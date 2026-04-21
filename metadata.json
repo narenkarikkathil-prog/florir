@@ -1,0 +1,7 @@
+{
+  "name": "Florir",
+  "description": "A speech-first AI language learning platform for French, Spanish, Mandarin, and English, featuring real-time conversation and vocabulary practice.",
+  "requestFramePermissions": [
+    "microphone"
+  ]
+}
