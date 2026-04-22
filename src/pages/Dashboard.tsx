@@ -36,27 +36,19 @@ const apModes = [
   {
     id: 'ap-simulated',
     title: 'Simulated Conversation',
-    desc: 'Aligns with official AP exam formats.',
+    desc: 'Practice AP-style conversations with timed responses and scoring.',
     icon: <GraduationCap size={24} />,
     color: 'bg-gold/10 text-gold',
   },
   {
     id: 'ap-speaking',
-    title: '2-Minute Speaking Task',
-    desc: 'Cultural comparison prompts with rubric scoring.',
+    title: 'Cultural Comparison',
+    desc: '2-minute speaking tasks graded on AP rubric standards.',
     icon: <Mic size={24} />,
-    color: 'bg-gold/10 text-gold',
-  },
-  {
-    id: 'ap-listening',
-    title: 'Listening Comprehension',
-    desc: 'MCQ testing main ideas and inference.',
-    icon: <BookOpen size={24} />,
     color: 'bg-gold/10 text-gold',
   },
 ];
 
-const SHOW_PAID_FEATURES = false;
 
 export default function Dashboard() {
   const [activeTab, setActiveTab] = useState<'general' | 'ap'>('general');
@@ -233,18 +225,16 @@ export default function Dashboard() {
               General Learning
               {activeTab === 'general' && <motion.div layoutId="tab" className="absolute bottom-0 left-0 w-full h-1 bg-gold rounded-full" />}
             </button>
-            {SHOW_PAID_FEATURES && (
-              <button
-                onClick={() => setActiveTab('ap')}
-                className={cn(
-                  "pb-4 text-lg font-serif font-bold transition-all relative",
-                  activeTab === 'ap' ? "text-dark" : "text-dark/30 hover:text-dark/50"
-                )}
-              >
-                AP Exam Prep
-                {activeTab === 'ap' && <motion.div layoutId="tab" className="absolute bottom-0 left-0 w-full h-1 bg-gold rounded-full" />}
-              </button>
-            )}
+            <button
+              onClick={() => setActiveTab('ap')}
+              className={cn(
+                "pb-4 text-lg font-serif font-bold transition-all relative",
+                activeTab === 'ap' ? "text-dark" : "text-dark/30 hover:text-dark/50"
+              )}
+            >
+              AP Exam Prep
+              {activeTab === 'ap' && <motion.div layoutId="tab" className="absolute bottom-0 left-0 w-full h-1 bg-gold rounded-full" />}
+            </button>
           </div>
 
           {/* Mode Cards */}
@@ -278,9 +268,12 @@ export default function Dashboard() {
             <p className="text-sm text-cream/80 mb-6 leading-relaxed">
               Florir is a non-profit initiative dedicated to making high-quality language education accessible to everyone, everywhere.
             </p>
-            {SHOW_PAID_FEATURES ? (
-              <button className="w-full py-3 bg-white text-gold rounded-full font-bold text-sm hover:bg-beige transition-all">
-                Upgrade Now
+            {activeTab === 'ap' ? (
+              <button 
+                onClick={() => navigate('/nonprofit')}
+                className="w-full py-3 bg-white text-gold rounded-full font-bold text-sm hover:bg-beige transition-all shadow-md"
+              >
+                Learn More
               </button>
             ) : (
               <button 

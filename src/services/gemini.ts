@@ -50,7 +50,7 @@ export class GeminiService {
     try {
       if (config.onRawMessage) config.onRawMessage({ type: 'AI_LIVE_CONNECT_CALL' });
       this.session = await this.liveAi.live.connect({
-        model: "gemini-2.0-flash-exp",
+        model: "gemini-3.1-flash-live-preview",
         config: {
           responseModalities: [Modality.AUDIO],
           speechConfig: {
@@ -59,11 +59,19 @@ export class GeminiService {
           systemInstruction: config.systemInstruction,
           inputAudioTranscription: { 
             enabled: !config.skipMic,
-            languageCode: config.languageCode || 'auto'
+            languageCode: config.languageCode || 'en-US'
           } as any,
           outputAudioTranscription: { enabled: true } as any,
           tools: config.tools,
-        },
+          generationConfig: {
+            responseModalities: [Modality.AUDIO],
+            thinkingConfig: { thinkingLevel: 'minimal' },
+          },
+          turnDetection: {
+            threshold: 0.3,
+            silenceDurationMs: 500,
+          } as any,
+        } as any,
         callbacks: {
           onopen: () => {
             console.log("Gemini Live Connection Opened");
@@ -92,9 +100,9 @@ export class GeminiService {
               
               if (modelTurn?.parts) {
                 for (const part of modelTurn.parts) {
-                  if (part.text) {
-                    config.onMessage(part.text, 'ai');
-                  }
+                  // NOTE: part.text in audio-only mode is the model's internal
+                  // thinking/reasoning, NOT what it speaks. We intentionally skip it.
+                  // The actual spoken words come via outputAudioTranscription below.
                   if (part.inlineData?.data) {
                     this.playAudio(part.inlineData.data);
                     if (config.onAudioData) config.onAudioData(part.inlineData.data);
@@ -105,16 +113,34 @@ export class GeminiService {
                   }
                 }
               }
-              
+
+              // Handle AI output audio transcription (what the AI said)
+              const outputParts = sc.outputAudioTranscription?.parts || sc.outputTranscription?.parts;
+              if (outputParts) {
+                for (const part of outputParts) {
+                  if (part.text) config.onMessage(part.text, 'ai');
+                }
+              } else if (sc.outputAudioTranscription?.text) {
+                config.onMessage(sc.outputAudioTranscription.text, 'ai');
+              } else if (sc.outputTranscription?.text) {
+                config.onMessage(sc.outputTranscription.text, 'ai');
+              }
+
+              // Handle user input audio transcription (what the user said)
               const userParts = sc.inputAudioTranscription?.parts || sc.inputTranscription?.parts;
               if (userParts) {
                 for (const part of userParts) {
-                  if (part.text) config.onMessage(part.text, 'user');
+                  if (part.text) {
+                    const cleaned = this.sanitizeTranscript(part.text);
+                    if (cleaned) config.onMessage(cleaned, 'user');
+                  }
                 }
               } else if (sc.inputAudioTranscription?.text) {
-                config.onMessage(sc.inputAudioTranscription.text, 'user');
+                const cleaned = this.sanitizeTranscript(sc.inputAudioTranscription.text);
+                if (cleaned) config.onMessage(cleaned, 'user');
               } else if (sc.inputTranscription?.text) {
-                config.onMessage(sc.inputTranscription.text, 'user');
+                const cleaned = this.sanitizeTranscript(sc.inputTranscription.text);
+                if (cleaned) config.onMessage(cleaned, 'user');
               }
 
               if (interrupted) {
@@ -137,50 +163,83 @@ export class GeminiService {
     }
   }
 
+  private micSource: MediaStreamAudioSourceNode | null = null;
+  private silentDest: GainNode | null = null;
+  private micHealthInterval: ReturnType<typeof setInterval> | null = null;
+  private lastMicActivity: number = 0;
+  private currentMicConfig: any = null;
+
   pause() {
-    if (this.processor) {
-      this.processor.disconnect();
-    }
+    // Disable mic tracks to stop sending audio, but keep the pipeline intact
     if (this.stream) {
       this.stream.getTracks().forEach(t => t.enabled = false);
     }
   }
 
   resume() {
-    if (this.processor && this.audioContext) {
-      this.processor.connect(this.audioContext.destination);
-    }
+    // Re-enable mic tracks
     if (this.stream) {
       this.stream.getTracks().forEach(t => t.enabled = true);
+    }
+    // Ensure AudioContext is running
+    if (this.audioContext?.state === 'suspended') {
+      this.audioContext.resume();
     }
   }
 
   private async startMic(config: any) {
+    this.currentMicConfig = config;
     try {
       if (config.onRawMessage) config.onRawMessage({ type: 'MIC_START_REQUEST' });
+
+      // Ensure AudioContext is active
       if (this.audioContext?.state === 'suspended') {
         await this.audioContext.resume();
       }
-      this.stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+
+      // Request mic with specific constraints for reliability
+      this.stream = await navigator.mediaDevices.getUserMedia({
+        audio: {
+          echoCancellation: true,
+          noiseSuppression: true,
+          autoGainControl: true,
+        }
+      });
       if (config.onRawMessage) config.onRawMessage({ type: 'MIC_STREAM_ACQUIRED' });
-      const source = this.audioContext!.createMediaStreamSource(this.stream);
-      this.processor = this.audioContext!.createScriptProcessor(4096, 1, 1);
+
+      this.micSource = this.audioContext!.createMediaStreamSource(this.stream);
+      this.processor = this.audioContext!.createScriptProcessor(1024, 1, 1);
+
+      // Create a silent destination — ScriptProcessorNode MUST be connected
+      // to a destination to fire onaudioprocess events. We use a GainNode
+      // with gain=0 so no sound is heard but the processor stays active.
+      this.silentDest = this.audioContext!.createGain();
+      this.silentDest.gain.value = 0;
+      this.silentDest.connect(this.audioContext!.destination);
+
+      this.lastMicActivity = Date.now();
 
       this.processor.onaudioprocess = (e) => {
         const inputData = e.inputBuffer.getChannelData(0);
-        
+
         let sum = 0;
         for (let i = 0; i < inputData.length; i++) {
           sum += inputData[i] * inputData[i];
         }
         const rms = Math.sqrt(sum / inputData.length);
+
+        // Track that audio is flowing (even silence has some tiny RMS)
+        if (rms > 0.0001) {
+          this.lastMicActivity = Date.now();
+        }
+
         if (config.onVolume) {
           config.onVolume(rms);
         }
 
         const pcmData = this.floatTo16BitPCM(inputData);
         const base64Data = btoa(String.fromCharCode(...new Uint8Array(pcmData.buffer)));
-        
+
         if (this.session) {
           this.session.sendRealtimeInput({
             audio: { data: base64Data, mimeType: 'audio/pcm;rate=16000' }
@@ -188,13 +247,73 @@ export class GeminiService {
         }
       };
 
-      source.connect(this.processor);
-      this.processor.connect(this.audioContext!.destination);
+      // Connect: mic → processor → silent gain → destination
+      this.micSource.connect(this.processor);
+      this.processor.connect(this.silentDest);
       if (config.onRawMessage) config.onRawMessage({ type: 'MIC_PROCESSOR_CONNECTED' });
+
+      // Start mic health monitoring — auto-reconnect if audio stops
+      this.startMicHealthCheck(config);
+
     } catch (err) {
       console.error("Mic access denied:", err);
       if (config.onRawMessage) config.onRawMessage({ type: 'MIC_ERROR', data: err });
     }
+  }
+
+  /**
+   * Monitors mic health. If no audio activity for 5 seconds and the stream
+   * is supposed to be active, attempt to reconnect.
+   */
+  private startMicHealthCheck(config: any) {
+    if (this.micHealthInterval) clearInterval(this.micHealthInterval);
+
+    this.micHealthInterval = setInterval(() => {
+      // Only check if we're supposed to be active and not paused
+      if (!this.session || !this.stream) return;
+      const tracksEnabled = this.stream.getTracks().some(t => t.enabled && t.readyState === 'live');
+      if (!tracksEnabled) return;
+
+      const silentFor = Date.now() - this.lastMicActivity;
+      if (silentFor > 5000) {
+        console.warn('Mic appears dead (no audio for 5s), reconnecting...');
+        if (config.onRawMessage) config.onRawMessage({ type: 'MIC_RECONNECT' });
+        this.reconnectMic(config);
+      }
+    }, 3000);
+  }
+
+  private async reconnectMic(config: any) {
+    // Clean up old mic
+    try {
+      if (this.processor) { this.processor.disconnect(); this.processor = null; }
+      if (this.micSource) { this.micSource.disconnect(); this.micSource = null; }
+      if (this.silentDest) { this.silentDest.disconnect(); this.silentDest = null; }
+      if (this.stream) {
+        this.stream.getTracks().forEach(t => t.stop());
+        this.stream = null;
+      }
+    } catch (e) { /* cleanup errors are ok */ }
+
+    // Re-initialize
+    await this.startMic(config);
+  }
+
+  /**
+   * Strips non-speech artifacts from transcription text.
+   * Returns cleaned text, or empty string if nothing meaningful remains.
+   */
+  private sanitizeTranscript(text: string): string {
+    // Remove common non-speech tags: <noise>, <silence>, <unk>, [noise], etc.
+    let cleaned = text
+      .replace(/<[^>]*(?:noise|silence|unk|laughter|cough|breath|music)[^>]*>/gi, '')
+      .replace(/\[[^\]]*(?:noise|silence|unk|laughter|cough|breath|music)[^\]]*\]/gi, '')
+      .replace(/\([^)]*(?:noise|silence|unk|laughter|cough|breath)[^)]*\)/gi, '');
+    // Remove stray angle-bracket tags that look like artifacts
+    cleaned = cleaned.replace(/<[a-z_]+>/gi, '');
+    // Collapse multiple spaces and trim
+    cleaned = cleaned.replace(/\s+/g, ' ').trim();
+    return cleaned;
   }
 
   private floatTo16BitPCM(input: Float32Array) {
@@ -243,13 +362,22 @@ export class GeminiService {
   }
 
   stop() {
+    // Stop health monitoring
+    if (this.micHealthInterval) {
+      clearInterval(this.micHealthInterval);
+      this.micHealthInterval = null;
+    }
     if (this.session) this.session.close();
     if (this.stream) this.stream.getTracks().forEach(t => t.stop());
     if (this.processor) this.processor.disconnect();
+    if (this.micSource) this.micSource.disconnect();
+    if (this.silentDest) this.silentDest.disconnect();
     if (this.audioContext) this.audioContext.close();
     this.session = null;
     this.stream = null;
     this.processor = null;
+    this.micSource = null;
+    this.silentDest = null;
     this.audioContext = null;
   }
 
@@ -257,7 +385,7 @@ export class GeminiService {
   async generateSpeech(text: string, voiceName?: string) {
     const finalVoice = voiceName || this.voiceName;
     const response = await this.ttsAi.models.generateContent({
-      model: "gemini-2.0-flash-exp",
+      model: "gemini-2.5-flash-preview-tts",
       contents: [{ parts: [{ text: `Say clearly: ${text}` }] }],
       config: {
         responseModalities: [Modality.AUDIO],
@@ -273,7 +401,7 @@ export class GeminiService {
 
   // Content Generation Methods
   async generateContent(params: any) {
-    if (!params.model) params.model = "gemini-2.0-flash-exp";
+    if (!params.model) params.model = "gemini-2.5-flash";
     return this.liveAi.models.generateContent(params);
   }
 }

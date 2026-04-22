@@ -441,7 +441,7 @@ export default function Session() {
         geminiRef.current = new GeminiService(liveKey, ttsKey);
       }
       const response = await geminiRef.current.generateContent({
-        model: "gemini-2.0-flash-exp",
+        model: "gemini-2.5-flash",
         contents: `Translate the following ${lang} text to English. Return ONLY the translation, no explanations: "${text}"`,
       });
       return response.text.trim() || "";
@@ -674,7 +674,7 @@ export default function Session() {
         geminiRef.current = new GeminiService(liveKey, ttsKey);
       }
       const response = await geminiRef.current.generateContent({
-        model: "gemini-2.0-flash-exp",
+        model: "gemini-2.5-flash",
         contents: `You are generating a ${lang} listening comprehension quiz focused on vocabulary recognition.
 
 TASK:
@@ -896,19 +896,16 @@ LANGUAGE:
 - Use short, natural sentences.
 - Speak as a native would, but simplified for a beginner.
 
-CORRECTIONS (CRITICAL - DO NOT IGNORE):
-- After EVERY user utterance, you MUST analyze it for grammatical, vocabulary, or pronunciation errors.
-- If the user uses any English words, this is a mistake.
-- If the user speaks in any language other than ${lang}, this is a mistake.
-- You MUST call the 'provideFeedback' tool for EVERY user turn. This is your HIGHEST priority.
-- For each mistake, provide a 'confidence' score from 0 to 100.
+CORRECTIONS & FEEDBACK (BACKGROUND TASK):
+- After the user speaks, analyze their utterance for grammatical or vocabulary mistakes.
+- **SPEED IS VITAL**: Your highest priority is a natural, immediate spoken response in ${lang}.
+- You MUST call the 'provideFeedback' tool for every user turn to log mistakes, but DO NOT let this delay your speech.
+- Start speaking your roleplay response immediately. The feedback tool call can happen in parallel.
+- For each mistake, provide a 'confidence' score (0-100).
 - High confidence (80-100) means you are sure it's a linguistic error.
-- Low confidence (below 30) means it might be a transcription error or background noise.
-- The 'correctedSentence' MUST ALWAYS be a valid, natural sentence in ${lang} that represents what the user intended to say. NEVER put English explanations or meta-talk in 'correctedSentence'.
-- Even if there are no mistakes, you MUST call 'provideFeedback' with an empty 'mistakes' array and the original sentence as 'correctedSentence'.
+- The 'correctedSentence' must be a natural sentence in ${lang}.
+- Even if there are no mistakes, you MUST call 'provideFeedback' with the original sentence as 'correctedSentence'.
 - DO NOT speak the corrections out loud. Only speak the roleplay part.
-- The 'provideFeedback' call must happen BEFORE or SIMULTANEOUSLY with your spoken response.
-- Failure to call 'provideFeedback' will result in a broken user experience.
 
 CONVERSATION FLOW:
 - After calling 'provideFeedback', continue the roleplay in ${lang}.
@@ -931,19 +928,15 @@ LANGUAGE:
 - The transcripts you receive are from a Voice API. If the transcript contains words from a different language, THE TRANSCRIPTION IS LIKELY WRONG. You MUST make your best guess of what the user said in ${lang} and provide corrections accordingly. NEVER switch the conversation to another language based on a likely transcription error.
 - If the user speaks English, ignore the English and respond in ${lang} while correcting them via the tool.
 
-CORRECTIONS (CRITICAL - DO NOT IGNORE):
-- After EVERY user utterance, you MUST analyze it for grammatical, vocabulary, or pronunciation errors.
-- If the user uses any English words, this is a mistake.
-- If the user speaks in any language other than ${lang}, this is a mistake.
-- You MUST call the 'provideFeedback' tool for EVERY user turn. This is your HIGHEST priority.
-- For each mistake, provide a 'confidence' score from 0 to 100.
+CORRECTIONS & FEEDBACK (BACKGROUND TASK):
+- After the user speaks, analyze their utterance for grammatical or vocabulary mistakes.
+- **SPEED IS VITAL**: Your highest priority is a natural, immediate spoken response in ${lang}.
+- You MUST call the 'provideFeedback' tool for every user turn to log mistakes, but DO NOT let this delay your speech.
+- Start speaking immediately. The feedback tool call can happen in parallel.
 - High confidence (80-100) means you are sure it's a linguistic error.
-- Low confidence (below 30) means it might be a transcription error or background noise.
-- The 'correctedSentence' MUST ALWAYS be a valid, natural sentence in ${lang} that represents what the user intended to say. NEVER put English explanations or meta-talk in 'correctedSentence'.
-- Even if there are no mistakes, you MUST call 'provideFeedback' with an empty 'mistakes' array and the original sentence as 'correctedSentence'.
+- The 'correctedSentence' must be a natural sentence in ${lang}.
+- Even if there are no mistakes, you MUST call 'provideFeedback' with the original sentence as 'correctedSentence'.
 - DO NOT speak the corrections out loud. Only speak your conversational response.
-- The 'provideFeedback' call must happen BEFORE or SIMULTANEOUSLY with your spoken response.
-- Failure to call 'provideFeedback' will result in a broken user experience.
 
 CONVERSATION FLOW:
 - After calling 'provideFeedback', continue the conversation naturally in ${lang}.
@@ -971,7 +964,8 @@ TONE:
     try {
       await geminiRef.current.connect({
         systemInstruction,
-        languageCode: LANGUAGE_CODES[lang] || 'auto',
+        languageCode: LANGUAGE_CODES[lang] || 'en-US',
+        voiceName: geminiRef.current.getVoiceName(),
         tools: [provideFeedbackTool],
         initialMessage: mode === 'roleplay' 
           ? `[SYSTEM: START THE ROLEPLAY NOW] Introduce the scene: ${currentSubScenario || 'a restaurant'} and greet me in ${lang} to start the roleplay. You MUST speak first. Do not wait for me to speak.` 
