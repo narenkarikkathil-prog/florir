@@ -9,22 +9,16 @@ RUN npm ci
 # Copy source code
 COPY . .
 
-# Set VITE_ env vars at BUILD TIME so they're baked into the bundle
-# Supabase keys are safe to be public (anon key)
-ARG VITE_SUPABASE_URL=https://qizfmgjjnluwizbnxypo.supabase.co
-ARG VITE_SUPABASE_ANON_KEY=sb_publishable_iUXrzwGcq4aKewi6fe1cGg_xbfqyXHb
+# VITE_ env vars are passed as build args from cloudbuild or CLI
+# Supabase keys (public anon key — safe to hardcode)
+ENV VITE_SUPABASE_URL=https://qizfmgjjnluwizbnxypo.supabase.co
+ENV VITE_SUPABASE_ANON_KEY=sb_publishable_iUXrzwGcq4aKewi6fe1cGg_xbfqyXHb
 
-# These are needed client-side for the Live API WebSocket and TTS
-# They will be served through the server proxy in production
-ARG VITE_VERTEX_API_KEY=""
-ARG VITE_GEMINI_LIVE_API_KEY=""
-ARG VITE_GEMINI_TTS_API_KEY=""
-
-ENV VITE_SUPABASE_URL=$VITE_SUPABASE_URL
-ENV VITE_SUPABASE_ANON_KEY=$VITE_SUPABASE_ANON_KEY
-ENV VITE_VERTEX_API_KEY=$VITE_VERTEX_API_KEY
-ENV VITE_GEMINI_LIVE_API_KEY=$VITE_GEMINI_LIVE_API_KEY
-ENV VITE_GEMINI_TTS_API_KEY=$VITE_GEMINI_TTS_API_KEY
+# Gemini keys passed at build time via --build-arg
+ARG GEMINI_API_KEY
+ENV VITE_VERTEX_API_KEY=$GEMINI_API_KEY
+ENV VITE_GEMINI_LIVE_API_KEY=$GEMINI_API_KEY
+ENV VITE_GEMINI_TTS_API_KEY=$GEMINI_API_KEY
 
 RUN npm run build
 

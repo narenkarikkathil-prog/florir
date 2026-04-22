@@ -1,0 +1,38 @@
+steps:
+  # Build the Docker image, passing the API key as a build arg
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'build'
+      - '--build-arg'
+      - 'GEMINI_API_KEY=${_GEMINI_API_KEY}'
+      - '-t'
+      - 'gcr.io/$PROJECT_ID/florir'
+      - '.'
+
+  # Push to Container Registry
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'gcr.io/$PROJECT_ID/florir']
+
+  # Deploy to Cloud Run
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    args:
+      - 'run'
+      - 'deploy'
+      - 'florir'
+      - '--image'
+      - 'gcr.io/$PROJECT_ID/florir'
+      - '--region'
+      - 'us-central1'
+      - '--platform'
+      - 'managed'
+      - '--allow-unauthenticated'
+      - '--set-env-vars'
+      - 'GEMINI_API_KEY=${_GEMINI_API_KEY}'
+    entrypoint: gcloud
+
+images:
+  - 'gcr.io/$PROJECT_ID/florir'
+
+# Pass the API key as a substitution variable
+substitutions:
+  _GEMINI_API_KEY: ''
