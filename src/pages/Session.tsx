@@ -1711,7 +1711,29 @@ TONE:
                     <h3 className="text-xl font-serif font-bold">Transcript</h3>
                     <div className="flex items-center gap-2">
                       <button 
-                        onClick={() => setShowTranslations(!showTranslations)}
+                        onClick={() => {
+                          const state = !showTranslations;
+                          setShowTranslations(state);
+                          if (state) {
+                            setTranscript(prev => {
+                              const next = [...prev];
+                              next.forEach((msg, i) => {
+                                if (!msg.translation) {
+                                  translateToEnglish(msg.text).then(t => {
+                                    if (t) {
+                                      setTranscript(latest => {
+                                        const update = [...latest];
+                                        if (update[i]) update[i] = { ...update[i], translation: t };
+                                        return update;
+                                      });
+                                    }
+                                  });
+                                }
+                              });
+                              return next;
+                            });
+                          }
+                        }}
                         className={cn(
                           "px-3 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-wider transition-all flex items-center gap-2",
                           showTranslations ? "bg-dark text-white" : "bg-beige/50 text-dark/60 hover:bg-beige"
@@ -1757,21 +1779,9 @@ TONE:
                             </div>
                           )}
                           {showTranslations && !msg.translation && (
-                            <button 
-                              onClick={async () => {
-                                const t = await translateToEnglish(msg.text);
-                                if (t) {
-                                  setTranscript(prev => {
-                                    const next = [...prev];
-                                    next[i] = { ...next[i], translation: t };
-                                    return next;
-                                  });
-                                }
-                              }}
-                              className="mt-2 text-[10px] underline opacity-50 hover:opacity-100"
-                            >
-                              Translate
-                            </button>
+                            <div className="mt-2 pt-2 border-t border-current/10 text-[10px] italic opacity-50 animate-pulse">
+                              Translating...
+                            </div>
                           )}
                         </div>
 
