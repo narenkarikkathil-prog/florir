@@ -212,26 +212,26 @@ export default function Dashboard() {
         {/* Main Content */}
         <div className="lg:col-span-2 space-y-8">
           {/* Tabs */}
-          <div className="flex gap-2 p-1.5 bg-beige/30 rounded-2xl w-fit border border-beige-mid/20">
+          <div className="flex gap-8 border-b border-beige-mid/30">
             <button
               onClick={() => setActiveTab('general')}
               className={cn(
-                "px-6 py-2.5 font-bold transition-all relative rounded-xl z-10",
-                activeTab === 'general' ? "text-white" : "text-dark/60 hover:text-dark hover:bg-white/50"
+                "pb-4 text-lg font-serif font-bold transition-all relative",
+                activeTab === 'general' ? "text-dark" : "text-dark/30 hover:text-dark/50"
               )}
             >
-              {activeTab === 'general' && <motion.div layoutId="tab" className="absolute inset-0 bg-gold rounded-xl -z-10 shadow-sm" transition={{ type: "spring", bounce: 0.2, duration: 0.6 }} />}
               General Learning
+              {activeTab === 'general' && <motion.div layoutId="tab" className="absolute bottom-0 left-0 w-full h-1 bg-gold rounded-full" />}
             </button>
             <button
               onClick={() => setActiveTab('ap')}
               className={cn(
-                "px-6 py-2.5 font-bold transition-all relative rounded-xl z-10",
-                activeTab === 'ap' ? "text-white" : "text-dark/60 hover:text-dark hover:bg-white/50"
+                "pb-4 text-lg font-serif font-bold transition-all relative hidden",
+                activeTab === 'ap' ? "text-dark" : "text-dark/30 hover:text-dark/50"
               )}
             >
-              {activeTab === 'ap' && <motion.div layoutId="tab" className="absolute inset-0 bg-gold rounded-xl -z-10 shadow-sm" transition={{ type: "spring", bounce: 0.2, duration: 0.6 }} />}
               AP Exam Prep
+              {activeTab === 'ap' && <motion.div layoutId="tab" className="absolute bottom-0 left-0 w-full h-1 bg-gold rounded-full" />}
             </button>
           </div>
 

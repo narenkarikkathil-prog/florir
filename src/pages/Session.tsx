@@ -549,6 +549,8 @@ export default function Session() {
       switch (lang) {
         case 'French': utterance.lang = 'fr-FR'; break;
         case 'Spanish': utterance.lang = 'es-ES'; break;
+        case 'Mandarin': utterance.lang = 'zh-CN'; break;
+        case 'English': utterance.lang = 'en-US'; break;
         default: utterance.lang = 'en-US';
       }
       window.speechSynthesis.speak(utterance);
