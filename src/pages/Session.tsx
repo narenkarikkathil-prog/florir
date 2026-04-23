@@ -432,20 +432,12 @@ export default function Session() {
   }, [isActive, isPaused, transcript]);
 
   const translateToEnglish = async (text: string): Promise<string> => {
-    const liveKey = import.meta.env.VITE_GEMINI_LIVE_API_KEY || import.meta.env.VITE_VERTEX_API_KEY || import.meta.env.GEMINI_API_KEY;
-    const ttsKey = import.meta.env.VITE_GEMINI_TTS_API_KEY || import.meta.env.VITE_VERTEX_API_KEY || import.meta.env.GEMINI_API_KEY;
-    
-    if (!liveKey || !text.trim()) return "";
-
+    if (!text.trim()) return "";
     try {
-      if (!geminiRef.current) {
-        geminiRef.current = new GeminiService(liveKey, ttsKey);
-      }
-      const response = await geminiRef.current.generateContent({
-        model: "gemini-2.5-flash",
-        contents: `Translate the following ${lang} text to English. Return ONLY the translation, no explanations: "${text}"`,
-      });
-      return response.text.trim() || "";
+      const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=en&dt=t&q=${encodeURIComponent(text)}`;
+      const res = await fetch(url);
+      const data = await res.json();
+      return data[0][0][0] || "";
     } catch (error) {
       console.error("Translation error:", error);
       return "";
