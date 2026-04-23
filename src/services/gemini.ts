@@ -341,9 +341,9 @@ export class GeminiService {
 
     const source = this.audioContext.createBufferSource();
     source.buffer = buffer;
-    // Enable pitch-shift web audio speeding ONLY for Fast speed (>1.0)
-    // Slow speeds (<1.0) are kept at 1.0 to prevent making the voice masculine.
-    source.playbackRate.value = this.playbackRate > 1.0 ? this.playbackRate : 1.0; 
+    // Always play at normal speed (1.0) to prevent Web Audio from pitch-shifting or buffer clipping.
+    // Both Slow and Fast speeds are handled by the AI system prompt dynamically modifying the speaking cadence.
+    source.playbackRate.value = 1.0;
     source.connect(this.audioContext.destination);
     
     const startTime = Math.max(this.audioContext.currentTime, this.nextStartTime);
