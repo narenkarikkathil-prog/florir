@@ -25,7 +25,7 @@ interface SettingsModalProps {
 
 export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
   const [voice, setVoice] = useState('Kore');
-  const [speed, setSpeed] = useState(1.0);
+  const [speed, setSpeed] = useState(1.3);
   const [isSaving, setIsSaving] = useState(false);
 
   useEffect(() => {
@@ -40,7 +40,7 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
     if (localSettings) {
       const parsed = JSON.parse(localSettings);
       setVoice('Kore'); // Force Kore
-      setSpeed(parsed.playback_speed || 1.0);
+      setSpeed(parsed.playback_speed || 1.3);
     }
 
     if (!supabase) return;
@@ -54,7 +54,7 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
       
       if (profile?.settings) {
         setVoice('Kore'); // Force Kore
-        setSpeed(profile.settings.playback_speed || 1.0);
+        setSpeed(profile.settings.playback_speed || 1.3);
         localStorage.setItem('user_settings', JSON.stringify({ ...profile.settings, voice_name: 'Kore' }));
       }
     }

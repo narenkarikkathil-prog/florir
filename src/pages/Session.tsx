@@ -858,7 +858,7 @@ Return ONLY valid JSON in this structure:
     if (localSettings) {
       const parsed = JSON.parse(localSettings);
       geminiRef.current.setVoiceName(parsed.voice_name || 'Kore');
-      geminiRef.current.setPlaybackRate(parsed.playback_speed || 1.0);
+      geminiRef.current.setPlaybackRate(parsed.playback_speed || 1.3);
     }
 
     if (supabase) {
@@ -872,7 +872,7 @@ Return ONLY valid JSON in this structure:
         
         if (profile?.settings) {
           geminiRef.current.setVoiceName(profile.settings.voice_name || 'Kore');
-          geminiRef.current.setPlaybackRate(profile.settings.playback_speed || 1.0);
+          geminiRef.current.setPlaybackRate(profile.settings.playback_speed || 1.3);
           localStorage.setItem('user_settings', JSON.stringify(profile.settings));
         }
       }
@@ -881,7 +881,7 @@ Return ONLY valid JSON in this structure:
     let currentSpeed = 1.0;
     const latestSettings = localStorage.getItem('user_settings');
     if (latestSettings) {
-      currentSpeed = JSON.parse(latestSettings).playback_speed || 1.0;
+      currentSpeed = JSON.parse(latestSettings).playback_speed || 1.3;
     }
 
     let systemInstruction = `You are a helpful language learning assistant for ${lang}. IMPORTANT: You MUST adopt the persona of a young, energetic, and expressive female with a bright and friendly feminine voice. Always maintain this feminine persona. `;
@@ -1940,7 +1940,7 @@ TONE:
           if (localSettings && geminiRef.current) {
             const parsed = JSON.parse(localSettings);
             geminiRef.current.setVoiceName(parsed.voice_name || 'Kore');
-            geminiRef.current.setPlaybackRate(parsed.playback_speed || 1.0);
+            geminiRef.current.setPlaybackRate(parsed.playback_speed || 1.3);
           }
         }} 
       />

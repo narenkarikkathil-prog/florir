@@ -90,7 +90,7 @@ export default function Dashboard() {
             },
             settings: {
               voice_name: 'Kore',
-              playback_speed: 1.0
+              playback_speed: 1.3
             }
           };
           const { data: newProfile } = await supabase
