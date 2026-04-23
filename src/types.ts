@@ -1,7 +1,5 @@
 export type Language = 
-  | 'English' 
   | 'French' 
-  | 'Mandarin' 
   | 'Spanish'
   | 'Japanese'
   | 'German'

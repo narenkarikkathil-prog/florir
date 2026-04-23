@@ -85,9 +85,7 @@ export default function Dashboard() {
             id: user.id,
             total_time: 0,
             level_per_language: {
-              English: 'Beginner 1',
               French: 'Beginner 1',
-              Mandarin: 'Beginner 1',
               Spanish: 'Beginner 1'
             },
             settings: {
@@ -137,9 +135,9 @@ export default function Dashboard() {
   };
 
   const allLanguages: Language[] = [
-    'English', 'French', 'Mandarin', 'Spanish'
+    'French', 'Spanish'
   ].sort() as Language[];
-  const apLanguages: Language[] = ['French', 'Spanish', 'Mandarin'];
+  const apLanguages: Language[] = ['French', 'Spanish'];
   const availableLanguages = activeTab === 'ap' ? apLanguages : allLanguages;
 
   // Ensure selected language is valid for the current tab
@@ -160,7 +158,7 @@ export default function Dashboard() {
             <FlowerLogo className="text-gold" size={28} />
             <h1 className="text-2xl md:text-4xl font-serif font-bold">My Learning</h1>
           </div>
-          <p className="text-dark/50">Practice French, Spanish, Mandarin, and English.</p>
+          <p className="text-dark/50">Practice French and Spanish.</p>
         </div>
         
         <div className="relative">

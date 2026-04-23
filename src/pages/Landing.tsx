@@ -8,8 +8,6 @@ import { FlowerLogo, BloomingFlower } from '@/src/components/FlowerLogo';
 const languages = [
   { name: 'French', icon: <Globe size={14} className="text-blue-500" /> },
   { name: 'Spanish', icon: <Globe size={14} className="text-red-500" /> },
-  { name: 'Mandarin', icon: <Globe size={14} className="text-red-600" /> },
-  { name: 'English', icon: <Globe size={14} className="text-gold" /> },
 ];
 
 const SHOW_PAID_FEATURES = false;

@@ -12,14 +12,12 @@ import SettingsModal from '@/src/components/SettingsModal';
 import { FlowerLogo, BloomingFlower } from '@/src/components/FlowerLogo';
 
 const LANGUAGE_CODES: Record<Language, string> = {
-  'English': 'en-US',
   'French': 'fr-FR',
   'Spanish': 'es-ES',
   'German': 'de-DE',
   'Portuguese': 'pt-BR',
   'Japanese': 'ja-JP',
   'Korean': 'ko-KR',
-  'Mandarin': 'zh-CN',
   'Hindi': 'hi-IN',
   'Arabic': 'ar-SA',
   'Russian': 'ru-RU',
@@ -231,16 +229,6 @@ export default function Session() {
         "Don't forget to use 'usted' in professional settings.",
         "Pay attention to the difference between 'ser' and 'estar'."
       ],
-      'Mandarin': [
-        "Focus on your tones—they are crucial for meaning.",
-        "Practice the 'ü' sound by shaping your lips for 'u' but saying 'ee'.",
-        "Pay attention to measure words when counting objects."
-      ],
-      'English': [
-        "Pay attention to word stress—it can change the meaning of a word.",
-        "Practice common phrasal verbs to sound more natural.",
-        "Don't forget to use articles (a, an, the) correctly."
-      ],
       'Japanese': [
         "Focus on pitch accent to distinguish between similar words.",
         "Practice using honorifics (keigo) in formal situations.",
@@ -434,7 +422,8 @@ export default function Session() {
   const translateToEnglish = async (text: string): Promise<string> => {
     if (!text.trim()) return "";
     try {
-      const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=en&dt=t&q=${encodeURIComponent(text)}`;
+      const sourceLang = LANGUAGE_CODES[lang]?.split('-')[0] || 'auto';
+      const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=${sourceLang}&tl=en&dt=t&q=${encodeURIComponent(text)}`;
       const res = await fetch(url);
       const data = await res.json();
       return data[0][0][0] || "";

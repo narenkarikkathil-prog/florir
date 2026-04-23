@@ -131,7 +131,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                 <span className="font-serif text-xl font-bold tracking-tight">Florir</span>
               </div>
               <p className="text-dark/60 max-w-sm text-sm leading-relaxed">
-                A speech-first language learning platform dedicated to helping you master French, Spanish, Mandarin, and English through real-time AI conversations.
+                A speech-first language learning platform dedicated to helping you master French and Spanish through real-time AI conversations.
               </p>
             </div>
             <div>
@@ -139,8 +139,6 @@ export default function Layout({ children }: { children: React.ReactNode }) {
               <ul className="space-y-2 text-sm text-dark/70">
                 <li>French</li>
                 <li>Spanish</li>
-                <li>Mandarin</li>
-                <li>English</li>
               </ul>
             </div>
             <div>
