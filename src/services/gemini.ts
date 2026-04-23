@@ -9,7 +9,7 @@ export class GeminiService {
   private processor: ScriptProcessorNode | null = null;
   private nextStartTime: number = 0;
   private playbackRate: number = 1.0;
-  private voiceName: string = "Kore";
+  private voiceName: string = "Aoede";
 
   constructor(liveKey: string, ttsKey?: string) {
     this.liveAi = new GoogleGenAI({ apiKey: liveKey });
@@ -341,12 +341,14 @@ export class GeminiService {
 
     const source = this.audioContext.createBufferSource();
     source.buffer = buffer;
-    source.playbackRate.value = this.playbackRate;
+    // Always play at normal speed (1.0) to prevent Web Audio from pitch-shifting
+    // Slow speeds are now handled via text-based word pauses or prompt instructions.
+    source.playbackRate.value = 1.0; 
     source.connect(this.audioContext.destination);
     
     const startTime = Math.max(this.audioContext.currentTime, this.nextStartTime);
     source.start(startTime);
-    this.nextStartTime = startTime + (buffer.duration / this.playbackRate);
+    this.nextStartTime = startTime + buffer.duration;
   }
 
   private stopPlayback() {
@@ -384,9 +386,20 @@ export class GeminiService {
   // TTS Methods
   async generateSpeech(text: string, voiceName?: string) {
     const finalVoice = voiceName || this.voiceName;
+    
+    // Simulate slow playback by adding literal pauses between words
+    let finalText = text;
+    if (this.playbackRate < 1.0) {
+      finalText = text.split(' ').join('... ');
+    } else if (this.playbackRate > 1.0) {
+      finalText = `Say this very rapidly: ${text}`;
+    } else {
+      finalText = `Say clearly: ${text}`;
+    }
+
     const response = await this.ttsAi.models.generateContent({
       model: "gemini-2.5-flash-preview-tts",
-      contents: [{ parts: [{ text: `Say clearly: ${text}` }] }],
+      contents: [{ parts: [{ text: finalText }] }],
       config: {
         responseModalities: [Modality.AUDIO],
         speechConfig: {

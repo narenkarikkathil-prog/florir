@@ -846,7 +846,7 @@ Return ONLY valid JSON in this structure:
     const localSettings = localStorage.getItem('user_settings');
     if (localSettings) {
       const parsed = JSON.parse(localSettings);
-      geminiRef.current.setVoiceName(parsed.voice_name || 'Kore');
+      geminiRef.current.setVoiceName(parsed.voice_name || 'Aoede');
       geminiRef.current.setPlaybackRate(parsed.playback_speed || 1.0);
     }
 
@@ -860,14 +860,26 @@ Return ONLY valid JSON in this structure:
           .single();
         
         if (profile?.settings) {
-          geminiRef.current.setVoiceName(profile.settings.voice_name || 'Kore');
+          geminiRef.current.setVoiceName(profile.settings.voice_name || 'Aoede');
           geminiRef.current.setPlaybackRate(profile.settings.playback_speed || 1.0);
           localStorage.setItem('user_settings', JSON.stringify(profile.settings));
         }
       }
     }
     
+    let currentSpeed = 1.0;
+    const latestSettings = localStorage.getItem('user_settings');
+    if (latestSettings) {
+      currentSpeed = JSON.parse(latestSettings).playback_speed || 1.0;
+    }
+
     let systemInstruction = `You are a helpful language learning assistant for ${lang}. `;
+    
+    if (currentSpeed < 1.0) {
+      systemInstruction += `CRITICAL INSTRUCTION: You must speak EXTREMELY SLOWLY and deliberately. Insert distinct pauses after every word so the user can hear the pronunciation perfectly. `;
+    } else if (currentSpeed > 1.0) {
+      systemInstruction += `Speak energetically and rapidly. `;
+    }
     
     // Add difficulty guidance
     if (level === 'beginner') {
@@ -1930,7 +1942,7 @@ TONE:
           const localSettings = localStorage.getItem('user_settings');
           if (localSettings && geminiRef.current) {
             const parsed = JSON.parse(localSettings);
-            geminiRef.current.setVoiceName(parsed.voice_name || 'Kore');
+            geminiRef.current.setVoiceName(parsed.voice_name || 'Aoede');
             geminiRef.current.setPlaybackRate(parsed.playback_speed || 1.0);
           }
         }} 
