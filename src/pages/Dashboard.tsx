@@ -150,15 +150,15 @@ export default function Dashboard() {
   }, [activeTab]);
 
   return (
-    <div className="container mx-auto px-4 py-12 max-w-6xl relative">
-      <BloomingFlower className="absolute -top-10 -right-10 text-gold" size={120} delay={0.2} />
-      <BloomingFlower className="absolute bottom-0 -left-10 text-petal" size={150} delay={0.5} />
+    <div className="container mx-auto px-4 py-6 md:py-12 max-w-6xl relative">
+      <BloomingFlower className="absolute -top-10 -right-10 text-gold hidden md:block" size={120} delay={0.2} />
+      <BloomingFlower className="absolute bottom-0 -left-10 text-petal hidden md:block" size={150} delay={0.5} />
 
       <header className="mb-12 flex flex-col md:flex-row md:items-start justify-between gap-6 relative z-10">
         <div>
           <div className="flex items-center gap-3 mb-2">
             <FlowerLogo className="text-gold" size={28} />
-            <h1 className="text-4xl font-serif font-bold">My Learning</h1>
+            <h1 className="text-2xl md:text-4xl font-serif font-bold">My Learning</h1>
           </div>
           <p className="text-dark/50">Practice French, Spanish, Mandarin, and English.</p>
         </div>
@@ -210,7 +210,7 @@ export default function Dashboard() {
         </div>
       </header>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8">
         {/* Main Content */}
         <div className="lg:col-span-2 space-y-8">
           {/* Tabs */}
@@ -228,7 +228,7 @@ export default function Dashboard() {
             <button
               onClick={() => setActiveTab('ap')}
               className={cn(
-                "pb-4 text-lg font-serif font-bold transition-all relative",
+                "pb-4 text-lg font-serif font-bold transition-all relative hidden",
                 activeTab === 'ap' ? "text-dark" : "text-dark/30 hover:text-dark/50"
               )}
             >

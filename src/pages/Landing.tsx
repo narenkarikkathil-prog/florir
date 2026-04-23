@@ -35,10 +35,10 @@ const modes = [
 export default function Landing() {
   return (
     <div className="overflow-hidden relative">
-      {/* Decorative Blooming Flowers */}
-      <BloomingFlower className="absolute top-20 left-10 text-gold" size={100} delay={0.2} />
-      <BloomingFlower className="absolute top-1/3 right-10 text-petal" size={150} delay={0.5} />
-      <BloomingFlower className="absolute bottom-1/3 left-20 text-leaf" size={120} delay={0.8} />
+      {/* Decorative Blooming Flowers — hidden on mobile */}
+      <BloomingFlower className="absolute top-20 left-10 text-gold hidden md:block" size={100} delay={0.2} />
+      <BloomingFlower className="absolute top-1/3 right-10 text-petal hidden md:block" size={150} delay={0.5} />
+      <BloomingFlower className="absolute bottom-1/3 left-20 text-leaf hidden md:block" size={120} delay={0.8} />
 
       {/* Hero Section */}
       <section className="relative pt-20 pb-32 md:pt-32 md:pb-48 px-4">
@@ -56,8 +56,8 @@ export default function Landing() {
             >
               <FlowerLogo size={14} /> AI-Powered Language Mastery
             </motion.div>
-            <h1 className="text-5xl md:text-7xl font-serif font-bold text-dark mb-6 leading-tight">
-              Learn by <span className="font-cursive text-gold text-6xl md:text-8xl inline-block mx-2 relative top-2">
+            <h1 className="text-3xl sm:text-5xl md:text-7xl font-serif font-bold text-dark mb-6 leading-tight">
+              Learn by <span className="font-cursive text-gold text-4xl sm:text-6xl md:text-8xl inline-block mx-1 sm:mx-2 relative top-1 sm:top-2">
                 {"blooming".split("").map((char, i) => (
                   <motion.span
                     key={i}
@@ -107,7 +107,7 @@ export default function Landing() {
       <section className="py-24 bg-beige/30 px-4">
         <div className="container mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-serif font-bold mb-4">Master Every Scenario</h2>
+            <h2 className="text-2xl md:text-4xl font-serif font-bold mb-4">Master Every Scenario</h2>
             <p className="text-dark/60 max-w-xl mx-auto">Choose from specialized modes designed to build confidence and fluency.</p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">

@@ -38,18 +38,18 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
   return (
     <div className="min-h-screen flex flex-col bg-cream relative overflow-hidden">
-      {/* Background Blooming Flowers */}
-      <BloomingFlower className="absolute -top-10 -left-10 text-gold" size={120} delay={0.2} />
-      <BloomingFlower className="absolute top-1/4 -right-10 text-petal" size={180} delay={0.5} />
-      <BloomingFlower className="absolute bottom-1/4 -left-10 text-leaf" size={140} delay={0.8} />
-      <BloomingFlower className="absolute -bottom-10 -right-10 text-gold" size={160} delay={1.1} />
+      {/* Background Blooming Flowers — hidden on mobile to prevent overflow */}
+      <BloomingFlower className="absolute -top-10 -left-10 text-gold hidden md:block" size={120} delay={0.2} />
+      <BloomingFlower className="absolute top-1/4 -right-10 text-petal hidden md:block" size={180} delay={0.5} />
+      <BloomingFlower className="absolute bottom-1/4 -left-10 text-leaf hidden md:block" size={140} delay={0.8} />
+      <BloomingFlower className="absolute -bottom-10 -right-10 text-gold hidden md:block" size={160} delay={1.1} />
 
       <header className={cn(
         "sticky top-0 z-50 w-full border-b border-beige-mid/30 bg-cream/80 backdrop-blur-md transition-all",
         isLanding ? "bg-transparent border-transparent" : "bg-cream/80"
       )}>
         <div className="container mx-auto px-4 h-16 flex items-center justify-between">
-          <Link to="/" className="flex items-center gap-2 group">
+          <Link to={user ? '/dashboard' : '/'} className="flex items-center gap-2 group">
             <FlowerLogo className="text-gold" size={32} />
             <span className="font-serif text-2xl font-bold tracking-tight text-dark">Florir</span>
           </Link>

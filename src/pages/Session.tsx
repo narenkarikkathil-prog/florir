@@ -1192,12 +1192,12 @@ TONE:
       <BloomingFlower className="absolute -bottom-10 -right-10 text-gold" size={160} delay={1.1} />
 
       {/* Top Navigation */}
-      <div className="p-6 md:p-8 flex items-center justify-between z-20 relative">
-        <div className="flex items-center gap-4">
-          <FlowerLogo className="text-gold" size={32} />
-          {/* Situation Badge */}
+      <div className="p-4 md:p-8 flex items-center justify-between z-20 relative">
+        <div className="flex items-center gap-2 md:gap-4">
+          <FlowerLogo className="text-gold shrink-0" size={32} />
+          {/* Situation Badge - hidden on mobile, appears at bottom instead */}
           {mode === 'roleplay' && selectedSituation ? (
-          <div className="flex items-center gap-3 bg-white px-5 py-2.5 rounded-full border border-beige/30 shadow-sm">
+          <div className="hidden md:flex items-center gap-3 bg-white px-5 py-2.5 rounded-full border border-beige/30 shadow-sm">
             <span className="text-xl">{SITUATIONS.find(s => s.id === selectedSituation)?.icon}</span>
             <div className="flex flex-col">
               <span className="text-sm font-bold text-dark/80">{SITUATIONS.find(s => s.id === selectedSituation)?.title}</span>
@@ -1228,7 +1228,7 @@ TONE:
             )}
           </div>
         ) : (mode?.includes('vocabulary') || mode?.includes('listening')) ? (
-          <div className="flex items-center gap-4">
+          <div className="hidden md:flex items-center gap-4">
             <div className="flex items-center gap-3 bg-white px-5 py-2.5 rounded-full border border-beige/30 shadow-sm">
               <BarChart3 size={18} className="text-gold" />
               <span className="text-sm font-bold text-dark/80 capitalize">{level} {mode}</span>
@@ -1241,7 +1241,7 @@ TONE:
             )}
           </div>
         ) : (
-          <div className="flex items-center gap-3 bg-white px-5 py-2.5 rounded-full border border-beige/30 shadow-sm">
+          <div className="hidden md:flex items-center gap-3 bg-white px-5 py-2.5 rounded-full border border-beige/30 shadow-sm">
             <span className="text-sm font-bold text-dark/80 capitalize">{mode} Mode</span>
           </div>
         )}
@@ -1286,7 +1286,7 @@ TONE:
             className="w-full max-w-2xl grid grid-cols-1 md:grid-cols-2 gap-4"
           >
             <div className="md:col-span-2 text-center mb-4">
-              <h2 className="text-3xl font-serif font-bold mb-2">Choose a Situation</h2>
+              <h2 className="text-2xl md:text-3xl font-serif font-bold mb-2">Choose a Situation</h2>
               <p className="text-dark/50">Select where you'd like to practice your {lang}.</p>
             </div>
             {SITUATIONS.map((s) => (
@@ -1336,7 +1336,7 @@ TONE:
             <div className="w-20 h-20 bg-gold/10 rounded-3xl flex items-center justify-center text-gold mx-auto mb-6">
               <Sliders size={40} />
             </div>
-            <h2 className="text-3xl font-serif font-bold mb-2">Select Difficulty</h2>
+            <h2 className="text-2xl md:text-3xl font-serif font-bold mb-2">Select Difficulty</h2>
             <p className="text-dark/50 mb-8 text-sm">Choose your level for this {mode} session.</p>
             
             <div className="grid grid-cols-1 gap-3 mb-8">
@@ -1388,7 +1388,7 @@ TONE:
               <div className="w-20 h-20 bg-gold/10 rounded-3xl flex items-center justify-center text-gold mx-auto mb-6">
                 <BarChart3 size={40} />
               </div>
-              <h2 className="text-3xl font-serif font-bold mb-2">Select Difficulty</h2>
+              <h2 className="text-2xl md:text-3xl font-serif font-bold mb-2">Select Difficulty</h2>
               <p className="text-dark/50 mb-8 text-sm">Choose your level for this vocabulary session.</p>
               
               <div className="grid grid-cols-1 gap-3 mb-8">
@@ -1529,11 +1529,43 @@ TONE:
                     onKeyDown={(e) => {
                       if (e.key === 'Enter' && writtenAnswer.trim() && attemptsLeft > 0 && isAnswerCorrect !== true) {
                         lastAudioActivityRef.current = Date.now();
-                        const correct = writtenAnswer.trim().toLowerCase() === (mcqQuestion.answer as string).toLowerCase();
+                        const userAns = writtenAnswer.trim().toLowerCase();
+                        const correctAns = (mcqQuestion.answer as string).toLowerCase();
                         
-                        if (correct) {
+                        // Exact match
+                        const exact = userAns === correctAns;
+                        
+                        // Fuzzy match: Levenshtein distance
+                        const levenshtein = (a: string, b: string): number => {
+                          const m = a.length, n = b.length;
+                          const dp: number[][] = Array.from({ length: m + 1 }, () => Array(n + 1).fill(0));
+                          for (let i = 0; i <= m; i++) dp[i][0] = i;
+                          for (let j = 0; j <= n; j++) dp[0][j] = j;
+                          for (let i = 1; i <= m; i++) {
+                            for (let j = 1; j <= n; j++) {
+                              dp[i][j] = a[i-1] === b[j-1]
+                                ? dp[i-1][j-1]
+                                : 1 + Math.min(dp[i-1][j], dp[i][j-1], dp[i-1][j-1]);
+                            }
+                          }
+                          return dp[m][n];
+                        };
+                        
+                        // Strip accents for comparison too
+                        const stripAccents = (s: string) => s.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+                        const accentMatch = stripAccents(userAns) === stripAccents(correctAns);
+                        
+                        const dist = levenshtein(userAns, correctAns);
+                        const maxAllowedDist = correctAns.length <= 4 ? 1 : 2;
+                        const fuzzyMatch = dist <= maxAllowedDist && dist > 0;
+                        
+                        if (exact || accentMatch || fuzzyMatch) {
                           setIsAnswerCorrect(true);
                           setCorrectCount(prev => prev + 1);
+                          if (fuzzyMatch && !exact && !accentMatch) {
+                            // Will show "Close enough" message
+                            setWrittenAnswer(writtenAnswer.trim() + ' ✓');
+                          }
                         } else {
                           const nextAttempts = attemptsLeft - 1;
                           setAttemptsLeft(nextAttempts);
@@ -1571,7 +1603,11 @@ TONE:
                       animate={{ opacity: 1, y: 0 }}
                       className="text-green-500 font-medium text-center flex items-center justify-center gap-2"
                     >
-                      <CheckCircle2 size={18} /> Correct!
+                      <CheckCircle2 size={18} /> 
+                      {writtenAnswer.includes('✓') 
+                        ? <>Close enough! Correct: <span className="text-gold font-bold ml-1">{mcqQuestion.answer}</span></>
+                        : 'Correct!'
+                      }
                     </motion.p>
                   )}
                 </div>
@@ -1605,10 +1641,13 @@ TONE:
               animate={{ 
                 scale: activePanel === 'transcript' ? 0.75 : 1,
                 x: activePanel === 'transcript' ? (window.innerWidth > 768 ? -50 : 0) : 0,
-                y: activePanel === 'transcript' ? (window.innerWidth <= 768 ? -100 : 0) : 0
+                y: activePanel === 'transcript' ? 0 : 0
               }}
               transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-              className="flex flex-col items-center z-20"
+              className={cn(
+                "flex flex-col items-center z-20",
+                activePanel === 'transcript' ? "hidden md:flex" : "flex"
+              )}
             >
               <motion.div 
                 animate={{ 
@@ -1780,6 +1819,24 @@ TONE:
                     ))}
                     <div ref={transcriptEndRef} />
                   </div>
+                  
+                  {/* Inline Mobile Mic (Shows only inside transcript when active on small screens) */}
+                  <div className="md:hidden mt-4 pt-4 border-t border-beige/20 flex flex-col items-center gap-2">
+                    <button
+                      onClick={toggleSession}
+                      className={cn(
+                        "w-16 h-16 rounded-full flex items-center justify-center transition-all shadow-[0_10px_25px_-5px_rgba(196,151,106,0.4)] relative",
+                        isActive && !isPaused ? "bg-gold text-white" : 
+                        isPaused ? "bg-yellow-500 text-white" :
+                        "bg-gold text-white"
+                      )}
+                    >
+                      <Mic size={24} className={cn(isActive && !isPaused && "animate-pulse")} />
+                    </button>
+                    <span className="text-[10px] font-bold text-dark/30 uppercase tracking-widest">
+                      {isActive ? (isPaused ? "Paused" : "Listening...") : "Tap to speak"}
+                    </span>
+                  </div>
                 </motion.div>
               )}
             </AnimatePresence>
@@ -1787,10 +1844,31 @@ TONE:
         )}
       </div>
 
-      {/* Bottom Info Section - Restored Accuracy Tracker */}
-      {!(mode?.includes('vocabulary') || mode?.includes('listening')) && isActive && (
-        <div className="p-6 md:p-10 flex flex-col md:flex-row items-center md:items-end justify-between gap-6 z-10">
-          {/* Accuracy Card */}
+      {/* Bottom Info Section */}
+      <div className="mt-auto px-4 md:px-10 pb-6 pt-4 flex flex-col gap-4 z-10">
+        
+        {/* Mobile Settings Badges (Moved to bottom) */}
+        <div className="md:hidden flex flex-wrap justify-center gap-2 mt-2">
+          {mode === 'roleplay' && selectedSituation ? (
+            <div className="flex items-center gap-2 bg-white/80 backdrop-blur-sm px-4 py-2 rounded-full border border-beige/30 shadow-sm text-sm">
+              <span>{SITUATIONS.find(s => s.id === selectedSituation)?.icon}</span>
+              <span className="font-bold text-dark/80">{SITUATIONS.find(s => s.id === selectedSituation)?.title}</span>
+            </div>
+          ) : (mode?.includes('vocabulary') || mode?.includes('listening')) ? (
+             <div className="flex items-center gap-2 bg-white/80 backdrop-blur-sm px-4 py-2 rounded-full border border-beige/30 shadow-sm text-sm font-bold text-dark/80 capitalize">
+               {level} {mode}
+             </div>
+          ) : (
+            <div className="flex items-center gap-2 bg-white/80 backdrop-blur-sm px-4 py-2 rounded-full border border-beige/30 shadow-sm text-sm font-bold text-dark/80 capitalize">
+               {mode} Mode
+            </div>
+          )}
+        </div>
+
+        {/* Live Accuracy and Corrections */}
+        {!(mode?.includes('vocabulary') || mode?.includes('listening')) && isActive && (
+          <div className="flex flex-col md:flex-row items-center md:items-end justify-between gap-6 w-full">
+            {/* Accuracy Card */}
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -1839,8 +1917,9 @@ TONE:
               <p className="text-sm text-dark/20 italic">No corrections yet</p>
             )}
           </motion.div>
-        </div>
-      )}
+          </div>
+        )}
+      </div>
 
       {/* Settings Modal */}
       <SettingsModal 

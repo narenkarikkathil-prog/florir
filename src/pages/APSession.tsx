@@ -727,7 +727,7 @@ Return ONLY valid JSON (no markdown, no code fences):
     return (
       <div className="space-y-6">
         <div className="flex items-center justify-between mb-2">
-          <h2 className="text-2xl font-serif font-bold">
+          <h2 className="text-xl md:text-2xl font-serif font-bold">
             {isConversation ? 'AP Simulated Conversation' : 'Cultural Comparison Speaking'}
           </h2>
           <span className="text-sm text-dark/40 font-bold">
@@ -749,7 +749,7 @@ Return ONLY valid JSON (no markdown, no code fences):
           />
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 max-h-[60vh] overflow-y-auto custom-scrollbar pr-2">
+        <div className="grid grid-cols-1 gap-3 max-h-[60vh] overflow-y-auto custom-scrollbar pr-1 md:pr-2">
           {prompts.map((p) => {
             const isCompleted = completedIds.includes(p.id);
             const isNext = p.id === nextUncompletedId;
@@ -824,7 +824,7 @@ Return ONLY valid JSON (no markdown, no code fences):
           <p className="text-dark/70 text-lg leading-relaxed">{conv.intro}</p>
         </div>
         <div className="space-y-2">
-          <div className="text-6xl font-bold text-gold font-mono">{timer}s</div>
+          <div className="text-4xl md:text-6xl font-bold text-gold font-mono">{timer}s</div>
           <p className="text-dark/40 text-sm">Reading time remaining</p>
           <div className="w-64 mx-auto h-2 bg-beige-mid/20 rounded-full overflow-hidden">
             <motion.div 
@@ -916,7 +916,7 @@ Return ONLY valid JSON (no markdown, no code fences):
               <div className="w-3 h-3 rounded-full bg-red-500 animate-pulse" />
               <span className="font-bold text-red-600">Your turn — speak now</span>
             </div>
-            <div className="text-5xl font-bold text-gold font-mono">{timer}s</div>
+            <div className="text-4xl md:text-6xl font-bold text-gold font-mono">{timer}s</div>
             <div className="w-48 mx-auto h-2 bg-beige-mid/20 rounded-full overflow-hidden">
               <motion.div 
                 className="h-full bg-gold rounded-full"
@@ -946,7 +946,7 @@ Return ONLY valid JSON (no markdown, no code fences):
             <div className="w-3 h-3 rounded-full bg-red-500 animate-pulse" />
             <span className="font-bold text-red-600">Speaking — {minutes}:{seconds.toString().padStart(2, '0')}</span>
           </div>
-          <div className="text-7xl font-bold text-gold font-mono">
+          <div className="text-5xl md:text-7xl font-bold text-gold font-mono">
             {minutes}:{seconds.toString().padStart(2, '0')}
           </div>
           <div className="w-64 mx-auto h-2 bg-beige-mid/20 rounded-full overflow-hidden">
@@ -997,7 +997,7 @@ Return ONLY valid JSON (no markdown, no code fences):
               <Star key={s} size={28} className={s <= score ? "text-gold fill-gold" : "text-beige-mid/30"} />
             ))}
           </div>
-          <div className="text-5xl font-bold text-gold mb-2">{score} / 5</div>
+          <div className="text-4xl md:text-5xl font-bold text-gold mb-2">{score} / 5</div>
           <p className="text-dark/50 text-sm">AP Score</p>
         </div>
 
@@ -1042,7 +1042,7 @@ Return ONLY valid JSON (no markdown, no code fences):
         )}
 
         {/* Actions */}
-        <div className="flex gap-3">
+        <div className="flex flex-col sm:flex-row gap-3">
           <button
             onClick={resetSession}
             className="flex-1 py-4 bg-white border-2 border-beige-mid/20 rounded-full font-bold hover:bg-beige/30 transition-all flex items-center justify-center gap-2"
