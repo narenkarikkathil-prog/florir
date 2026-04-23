@@ -341,7 +341,10 @@ export class GeminiService {
 
     const source = this.audioContext.createBufferSource();
     source.buffer = buffer;
-    const actualRate = this.playbackRate > 1.0 ? this.playbackRate : 1.0;
+    
+    // Explicitly bump pitch up by 15% across all speeds to enforce a much higher-pitched voice naturally
+    const PITCH_MULTIPLIER = 1.15;
+    const actualRate = (this.playbackRate > 1.0 ? this.playbackRate : 1.0) * PITCH_MULTIPLIER;
     source.playbackRate.value = actualRate;
     source.connect(this.audioContext.destination);
     
