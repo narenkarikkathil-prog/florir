@@ -13,9 +13,9 @@ const VOICES = [
 ];
 
 const SPEEDS = [
-  { label: 'Slow', value: 0.7 },
-  { label: 'Normal', value: 1.0 },
-  { label: 'Fast', value: 1.3 },
+  { label: 'Slower', value: 0.7 },
+  { label: 'Slow', value: 1.0 },
+  { label: 'Normal', value: 1.3 },
 ];
 
 interface SettingsModalProps {
