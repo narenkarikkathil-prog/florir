@@ -50,6 +50,7 @@ export default function Session() {
     translation?: string;
   }[]>([]);
   const [showTranslations, setShowTranslations] = useState(false);
+  const [activeWordTranslations, setActiveWordTranslations] = useState<Record<string, string>>({});
   const [accuracy, setAccuracy] = useState(100);
   const [prevAccuracy, setPrevAccuracy] = useState(100);
   const [mistakes, setMistakes] = useState<{ original: string; correction: string; explanation: string; severity: number; confidence: number }[]>([]);
@@ -448,6 +449,35 @@ export default function Session() {
     } catch (error) {
       console.error("Translation error:", error);
       return "";
+    }
+  };
+
+  const handleWordClick = async (msgIndex: number, wordIndex: number, wordText: string) => {
+    const key = `${msgIndex}-${wordIndex}`;
+    const cleanWord = wordText.replace(/[.,!?()[\]{}"']/g, "");
+    if (!cleanWord) return;
+    
+    // Set loading indicator
+    setActiveWordTranslations(prev => ({ ...prev, [key]: "..." }));
+    
+    const translation = await translateToEnglish(cleanWord);
+    if (translation) {
+      setActiveWordTranslations(prev => ({ ...prev, [key]: translation }));
+      // Optional: Auto-dismiss tooltip after a delay
+      setTimeout(() => {
+        setActiveWordTranslations(prev => {
+          const next = { ...prev };
+          delete next[key];
+          return next;
+        });
+      }, 3500);
+    } else {
+      // Revert if failed
+      setActiveWordTranslations(prev => {
+        const next = { ...prev };
+        delete next[key];
+        return next;
+      });
     }
   };
 
@@ -1100,23 +1130,6 @@ TONE:
             return [...filteredPrev, { role, text, timestamp: now }];
           });
 
-          // Translate if needed
-          if (showTranslations) {
-            translateToEnglish(text).then(translation => {
-              if (translation) {
-                setTranscript(prev => {
-                  const newTranscript = [...prev];
-                  for (let i = newTranscript.length - 1; i >= 0; i--) {
-                    if (newTranscript[i].text.includes(text)) {
-                      newTranscript[i] = { ...newTranscript[i], translation };
-                      break;
-                    }
-                  }
-                  return newTranscript;
-                });
-              }
-            });
-          }
         },
         onInterruption: () => {
           console.log("Interrupted");
@@ -1711,36 +1724,14 @@ TONE:
                     <h3 className="text-xl font-serif font-bold">Transcript</h3>
                     <div className="flex items-center gap-2">
                       <button 
-                        onClick={() => {
-                          const state = !showTranslations;
-                          setShowTranslations(state);
-                          if (state) {
-                            setTranscript(prev => {
-                              const next = [...prev];
-                              next.forEach((msg, i) => {
-                                if (!msg.translation) {
-                                  translateToEnglish(msg.text).then(t => {
-                                    if (t) {
-                                      setTranscript(latest => {
-                                        const update = [...latest];
-                                        if (update[i]) update[i] = { ...update[i], translation: t };
-                                        return update;
-                                      });
-                                    }
-                                  });
-                                }
-                              });
-                              return next;
-                            });
-                          }
-                        }}
+                        onClick={() => setShowTranslations(!showTranslations)}
                         className={cn(
                           "px-3 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-wider transition-all flex items-center gap-2",
                           showTranslations ? "bg-dark text-white" : "bg-beige/50 text-dark/60 hover:bg-beige"
                         )}
                       >
                         <Languages size={12} />
-                        {showTranslations ? "Hide Translations" : "Show Translations"}
+                        {showTranslations ? "Word Translate Active" : "Tap Words to Translate"}
                       </button>
                       <button 
                         onClick={() => setTranscript([])}
@@ -1772,16 +1763,31 @@ TONE:
                           "max-w-[90%] p-4 rounded-[24px] text-sm leading-relaxed shadow-sm transition-all duration-300",
                           msg.role === 'user' ? "bg-dark text-white rounded-tr-none" : "bg-[#F3EFE9] text-dark rounded-tl-none border border-beige/20"
                         )}>
-                          {msg.text}
-                          {showTranslations && msg.translation && (
-                            <div className="mt-2 pt-2 border-t border-current/10 text-[11px] italic opacity-80">
-                              {msg.translation}
+                          {showTranslations ? (
+                            <div className="flex flex-wrap gap-x-1 gap-y-1">
+                              {msg.text.split(' ').map((word, wIdx) => {
+                                const key = `${i}-${wIdx}`;
+                                const translation = activeWordTranslations[key];
+                                return (
+                                  <span key={wIdx} className="relative group inline-block">
+                                    <span 
+                                      onClick={() => handleWordClick(i, wIdx, word)}
+                                      className="cursor-pointer hover:bg-gold/30 hover:text-gold-dark rounded transition-colors px-1"
+                                      title="Tap to translate this word"
+                                    >
+                                      {word}
+                                    </span>
+                                    {translation && (
+                                      <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-1 px-2 py-1 bg-dark text-white text-[10px] font-bold tracking-wider uppercase rounded shadow-xl whitespace-nowrap z-50 pointer-events-none">
+                                        {translation}
+                                      </span>
+                                    )}
+                                  </span>
+                                );
+                              })}
                             </div>
-                          )}
-                          {showTranslations && !msg.translation && (
-                            <div className="mt-2 pt-2 border-t border-current/10 text-[10px] italic opacity-50 animate-pulse">
-                              Translating...
-                            </div>
+                          ) : (
+                            msg.text
                           )}
                         </div>
 
