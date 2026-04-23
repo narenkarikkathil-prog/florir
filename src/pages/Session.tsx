@@ -489,6 +489,13 @@ export default function Session() {
       return;
     }
 
+    // If we know quota is exhausted, skip Gemini TTS and go to fallback immediately
+    if (isQuotaExhaustedRef.current) {
+      setVoiceStatus('standard');
+      playBrowserTTS(text);
+      return;
+    }
+
     try {
       if (!geminiRef.current) {
         geminiRef.current = new GeminiService(liveKey, ttsKey);
@@ -504,17 +511,52 @@ export default function Session() {
     } catch (error: any) {
       console.error("TTS Error:", error);
       
-      if (retryCount < 2) {
-        console.log(`TTS error, retrying... (Attempt ${retryCount + 1})`);
-        setTimeout(() => playQuizAudio(text, retryCount + 1), 1000);
-        return;
+      // Handle Quota Error (429) with retry and fallback
+      let errorStr = "";
+      try {
+        errorStr = typeof error === 'string' ? error : JSON.stringify(error);
+      } catch (e) {
+        errorStr = error?.message || "";
       }
-      setVoiceStatus('error');
+
+      const isQuotaError = errorStr.includes('429') || 
+                          errorStr.includes('RESOURCE_EXHAUSTED') ||
+                          error?.status === 'RESOURCE_EXHAUSTED';
+
+      if (isQuotaError) {
+        isQuotaExhaustedRef.current = true;
+        // Reset quota flag after 1 minute
+        setTimeout(() => { isQuotaExhaustedRef.current = false; }, 60000);
+
+        if (retryCount < 1) {
+          console.log(`Quota hit, retrying in 2s... (Attempt ${retryCount + 1})`);
+          setTimeout(() => playQuizAudio(text, retryCount + 1), 2000);
+          return;
+        }
+        setVoiceStatus('standard');
+      } else {
+        setVoiceStatus('error');
+      }
+
+      playBrowserTTS(text);
+    }
+  };
+
+  const playBrowserTTS = (text: string) => {
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      switch (lang) {
+        case 'French': utterance.lang = 'fr-FR'; break;
+        case 'Spanish': utterance.lang = 'es-ES'; break;
+        default: utterance.lang = 'en-US';
+      }
+      window.speechSynthesis.speak(utterance);
     }
   };
 
   const prefetchAudio = async (text: string) => {
-    if (!text || audioCacheRef.current[text] || prefetchedAudioRef.current[text]) return;
+    if (!text || audioCacheRef.current[text] || prefetchedAudioRef.current[text] || isQuotaExhaustedRef.current) return;
     
     const liveKey = import.meta.env.VITE_GEMINI_LIVE_API_KEY || import.meta.env.VITE_VERTEX_API_KEY || import.meta.env.GEMINI_API_KEY;
     const ttsKey = import.meta.env.VITE_GEMINI_TTS_API_KEY || import.meta.env.VITE_VERTEX_API_KEY || import.meta.env.GEMINI_API_KEY;
@@ -770,22 +812,6 @@ Return ONLY valid JSON in this structure:
   };
 
   const toggleSession = async () => {
-    // Unlock AudioContext for mobile Safari immediately upon user interaction
-    if (!quizAudioContextRef.current && (mode?.includes('vocabulary') || mode?.includes('listening'))) {
-      const AudioCtx = window.AudioContext || (window as any).webkitAudioContext;
-      if (AudioCtx) {
-        quizAudioContextRef.current = new AudioCtx({ sampleRate: 24000 });
-        const buffer = quizAudioContextRef.current.createBuffer(1, 1, 22050);
-        const source = quizAudioContextRef.current.createBufferSource();
-        source.buffer = buffer;
-        source.connect(quizAudioContextRef.current.destination);
-        source.start(0);
-        if (quizAudioContextRef.current.state === 'suspended') {
-          quizAudioContextRef.current.resume();
-        }
-      }
-    }
-
     if (mode?.includes('vocabulary') || mode?.includes('listening')) {
       if (isActive) {
         setIsActive(false);
@@ -1409,7 +1435,15 @@ TONE:
                   </button>
                   <div className="flex flex-col">
                     <h3 className="text-2xl font-serif font-bold">Listen and Answer</h3>
-
+                    {voiceStatus === 'standard' && (
+                      <motion.span 
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        className="text-[10px] font-bold text-dark/30 uppercase tracking-widest flex items-center gap-1 mt-1"
+                      >
+                        <AlertCircle size={10} /> Standard Voice (Quota Limit)
+                      </motion.span>
+                    )}
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
