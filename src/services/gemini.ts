@@ -9,7 +9,7 @@ export class GeminiService {
   private processor: ScriptProcessorNode | null = null;
   private nextStartTime: number = 0;
   private playbackRate: number = 1.0;
-  private voiceName: string = "Aoede";
+  private voiceName: string = "Kore";
 
   constructor(liveKey: string, ttsKey?: string) {
     this.liveAi = new GoogleGenAI({ apiKey: liveKey });
@@ -341,9 +341,9 @@ export class GeminiService {
 
     const source = this.audioContext.createBufferSource();
     source.buffer = buffer;
-    // Always play at normal speed (1.0) to prevent Web Audio from pitch-shifting
-    // Slow speeds are now handled via text-based word pauses or prompt instructions.
-    source.playbackRate.value = 1.0; 
+    // Enable pitch-shift web audio speeding ONLY for Fast speed (>1.0)
+    // Slow speeds (<1.0) are kept at 1.0 to prevent making the voice masculine.
+    source.playbackRate.value = this.playbackRate > 1.0 ? this.playbackRate : 1.0; 
     source.connect(this.audioContext.destination);
     
     const startTime = Math.max(this.audioContext.currentTime, this.nextStartTime);

@@ -408,7 +408,7 @@ export default function APSession({ mode }: { mode: 'ap-simulated' | 'ap-speakin
     isSpeakingRef.current = true;
     setIsSpeaking(true);
     try {
-      const base64Audio = await geminiRef.current.generateSpeech(text, 'Aoede');
+      const base64Audio = await geminiRef.current.generateSpeech(text, 'Kore');
       if (base64Audio) {
         if (!audioContextRef.current || audioContextRef.current.state === 'closed') {
           audioContextRef.current = new AudioContext();

@@ -5,7 +5,7 @@ import { supabase } from '@/src/lib/supabase';
 import { cn } from '@/src/lib/utils';
 
 const VOICES = [
-  { id: 'Aoede', name: 'Aoede (Recommended)', desc: 'Soft and calm female voice - Best for learning' },
+  { id: 'Kore', name: 'Kore (Recommended)', desc: 'Soft and calm female voice - Best for learning' },
   { id: 'Zephyr', name: 'Zephyr', desc: 'Balanced and clear' },
   { id: 'Puck', name: 'Puck', desc: 'Energetic and bright' },
   { id: 'Charon', name: 'Charon', desc: 'Deep and steady' },
@@ -24,7 +24,7 @@ interface SettingsModalProps {
 }
 
 export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
-  const [voice, setVoice] = useState('Aoede');
+  const [voice, setVoice] = useState('Kore');
   const [speed, setSpeed] = useState(1.0);
   const [isSaving, setIsSaving] = useState(false);
 
@@ -39,7 +39,7 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
     const localSettings = localStorage.getItem('user_settings');
     if (localSettings) {
       const parsed = JSON.parse(localSettings);
-      setVoice('Aoede'); // Force Aoede
+      setVoice('Kore'); // Force Kore
       setSpeed(parsed.playback_speed || 1.0);
     }
 
@@ -53,9 +53,9 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
         .single();
       
       if (profile?.settings) {
-        setVoice('Aoede'); // Force Aoede
+        setVoice('Kore'); // Force Kore
         setSpeed(profile.settings.playback_speed || 1.0);
-        localStorage.setItem('user_settings', JSON.stringify({ ...profile.settings, voice_name: 'Aoede' }));
+        localStorage.setItem('user_settings', JSON.stringify({ ...profile.settings, voice_name: 'Kore' }));
       }
     }
   };
@@ -63,7 +63,7 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
   const handleSave = async () => {
     setIsSaving(true);
     const newSettings = {
-      voice_name: 'Aoede', // Force Aoede
+      voice_name: 'Kore', // Force Kore
       playback_speed: speed
     };
     
@@ -112,14 +112,14 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
             </div>
 
             <div className="p-8 space-y-8 max-h-[70vh] overflow-y-auto custom-scrollbar">
-              {/* Voice Selection - Removed as per request, keeping only Aoede internally */}
+              {/* Voice Selection - Removed as per request, keeping only Kore internally */}
               <div className="bg-beige/20 p-6 rounded-3xl border border-beige-mid/10">
                 <div className="flex items-center gap-3 text-gold mb-2">
                   <Volume2 size={20} />
                   <span className="font-serif font-bold text-lg text-dark">Voice Profile</span>
                 </div>
                 <p className="text-sm text-dark/60">
-                  Using <strong>Aoede</strong> — our most natural and clear female voice profile optimized for language learning.
+                  Using <strong>Kore</strong> — our most natural and clear female voice profile optimized for language learning.
                 </p>
               </div>
 
