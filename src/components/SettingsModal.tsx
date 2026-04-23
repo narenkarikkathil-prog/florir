@@ -119,7 +119,7 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                   <span className="font-serif font-bold text-lg text-dark">Voice Profile</span>
                 </div>
                 <p className="text-sm text-dark/60">
-                  Using a <strong>feminine, natural voice profile</strong> optimized for clear pronunciation and language learning.
+                  Using a <strong>natural voice profile</strong> optimized for clear pronunciation and language learning.
                 </p>
               </div>
 

@@ -341,14 +341,13 @@ export class GeminiService {
 
     const source = this.audioContext.createBufferSource();
     source.buffer = buffer;
-    // Always play at normal speed (1.0) to prevent Web Audio from pitch-shifting or buffer clipping.
-    // Both Slow and Fast speeds are handled by the AI system prompt dynamically modifying the speaking cadence.
-    source.playbackRate.value = 1.0;
+    const actualRate = this.playbackRate > 1.0 ? this.playbackRate : 1.0;
+    source.playbackRate.value = actualRate;
     source.connect(this.audioContext.destination);
     
     const startTime = Math.max(this.audioContext.currentTime, this.nextStartTime);
     source.start(startTime);
-    this.nextStartTime = startTime + buffer.duration;
+    this.nextStartTime = startTime + (buffer.duration / actualRate);
   }
 
   private stopPlayback() {
