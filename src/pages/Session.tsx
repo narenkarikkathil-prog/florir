@@ -8,7 +8,6 @@ import { GeminiService } from '@/src/services/gemini';
 import { Language, UserLevel } from '@/src/types';
 import { supabase } from '@/src/lib/supabase';
 import SettingsModal from '@/src/components/SettingsModal';
-import vocabularyData from '@/src/data/vocabulary.json';
 
 import { FlowerLogo, BloomingFlower } from '@/src/components/FlowerLogo';
 
@@ -64,7 +63,7 @@ export default function Session() {
   const [selectedSituation, setSelectedSituation] = useState<string | null>(null);
   const [currentSubScenario, setCurrentSubScenario] = useState<string>("");
   const [questionCount, setQuestionCount] = useState(0);
-  const [totalQuestions] = useState(7);
+  const [totalQuestions] = useState(10);
   const [correctCount, setCorrectCount] = useState(0);
   const [level, setLevel] = useState<'beginner' | 'intermediate' | 'hard'>('beginner');
   const [quizQuestions, setQuizQuestions] = useState<any[]>([]);
@@ -89,7 +88,7 @@ export default function Session() {
   const [voiceStatus, setVoiceStatus] = useState<'high-fidelity' | 'standard' | 'error'>('high-fidelity');
   const isQuotaExhaustedRef = useRef<boolean>(false);
   const audioCacheRef = useRef<Record<string, string>>({});
-  const prefetchedAudioRef = useRef<Record<string, Promise<string | null> | string>>({});
+  const prefetchedAudioRef = useRef<Record<string, string>>({});
 
   const geminiRef = useRef<GeminiService | null>(null);
   const quizAudioContextRef = useRef<AudioContext | null>(null);
@@ -469,22 +468,31 @@ export default function Session() {
     
     if (!ttsKey) return;
 
+    // Stop any ongoing browser speech to prevent overlap
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+    }
+
     // Check prefetch first
     if (prefetchedAudioRef.current[text]) {
-      let base64Audio = prefetchedAudioRef.current[text];
-      if (base64Audio instanceof Promise) {
-        base64Audio = await base64Audio;
-      }
-      if (base64Audio && typeof base64Audio === 'string') {
-        playFromBase64(base64Audio);
-        return;
-      }
+      const base64Audio = prefetchedAudioRef.current[text];
+      playFromBase64(base64Audio);
+      setVoiceStatus('high-fidelity');
+      return;
     }
 
     // Check cache next
     if (audioCacheRef.current[text]) {
       const base64Audio = audioCacheRef.current[text];
       playFromBase64(base64Audio);
+      setVoiceStatus('high-fidelity');
+      return;
+    }
+
+    // If we know quota is exhausted, skip Gemini TTS and go to fallback immediately
+    if (isQuotaExhaustedRef.current) {
+      setVoiceStatus('standard');
+      playBrowserTTS(text);
       return;
     }
 
@@ -497,11 +505,13 @@ export default function Session() {
       if (base64Audio) {
         audioCacheRef.current[text] = base64Audio; // Cache it
         playFromBase64(base64Audio);
+        setVoiceStatus('high-fidelity');
         isQuotaExhaustedRef.current = false; // Reset if successful
       }
     } catch (error: any) {
       console.error("TTS Error:", error);
       
+      // Handle Quota Error (429) with retry and fallback
       let errorStr = "";
       try {
         errorStr = typeof error === 'string' ? error : JSON.stringify(error);
@@ -515,10 +525,33 @@ export default function Session() {
 
       if (isQuotaError) {
         isQuotaExhaustedRef.current = true;
+        // Reset quota flag after 1 minute
         setTimeout(() => { isQuotaExhaustedRef.current = false; }, 60000);
-        console.log(`Quota hit, retrying in 2s... (Attempt ${retryCount + 1})`);
-        setTimeout(() => playQuizAudio(text, retryCount + 1), 2000);
+
+        if (retryCount < 1) {
+          console.log(`Quota hit, retrying in 2s... (Attempt ${retryCount + 1})`);
+          setTimeout(() => playQuizAudio(text, retryCount + 1), 2000);
+          return;
+        }
+        setVoiceStatus('standard');
+      } else {
+        setVoiceStatus('error');
       }
+
+      playBrowserTTS(text);
+    }
+  };
+
+  const playBrowserTTS = (text: string) => {
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      switch (lang) {
+        case 'French': utterance.lang = 'fr-FR'; break;
+        case 'Spanish': utterance.lang = 'es-ES'; break;
+        default: utterance.lang = 'en-US';
+      }
+      window.speechSynthesis.speak(utterance);
     }
   };
 
@@ -534,11 +567,7 @@ export default function Session() {
       if (!geminiRef.current) {
         geminiRef.current = new GeminiService(liveKey, ttsKey);
       }
-      // Store the promise immediately so playQuizAudio can await it if called before completion
-      const promise = geminiRef.current.generateSpeech(text);
-      prefetchedAudioRef.current[text] = promise;
-      
-      const base64Audio = await promise;
+      const base64Audio = await geminiRef.current.generateSpeech(text);
       if (base64Audio) {
         prefetchedAudioRef.current[text] = base64Audio;
         isQuotaExhaustedRef.current = false;
@@ -653,22 +682,7 @@ export default function Session() {
       if (!geminiRef.current) {
         geminiRef.current = new GeminiService(liveKey, ttsKey);
       }
-
-      // Check predefined vocabulary sets first
-      let quizData: any = null;
-      const progressKey = `vocab_progress_${lang}_${level}`;
-      const completedSets = parseInt(localStorage.getItem(progressKey) || '0', 10);
-      
-      const availableSets = (vocabularyData as any)[lang]?.[level] || [];
-      if (completedSets < availableSets.length) {
-        // Use predefined set
-        quizData = availableSets[completedSets];
-        localStorage.setItem(progressKey, (completedSets + 1).toString());
-      }
-
-      if (!quizData) {
-        // Fallback to Gemini AI Generation if no predefined sets are available or we ran out
-        const response = await geminiRef.current.generateContent({
+      const response = await geminiRef.current.generateContent({
         model: "gemini-2.5-flash",
         contents: `You are generating a ${lang} listening comprehension quiz focused on vocabulary recognition.
 
@@ -767,9 +781,7 @@ Return ONLY valid JSON in this structure:
         }
       });
 
-        quizData = JSON.parse(response.text);
-      }
-
+      const quizData = JSON.parse(response.text);
       setQuizQuestions(quizData.questions);
       setCurrentQuestionIndex(0);
       setQuestionCount(1);
@@ -1439,6 +1451,15 @@ TONE:
                   </button>
                   <div className="flex flex-col">
                     <h3 className="text-2xl font-serif font-bold">Listen and Answer</h3>
+                    {voiceStatus === 'standard' && (
+                      <motion.span 
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        className="text-[10px] font-bold text-dark/30 uppercase tracking-widest flex items-center gap-1 mt-1"
+                      >
+                        <AlertCircle size={10} /> Standard Voice (Quota Limit)
+                      </motion.span>
+                    )}
                   </div>
                 </div>
                 <div className="flex items-center gap-3">

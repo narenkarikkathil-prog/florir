@@ -223,7 +223,6 @@ export default function Dashboard() {
               {activeTab === 'general' && <motion.div layoutId="tab" className="absolute inset-0 bg-gold rounded-xl -z-10 shadow-sm" transition={{ type: "spring", bounce: 0.2, duration: 0.6 }} />}
               General Learning
             </button>
-            {/* AP Exam tab temporarily disabled
             <button
               onClick={() => setActiveTab('ap')}
               className={cn(
@@ -234,7 +233,6 @@ export default function Dashboard() {
               {activeTab === 'ap' && <motion.div layoutId="tab" className="absolute inset-0 bg-gold rounded-xl -z-10 shadow-sm" transition={{ type: "spring", bounce: 0.2, duration: 0.6 }} />}
               AP Exam Prep
             </button>
-            */}
           </div>
 
           {/* Mode Cards */}
