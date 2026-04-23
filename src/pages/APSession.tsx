@@ -7,6 +7,7 @@ import { GeminiService } from '@/src/services/gemini';
 import { Language } from '@/src/types';
 import { supabase } from '@/src/lib/supabase';
 import { Modality } from '@google/genai';
+import confetti from 'canvas-confetti';
 
 // ─── AP Conversation Prompts (20, progressively harder) ─── 
 
@@ -271,7 +272,7 @@ const AP_CULTURAL_COMPARISONS: {
 
 // ─── Types ─── 
 
-type APPhase = 'select' | 'preview' | 'conversation' | 'recording' | 'grading' | 'results';
+type APPhase = 'select' | 'preview' | 'conversation' | 'turn-grading' | 'turn-results' | 'recording' | 'grading' | 'results';
 
 // ─── Component ─── 
 
@@ -286,12 +287,13 @@ export default function APSession({ mode }: { mode: 'ap-simulated' | 'ap-speakin
   const [timer, setTimer] = useState(0);
   const [maxTimer, setMaxTimer] = useState(0);
   const [currentTurnIndex, setCurrentTurnIndex] = useState(0);
-  const [userResponses, setUserResponses] = useState<string[]>([]);
+  const [userResponses, setUserResponses] = useState<{text: string, audioBase64: string | null}[]>([]);
   const [isRecording, setIsRecording] = useState(false);
   const [gradeResult, setGradeResult] = useState<any>(null);
   const [isGrading, setIsGrading] = useState(false);
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [showTranscript, setShowTranscript] = useState(false);
+  const [currentTranscript, setCurrentTranscript] = useState('');
 
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
@@ -302,8 +304,24 @@ export default function APSession({ mode }: { mode: 'ap-simulated' | 'ap-speakin
   const currentRecordingRef = useRef<string>('');
   const isSpeakingRef = useRef<boolean>(false);
   const shouldRecordRef = useRef<boolean>(false);
+  const prefetchedAudioRef = useRef<{ [text: string]: string }>({});
 
   const isConversation = mode === 'ap-simulated';
+
+  // Pre-fetch TTS when a prompt is selected
+  useEffect(() => {
+    if (selectedPromptId && isConversation && geminiRef.current) {
+      const conv = AP_CONVERSATIONS.find(c => c.id === selectedPromptId);
+      if (conv && conv.turns.length > 0) {
+        const text = conv.turns[0].text;
+        if (!prefetchedAudioRef.current[text]) {
+          geminiRef.current.generateSpeech(text, 'Kore').then(audio => {
+            if (audio) prefetchedAudioRef.current[text] = audio;
+          });
+        }
+      }
+    }
+  }, [selectedPromptId, isConversation]);
   const prompts = isConversation ? AP_CONVERSATIONS : AP_CULTURAL_COMPARISONS;
 
   // Load completed IDs from Supabase (with localStorage fallback)
@@ -408,7 +426,12 @@ export default function APSession({ mode }: { mode: 'ap-simulated' | 'ap-speakin
     isSpeakingRef.current = true;
     setIsSpeaking(true);
     try {
-      const base64Audio = await geminiRef.current.generateSpeech(text, 'Kore');
+      let base64Audio = prefetchedAudioRef.current[text];
+      if (!base64Audio) {
+        base64Audio = await geminiRef.current.generateSpeech(text, 'Kore');
+        if (base64Audio) prefetchedAudioRef.current[text] = base64Audio;
+      }
+      
       if (base64Audio) {
         if (!audioContextRef.current || audioContextRef.current.state === 'closed') {
           audioContextRef.current = new AudioContext();
@@ -468,6 +491,7 @@ export default function APSession({ mode }: { mode: 'ap-simulated' | 'ap-speakin
     // Reset ALL transcript state for this recording session
     accumulatedTextRef.current = '';
     currentRecordingRef.current = '';
+    setCurrentTranscript('');
     shouldRecordRef.current = true;
 
     const createRecognition = () => {
@@ -485,6 +509,7 @@ export default function APSession({ mode }: { mode: 'ap-simulated' | 'ap-speakin
         }
         // APPEND to accumulated text (from previous auto-restarts)
         currentRecordingRef.current = accumulatedTextRef.current + sessionTranscript;
+        setCurrentTranscript(currentRecordingRef.current);
         console.log('[STT] Captured:', currentRecordingRef.current);
       };
 
@@ -541,10 +566,44 @@ export default function APSession({ mode }: { mode: 'ap-simulated' | 'ap-speakin
       mediaRecorderRef.current.stream.getTracks().forEach(t => t.stop());
     }
     setIsRecording(false);
-    const result = currentRecordingRef.current;
-    console.log('[STT] Final captured text:', result);
-    return result;
+    return currentRecordingRef.current;
   }, []);
+
+  const stopSTTAndGetAudio = (): Promise<{ text: string, audioBase64: string | null }> => {
+    return new Promise((resolve) => {
+      shouldRecordRef.current = false;
+      if (recognitionRef.current) {
+        try { recognitionRef.current.stop(); } catch {}
+        recognitionRef.current = null;
+      }
+      
+      const textResult = currentRecordingRef.current;
+      setIsRecording(false);
+      
+      if (!mediaRecorderRef.current || mediaRecorderRef.current.state === 'inactive') {
+        resolve({ text: textResult, audioBase64: null });
+        return;
+      }
+
+      mediaRecorderRef.current.onstop = () => {
+        if (audioChunksRef.current.length === 0) {
+          resolve({ text: textResult, audioBase64: null });
+          return;
+        }
+        const audioBlob = new Blob(audioChunksRef.current, { type: 'audio/webm' });
+        const reader = new FileReader();
+        reader.readAsDataURL(audioBlob);
+        reader.onloadend = () => {
+          const base64data = (reader.result as string).split(',')[1];
+          resolve({ text: textResult, audioBase64: base64data });
+        };
+        mediaRecorderRef.current?.stream.getTracks().forEach(t => t.stop());
+      };
+      
+      try { mediaRecorderRef.current.stop(); } 
+      catch { resolve({ text: textResult, audioBase64: null }); }
+    });
+  };
 
   // ─── Timer helpers ─── 
   const startTimer = (seconds: number, onComplete: () => void) => {
@@ -564,18 +623,18 @@ export default function APSession({ mode }: { mode: 'ap-simulated' | 'ap-speakin
   };
 
   // ─── AP Conversation Flow ─── 
-  const userResponsesRef = useRef<string[]>([]);
+  const userResponsesRef = useRef<{text: string, audioBase64: string | null}[]>([]);
 
   const startConversation = async () => {
     if (!selectedPromptId) return;
     const conv = AP_CONVERSATIONS.find(c => c.id === selectedPromptId)!;
-    setPhase('preview');
+    setPhase('conversation');
     setCurrentTurnIndex(0);
     setUserResponses([]);
     userResponsesRef.current = [];
 
-    // 60s preview
-    startTimer(60, () => runConversationTurn(conv, 0));
+    // Immediately start without preview wait
+    runConversationTurn(conv, 0);
   };
 
   const runConversationTurn = async (conv: typeof AP_CONVERSATIONS[0], turnIdx: number) => {
@@ -596,18 +655,36 @@ export default function APSession({ mode }: { mode: 'ap-simulated' | 'ap-speakin
     setPhase('conversation');
     setCurrentTurnIndex(turnIdx);
 
+    // Stop listening before AI speaks!
+    stopSTT();
+
     // AI speaks (timer hidden during this)
     await speakText(conv.turns[turnIdx].text);
 
     // NOW start STT + 20s timer for user response
     await startSTT();
+    
+    // Prefetch next AI turn while user is speaking to eliminate delay
+    if (turnIdx + 1 < conv.turns.length && geminiRef.current) {
+      const nextText = conv.turns[turnIdx + 1].text;
+      if (!prefetchedAudioRef.current[nextText]) {
+        geminiRef.current.generateSpeech(nextText, 'Kore').then(audio => {
+          if (audio) prefetchedAudioRef.current[nextText] = audio;
+        });
+      }
+    }
+
     startTimer(20, async () => {
-      const response = stopSTT();
-      console.log(`[Turn ${turnIdx + 1}] User said: "${response}"`);
-      userResponsesRef.current = [...userResponsesRef.current, response];
+      const responseObj = await stopSTTAndGetAudio();
+      console.log(`[Turn ${turnIdx + 1}] User said: "${responseObj.text}", audio: ${responseObj.audioBase64 ? 'Yes' : 'No'}`);
+      userResponsesRef.current = [...userResponsesRef.current, responseObj];
       setUserResponses([...userResponsesRef.current]);
-      // Move to next turn
-      await runConversationTurn(conv, turnIdx + 1);
+      
+      // Instead of immediately moving to the next turn, we grade this turn
+      setPhase('turn-grading');
+      setIsRecording(false);
+      setTimer(0);
+      await gradeSingleTurn(conv, turnIdx, responseObj);
     });
   };
 
@@ -620,51 +697,103 @@ export default function APSession({ mode }: { mode: 'ap-simulated' | 'ap-speakin
     // 2 minute timer
     startSTT();
     startTimer(120, async () => {
-      const response = stopSTT();
-      setUserResponses([response]);
+      const responseObj = await stopSTTAndGetAudio();
+      setUserResponses([responseObj]);
       setPhase('grading');
       const prompt = AP_CULTURAL_COMPARISONS.find(p => p.id === selectedPromptId)!;
-      await gradeCulturalComparison(prompt, response);
+      await gradeCulturalComparison(prompt, responseObj);
     });
   };
 
   // ─── Grading (single Gemini text call — cheap) ─── 
-  const gradeConversation = async (conv: typeof AP_CONVERSATIONS[0], responses: string[]) => {
+  const computeGradeResult = (raw: { flow: number, grammar: number, correctness: number }) => {
+    const flow = raw.flow || 3;
+    const grammar = raw.grammar || 3;
+    const correctness = raw.correctness || 3;
+    
+    const score = Math.round((flow + grammar + correctness) / 3);
+    
+    if (score >= 3) {
+      confetti({
+        particleCount: 150,
+        spread: 80,
+        origin: { y: 0.6 },
+        colors: ['#D4AF37', '#FAF9F6', '#8FA8FF'],
+        zIndex: 100
+      });
+    }
+
+    let comment = "Keep practicing! Making mistakes is part of learning.";
+    if (score === 5) comment = "Excellent work! Your response was nearly perfect and very natural.";
+    else if (score === 4) comment = "Great job! Strong communication with just a few minor slip-ups.";
+    else if (score === 3) comment = "Good effort! You're getting the hang of it, keep practicing your flow.";
+
+    const tips = [];
+    if (flow <= grammar && flow <= correctness && flow < 5) {
+      tips.push("Try to speak more fluidly, without long pauses. It's okay to use filler words like 'euh' instead of silence.");
+    } else if (grammar <= flow && grammar <= correctness && grammar < 5) {
+      tips.push("Pay close attention to your verb conjugations and noun genders.");
+    } else if (correctness < 5) {
+      tips.push("Make sure you are directly answering the prompt and using appropriate vocabulary.");
+    } else {
+      tips.push("Keep practicing your listening skills to maintain this high level of fluency!");
+    }
+
+    return {
+      score,
+      overallComment: comment,
+      maintainingConversation: { score: flow, comment: "Flow & conversational pacing" },
+      grammar: { score: grammar, comment: "Grammar & structure" },
+      vocabulary: { score: correctness, comment: "Vocabulary & accuracy" },
+      pronunciation: { score: correctness, comment: "Pronunciation & clarity" },
+      treatmentOfTopic: { score: correctness, comment: "Relevance & accuracy" },
+      comparison: { score: flow, comment: "Flow & comparison delivery" },
+      tips: [tips[0]] // Ensure exactly one feedback/tip is shown
+    };
+  };
+
+  const gradeConversation = async (conv: typeof AP_CONVERSATIONS[0], responses: { text: string, audioBase64: string | null }[]) => {
     setIsGrading(true);
     try {
       const liveKey = import.meta.env.VITE_GEMINI_LIVE_API_KEY || import.meta.env.VITE_VERTEX_API_KEY;
       if (!liveKey || !geminiRef.current) return;
 
       const transcriptText = conv.turns.map((t, i) => 
-        `AI: ${t.text}\nUser: ${responses[i] || '(no response)'}`
+        `AI: ${t.text}\nUser: ${responses[i]?.text || '(no response)'}`
       ).join('\n\n');
+
+      const contents: any[] = [];
+      responses.forEach(r => {
+        if (r.audioBase64) {
+          contents.push({
+            inlineData: { mimeType: "audio/webm", data: r.audioBase64 }
+          });
+        }
+      });
+      
+      contents.push({
+        text: `You are an AP French exam grader. Grade the overall conversation. Be very lenient, constructive and encouraging. Do not penalize minor mistakes harshly. Reply ONLY with JSON containing 3 numbers (1-5) representing flow, grammar, and correctness. Grade based on audio if present.
+
+Transcript (for reference):
+${transcriptText}
+
+Return ONLY valid JSON (no markdown):
+{
+  "flow": <1-5>,
+  "grammar": <1-5>,
+  "correctness": <1-5>
+}`
+      });
 
       const response = await geminiRef.current.generateContent({
         model: 'gemini-2.5-flash',
-        contents: `You are an AP French exam grader. Grade this simulated conversation out of 5 using AP standards.
-
-Conversation topic: ${conv.title}
-Introduction: ${conv.intro}
-
-Transcript:
-${transcriptText}
-
-Return ONLY valid JSON (no markdown, no code fences):
-{
-  "score": <1-5>,
-  "maintainingConversation": { "score": <1-5>, "comment": "<brief>" },
-  "vocabulary": { "score": <1-5>, "comment": "<brief>" },  
-  "grammar": { "score": <1-5>, "comment": "<brief>" },
-  "pronunciation": { "score": <1-5>, "comment": "<brief>" },
-  "overallComment": "<2-3 sentences>",
-  "tips": ["<tip1>", "<tip2>", "<tip3>"]
-}`,
+        contents: [{ parts: contents }],
       });
       
       const text = response.text || '';
       const jsonStr = text.replace(/```json\s*/g, '').replace(/```\s*/g, '').trim();
-      const result = JSON.parse(jsonStr);
-      setGradeResult(result);
+      const rawResult = JSON.parse(jsonStr);
+      setGradeResult(computeGradeResult(rawResult));
       saveCompleted(selectedPromptId!);
     } catch (e) {
       console.error('Grading error:', e);
@@ -674,32 +803,40 @@ Return ONLY valid JSON (no markdown, no code fences):
     setPhase('results');
   };
 
-  const gradeCulturalComparison = async (prompt: typeof AP_CULTURAL_COMPARISONS[0], response: string) => {
+  const gradeCulturalComparison = async (prompt: typeof AP_CULTURAL_COMPARISONS[0], response: { text: string, audioBase64: string | null }) => {
     setIsGrading(true);
     try {
       if (!geminiRef.current) return;
-      const genResponse = await geminiRef.current.generateContent({
-        model: 'gemini-2.5-flash',
-        contents: `You are an AP French exam grader. Grade this cultural comparison speaking task out of 5 using AP standards.
+      
+      const contents: any[] = [];
+      if (response.audioBase64) {
+        contents.push({
+          inlineData: { mimeType: "audio/webm", data: response.audioBase64 }
+        });
+      }
+      
+      contents.push({
+        text: `You are an AP French exam grader. Grade this cultural comparison task. Be very lenient, constructive and encouraging. Do not penalize minor mistakes harshly. Reply ONLY with JSON containing 3 numbers (1-5) representing flow, grammar, and correctness. Grade based on audio if present.
 
 Prompt: ${prompt.prompt}
-Student response (2 min): ${response || '(no response)'}
+Student response transcript (for reference): ${response.text || '(no response)'}
 
-Return ONLY valid JSON (no markdown, no code fences):
+Return ONLY valid JSON (no markdown):
 {
-  "score": <1-5>,
-  "treatmentOfTopic": { "score": <1-5>, "comment": "<brief>" },
-  "comparison": { "score": <1-5>, "comment": "<brief>" },
-  "vocabulary": { "score": <1-5>, "comment": "<brief>" },
-  "grammar": { "score": <1-5>, "comment": "<brief>" },
-  "overallComment": "<2-3 sentences>",
-  "tips": ["<tip1>", "<tip2>", "<tip3>"]
-}`,
+  "flow": <1-5>,
+  "grammar": <1-5>,
+  "correctness": <1-5>
+}`
+      });
+
+      const genResponse = await geminiRef.current.generateContent({
+        model: 'gemini-2.5-flash',
+        contents: [{ parts: contents }],
       });
       const text = genResponse.text || '';
       const jsonStr = text.replace(/```json\s*/g, '').replace(/```\s*/g, '').trim();
-      const result = JSON.parse(jsonStr);
-      setGradeResult(result);
+      const rawResult = JSON.parse(jsonStr);
+      setGradeResult(computeGradeResult(rawResult));
       saveCompleted(selectedPromptId!);
     } catch (e) {
       console.error('Grading error:', e);
@@ -707,6 +844,50 @@ Return ONLY valid JSON (no markdown, no code fences):
     }
     setIsGrading(false);
     setPhase('results');
+  };
+
+  const gradeSingleTurn = async (conv: typeof AP_CONVERSATIONS[0], turnIdx: number, response: { text: string, audioBase64: string | null }) => {
+    setIsGrading(true);
+    try {
+      if (!geminiRef.current) return;
+      const aiText = conv.turns[turnIdx].text;
+      
+      const contents: any[] = [];
+      if (response.audioBase64) {
+        contents.push({
+          inlineData: { mimeType: "audio/webm", data: response.audioBase64 }
+        });
+      }
+      
+      contents.push({
+        text: `You are an AP French exam grader. Grade this single response. Be very lenient, constructive and encouraging. Do not penalize minor mistakes harshly. Reply ONLY with JSON containing 3 numbers (1-5) representing flow, grammar, and correctness. Grade based on audio if present.
+        
+Conversation topic: ${conv.title}
+AI said: ${aiText}
+Student responded transcript: ${response.text || '(no response)'}
+
+Return ONLY valid JSON (no markdown):
+{
+  "flow": <1-5>,
+  "grammar": <1-5>,
+  "correctness": <1-5>
+}`
+      });
+
+      const genResponse = await geminiRef.current.generateContent({
+        model: 'gemini-2.5-flash',
+        contents: [{ parts: contents }],
+      });
+      const text = genResponse.text || '';
+      const jsonStr = text.replace(/```json\s*/g, '').replace(/```\s*/g, '').trim();
+      const rawResult = JSON.parse(jsonStr);
+      setGradeResult(computeGradeResult(rawResult));
+    } catch (e) {
+      console.error('Grading error:', e);
+      setGradeResult({ score: 0, overallComment: 'Unable to grade. Please try again.', tips: [] });
+    }
+    setIsGrading(false);
+    setPhase('turn-results');
   };
 
   const resetSession = () => {
@@ -916,6 +1097,15 @@ Return ONLY valid JSON (no markdown, no code fences):
               <div className="w-3 h-3 rounded-full bg-red-500 animate-pulse" />
               <span className="font-bold text-red-600">Your turn — speak now</span>
             </div>
+
+            {currentTranscript && (
+              <div className="bg-white/80 rounded-2xl p-4 border border-beige-mid/20 shadow-sm max-w-lg mx-auto text-left mt-2 max-h-32 overflow-y-auto custom-scrollbar">
+                <p className="text-dark/80 text-base font-serif italic leading-relaxed">
+                  "{currentTranscript}"
+                </p>
+              </div>
+            )}
+
             <div className="text-4xl md:text-6xl font-bold text-gold font-mono">{timer}s</div>
             <div className="w-48 mx-auto h-2 bg-beige-mid/20 rounded-full overflow-hidden">
               <motion.div 
@@ -946,6 +1136,15 @@ Return ONLY valid JSON (no markdown, no code fences):
             <div className="w-3 h-3 rounded-full bg-red-500 animate-pulse" />
             <span className="font-bold text-red-600">Speaking — {minutes}:{seconds.toString().padStart(2, '0')}</span>
           </div>
+
+          {currentTranscript && (
+            <div className="bg-white/80 rounded-2xl p-4 border border-beige-mid/20 shadow-sm mx-auto text-left max-h-40 overflow-y-auto custom-scrollbar mt-4 mb-4">
+              <p className="text-dark/80 text-base font-serif italic leading-relaxed">
+                "{currentTranscript}"
+              </p>
+            </div>
+          )}
+
           <div className="text-5xl md:text-7xl font-bold text-gold font-mono">
             {minutes}:{seconds.toString().padStart(2, '0')}
           </div>
@@ -969,6 +1168,56 @@ Return ONLY valid JSON (no markdown, no code fences):
       <p className="text-sm text-dark/30">Using AP French exam standards</p>
     </div>
   );
+
+  // ─── Render: Turn Results ─── 
+  const renderTurnResults = () => {
+    if (!gradeResult) return null;
+    const score = gradeResult.score || 0;
+    const conv = AP_CONVERSATIONS.find(c => c.id === selectedPromptId)!;
+    
+    return (
+      <div className="space-y-6">
+        <div className="text-center bg-gradient-to-br from-gold/10 to-petal/10 rounded-[32px] p-8 border border-gold/20">
+          <div className="text-4xl md:text-5xl font-bold text-gold mb-2">{score} / 5</div>
+          <p className="text-dark/50 text-sm">Turn Score</p>
+        </div>
+        
+        <div className="bg-white rounded-2xl border border-beige-mid/20 p-6">
+          <h3 className="font-serif font-bold mb-2">Feedback</h3>
+          <p className="text-dark/60 text-sm leading-relaxed">{gradeResult.overallComment}</p>
+        </div>
+        
+        {gradeResult.tips?.length > 0 && (
+          <div className="bg-blue-50/50 rounded-2xl border border-blue-200/30 p-6">
+            <h3 className="font-serif font-bold mb-3 text-blue-700">Tips to Improve</h3>
+            <ul className="space-y-2">
+              {gradeResult.tips.map((tip: string, i: number) => (
+                <li key={i} className="flex items-start gap-2 text-sm text-blue-600">
+                  <ChevronRight size={14} className="shrink-0 mt-0.5" />
+                  <span>{tip}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+        
+        <button
+          onClick={() => {
+            if (currentTurnIndex + 1 >= conv.turns.length) {
+               // End of conversation
+               setPhase('grading');
+               gradeConversation(conv, userResponsesRef.current);
+            } else {
+               runConversationTurn(conv, currentTurnIndex + 1);
+            }
+          }}
+          className="w-full py-4 bg-gold text-cream rounded-full font-bold hover:bg-gold/90 transition-all shadow-lg shadow-gold/20"
+        >
+          {currentTurnIndex + 1 >= conv.turns.length ? 'Finish Conversation' : 'Next Turn →'}
+        </button>
+      </div>
+    );
+  };
 
   // ─── Render: Results ─── 
   const renderResults = () => {
@@ -1097,6 +1346,8 @@ Return ONLY valid JSON (no markdown, no code fences):
             {phase === 'preview' && renderPreview()}
             {phase === 'conversation' && renderConversation()}
             {phase === 'recording' && renderRecording()}
+            {phase === 'turn-grading' && renderGrading()}
+            {phase === 'turn-results' && renderTurnResults()}
             {phase === 'grading' && renderGrading()}
             {phase === 'results' && renderResults()}
           </motion.div>
