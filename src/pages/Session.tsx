@@ -468,10 +468,7 @@ export default function Session() {
     
     if (!ttsKey) return;
 
-    // Stop any ongoing browser speech to prevent overlap
-    if ('speechSynthesis' in window) {
-      window.speechSynthesis.cancel();
-    }
+    if (!ttsKey) return;
 
     // Check prefetch first
     if (prefetchedAudioRef.current[text]) {
@@ -489,10 +486,9 @@ export default function Session() {
       return;
     }
 
-    // If we know quota is exhausted, skip Gemini TTS and go to fallback immediately
+    // If we know quota is exhausted, just log it
     if (isQuotaExhaustedRef.current) {
-      setVoiceStatus('standard');
-      playBrowserTTS(text);
+      console.warn("Gemini TTS quota exhausted, skipping audio.");
       return;
     }
 
@@ -537,24 +533,11 @@ export default function Session() {
       } else {
         setVoiceStatus('error');
       }
-
-      playBrowserTTS(text);
     }
   };
 
   const playBrowserTTS = (text: string) => {
-    if ('speechSynthesis' in window) {
-      window.speechSynthesis.cancel();
-      const utterance = new SpeechSynthesisUtterance(text);
-      switch (lang) {
-        case 'French': utterance.lang = 'fr-FR'; break;
-        case 'Spanish': utterance.lang = 'es-ES'; break;
-        case 'Mandarin': utterance.lang = 'zh-CN'; break;
-        case 'English': utterance.lang = 'en-US'; break;
-        default: utterance.lang = 'en-US';
-      }
-      window.speechSynthesis.speak(utterance);
-    }
+    // Removed browser TTS fallback
   };
 
   const prefetchAudio = async (text: string) => {

@@ -10,6 +10,8 @@ export class GeminiService {
   private nextStartTime: number = 0;
   private playbackRate: number = 1.0;
   private voiceName: string = "Kore";
+  private deviceChangeListenerAdded: boolean = false;
+  private boundHandleDeviceChange: (() => void) | null = null;
 
   constructor(liveKey: string, ttsKey?: string) {
     this.liveAi = new GoogleGenAI({ apiKey: liveKey });
@@ -197,13 +199,12 @@ export class GeminiService {
         await this.audioContext.resume();
       }
 
-      // Request mic with specific constraints for reliability
+      // Request mic with minimal constraints to respect Chrome's default and allow browser-level switching
+      const localSettings = localStorage.getItem('user_settings');
+      const microphoneId = localSettings ? JSON.parse(localSettings).microphone_id : null;
+      
       this.stream = await navigator.mediaDevices.getUserMedia({
-        audio: {
-          echoCancellation: true,
-          noiseSuppression: true,
-          autoGainControl: true,
-        }
+        audio: microphoneId ? { deviceId: { exact: microphoneId } } : true
       });
       if (config.onRawMessage) config.onRawMessage({ type: 'MIC_STREAM_ACQUIRED' });
 
@@ -254,6 +255,16 @@ export class GeminiService {
 
       // Start mic health monitoring — auto-reconnect if audio stops
       this.startMicHealthCheck(config);
+
+      // Listen for device changes (like changing default mic in Chrome)
+      if (navigator.mediaDevices && !this.deviceChangeListenerAdded) {
+        this.boundHandleDeviceChange = () => {
+          console.log('Microphone device change detected, reconnecting...');
+          this.reconnectMic(this.currentMicConfig);
+        };
+        navigator.mediaDevices.addEventListener('devicechange', this.boundHandleDeviceChange);
+        this.deviceChangeListenerAdded = true;
+      }
 
     } catch (err) {
       console.error("Mic access denied:", err);
@@ -377,6 +388,14 @@ export class GeminiService {
     if (this.micSource) this.micSource.disconnect();
     if (this.silentDest) this.silentDest.disconnect();
     if (this.audioContext) this.audioContext.close();
+    
+    // Clean up device change listener
+    if (this.boundHandleDeviceChange) {
+      navigator.mediaDevices?.removeEventListener('devicechange', this.boundHandleDeviceChange);
+      this.boundHandleDeviceChange = null;
+      this.deviceChangeListenerAdded = false;
+    }
+
     this.session = null;
     this.stream = null;
     this.processor = null;

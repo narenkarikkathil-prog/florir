@@ -446,7 +446,12 @@ export default function APSession({ mode }: { mode: 'ap-simulated' | 'ap-speakin
   const startSTT = useCallback(async () => {
     // Request microphone permission explicitly first
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      const localSettings = localStorage.getItem('user_settings');
+      const microphoneId = localSettings ? JSON.parse(localSettings).microphone_id : null;
+      
+      const stream = await navigator.mediaDevices.getUserMedia({ 
+        audio: microphoneId ? { deviceId: { exact: microphoneId } } : true 
+      });
       mediaRecorderRef.current = new MediaRecorder(stream);
       audioChunksRef.current = [];
       mediaRecorderRef.current.ondataavailable = (e) => {
@@ -545,6 +550,21 @@ export default function APSession({ mode }: { mode: 'ap-simulated' | 'ap-speakin
     console.log('[STT] Final captured text:', result);
     return result;
   }, []);
+
+  // Listen for device changes (like changing default mic in Chrome)
+  useEffect(() => {
+    const handleDeviceChange = () => {
+      if (isRecording) {
+        console.log('Microphone device change detected during recording, restarting STT...');
+        stopSTT();
+        startSTT();
+      }
+    };
+    navigator.mediaDevices?.addEventListener('devicechange', handleDeviceChange);
+    return () => {
+      navigator.mediaDevices?.removeEventListener('devicechange', handleDeviceChange);
+    };
+  }, [isRecording, startSTT, stopSTT]);
 
   // ─── Timer helpers ─── 
   const startTimer = (seconds: number, onComplete: () => void) => {

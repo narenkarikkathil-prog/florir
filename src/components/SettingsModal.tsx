@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { X, Volume2, Gauge, Check } from 'lucide-react';
+import { X, Volume2, Gauge, Check, Mic } from 'lucide-react';
 import { supabase } from '@/src/lib/supabase';
 import { cn } from '@/src/lib/utils';
 
@@ -26,13 +26,30 @@ interface SettingsModalProps {
 export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
   const [voice, setVoice] = useState('Kore');
   const [speed, setSpeed] = useState(1.3);
+  const [selectedMic, setSelectedMic] = useState('');
+  const [mics, setMics] = useState<MediaDeviceInfo[]>([]);
   const [isSaving, setIsSaving] = useState(false);
 
   useEffect(() => {
     if (isOpen) {
       fetchSettings();
+      fetchMics();
     }
   }, [isOpen]);
+
+  const fetchMics = async () => {
+    try {
+      // Request permission briefly to get device labels if not already available
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      stream.getTracks().forEach(track => track.stop());
+      
+      const devices = await navigator.mediaDevices.enumerateDevices();
+      const audioInputs = devices.filter(device => device.kind === 'audioinput');
+      setMics(audioInputs);
+    } catch (err) {
+      console.error("Error fetching microphones:", err);
+    }
+  };
 
   const fetchSettings = async () => {
     // Try localStorage first for speed and fallback
@@ -41,6 +58,7 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
       const parsed = JSON.parse(localSettings);
       setVoice('Kore'); // Force Kore
       setSpeed(parsed.playback_speed || 1.3);
+      setSelectedMic(parsed.microphone_id || '');
     }
 
     if (!supabase) return;
@@ -55,7 +73,11 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
       if (profile?.settings) {
         setVoice('Kore'); // Force Kore
         setSpeed(profile.settings.playback_speed || 1.3);
-        localStorage.setItem('user_settings', JSON.stringify({ ...profile.settings, voice_name: 'Kore' }));
+        setSelectedMic(profile.settings.microphone_id || '');
+        localStorage.setItem('user_settings', JSON.stringify({ 
+          ...profile.settings, 
+          voice_name: 'Kore' 
+        }));
       }
     }
   };
@@ -64,7 +86,8 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
     setIsSaving(true);
     const newSettings = {
       voice_name: 'Kore', // Force Kore
-      playback_speed: speed
+      playback_speed: speed,
+      microphone_id: selectedMic
     };
     
     localStorage.setItem('user_settings', JSON.stringify(newSettings));
@@ -141,6 +164,51 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                       )}
                     >
                       {s.label}
+                    </button>
+                  ))}
+                </div>
+              </section>
+
+              {/* Microphone Selection */}
+              <section>
+                <div className="flex items-center gap-2 mb-4 text-dark/40 uppercase tracking-widest text-xs font-bold">
+                  <Mic size={14} /> Microphone Source
+                </div>
+                <div className="space-y-2">
+                  <button
+                    onClick={() => setSelectedMic('')}
+                    className={cn(
+                      "w-full px-5 py-3.5 rounded-2xl border-2 text-left transition-all flex items-center justify-between group",
+                      selectedMic === '' 
+                        ? "border-gold bg-gold/5 shadow-sm" 
+                        : "border-beige-mid/10 hover:border-beige-mid/30"
+                    )}
+                  >
+                    <div className="flex flex-col">
+                      <span className={cn("font-bold text-sm", selectedMic === '' ? "text-dark" : "text-dark/60")}>
+                        System Default
+                      </span>
+                    </div>
+                    {selectedMic === '' && <Check size={18} className="text-gold" />}
+                  </button>
+
+                  {mics.map((mic) => (
+                    <button
+                      key={mic.deviceId}
+                      onClick={() => setSelectedMic(mic.deviceId)}
+                      className={cn(
+                        "w-full px-5 py-3.5 rounded-2xl border-2 text-left transition-all flex items-center justify-between group",
+                        selectedMic === mic.deviceId 
+                          ? "border-gold bg-gold/5 shadow-sm" 
+                          : "border-beige-mid/10 hover:border-beige-mid/30"
+                      )}
+                    >
+                      <div className="flex flex-col">
+                        <span className={cn("font-bold text-sm truncate max-w-[280px]", selectedMic === mic.deviceId ? "text-dark" : "text-dark/60")}>
+                          {mic.label || `Microphone ${mic.deviceId.slice(0, 5)}...`}
+                        </span>
+                      </div>
+                      {selectedMic === mic.deviceId && <Check size={18} className="text-gold" />}
                     </button>
                   ))}
                 </div>
