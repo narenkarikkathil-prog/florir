@@ -25,7 +25,7 @@ export default function NonProfit() {
               A Mission to <span className="text-gold italic">Connect</span>,<br />Not to Profit.
             </h1>
             <p className="text-lg md:text-xl text-dark/60 max-w-2xl mx-auto leading-relaxed">
-              Florir is built on the belief that language learning should be accessible to everyone. We operate as a non-profit framing, where every dollar goes directly to covering AI costs.
+              Orati is built on the belief that language learning should be accessible to everyone. We operate as a non-profit framing, where every dollar goes directly to covering AI costs.
             </p>
           </motion.div>
         </div>
@@ -75,7 +75,7 @@ export default function NonProfit() {
             </div>
             <h3 className="text-2xl font-serif font-bold mb-4">Community Driven</h3>
             <p className="text-dark/60 text-sm leading-relaxed">
-              Florir is built by language lovers, for language lovers. Your feedback and support directly shape the future of the platform.
+              Orati is built by language lovers, for language lovers. Your feedback and support directly shape the future of the platform.
             </p>
           </motion.div>
         </div>

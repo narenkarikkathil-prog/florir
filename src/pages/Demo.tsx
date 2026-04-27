@@ -22,7 +22,7 @@ export default function Demo() {
               <Play size={14} /> Product Showcase
             </div>
             <h1 className="text-5xl md:text-7xl font-serif font-bold text-dark mb-6 leading-tight">
-              See Florir in <span className="text-gold italic">Action</span>.
+              See Orati in <span className="text-gold italic">Action</span>.
             </h1>
             <p className="text-lg md:text-xl text-dark/60 max-w-2xl mx-auto leading-relaxed">
               Experience the future of language learning. No more tapping on screens—just natural, real-time conversation with AI that understands you.
@@ -93,7 +93,7 @@ export default function Demo() {
                     </div>
 
                     <div className="mt-auto">
-                      <div className="text-[8px] font-bold text-dark/20 uppercase tracking-widest mb-2">Florir</div>
+                      <div className="text-[8px] font-bold text-dark/20 uppercase tracking-widest mb-2">Orati</div>
                       <div className="bg-beige/20 p-4 rounded-2xl rounded-tl-none text-xs text-dark/70 leading-relaxed">
                         C'est génial ! Quelle est votre ville préférée en France ? J'adore Paris, mais Lyon est aussi magnifique.
                       </div>

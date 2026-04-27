@@ -1,5 +1,5 @@
 /**
- * Production server for Florir.
+ * Production server for Orati.
  * - Serves the Vite-built static files
  * - Proxies Gemini API calls so the API key stays server-side
  */
@@ -88,6 +88,6 @@ app.get('*', (req, res) => {
 });
 
 app.listen(PORT, '0.0.0.0', () => {
-  console.log(`Florir server running on port ${PORT}`);
+  console.log(`Orati server running on port ${PORT}`);
   console.log(`Gemini API key: ${GEMINI_API_KEY ? '✓ configured' : '✗ MISSING'}`);
 });

@@ -309,7 +309,7 @@ export default function APSession({ mode }: { mode: 'ap-simulated' | 'ap-speakin
   // Load completed IDs from Supabase (with localStorage fallback)
   useEffect(() => {
     const loadProgress = async () => {
-      const localKey = `florir_ap_${mode}_completed`;
+      const localKey = `orati_ap_${mode}_completed`;
       
       // Try Supabase first
       if (supabase) {
@@ -366,7 +366,7 @@ export default function APSession({ mode }: { mode: 'ap-simulated' | 'ap-speakin
   }, []);
 
   const saveCompleted = async (id: number) => {
-    const localKey = `florir_ap_${mode}_completed`;
+    const localKey = `orati_ap_${mode}_completed`;
     const newIds = [...new Set([...completedIds, id])];
     setCompletedIds(newIds);
     

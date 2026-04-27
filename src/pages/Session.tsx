@@ -965,7 +965,7 @@ TONE:
     lastAudioActivityRef.current = Date.now();
     totalSessionTimeRef.current = 0;
     startTimeRef.current = Date.now();
-    setTranscript([{ role: 'ai', text: 'Connecting to Florir...', timestamp: Date.now() }]);
+    setTranscript([{ role: 'ai', text: 'Connecting to Orati...', timestamp: Date.now() }]);
 
     try {
       await geminiRef.current.connect({
@@ -1042,7 +1042,7 @@ TONE:
             const now = Date.now();
             // Remove connection messages
             const filteredPrev = prev.filter(m => 
-              m.text !== 'Connecting to Florir...' && 
+              m.text !== 'Connecting to Orati...' && 
               !m.text.startsWith('Connection established!')
             );
             
@@ -1103,7 +1103,7 @@ TONE:
       });
 
       setTranscript(prev => {
-        const filtered = prev.filter(m => m.text !== 'Connecting to Florir...');
+        const filtered = prev.filter(m => m.text !== 'Connecting to Orati...');
         const introMsg = mode === 'roleplay' 
           ? `Connection established! Ready to speak. Setting the scene: You are at ${currentSubScenario || 'a restaurant'} where ${lang} is spoken.`
           : 'Connection established! Ready to speak.';
@@ -1111,7 +1111,7 @@ TONE:
       });
     } catch (err) {
       console.error("Failed to connect:", err);
-      setTranscript([{ role: 'ai', text: 'Failed to connect to Florir. Please check your internet and API key.', timestamp: Date.now() }]);
+      setTranscript([{ role: 'ai', text: 'Failed to connect to Orati. Please check your internet and API key.', timestamp: Date.now() }]);
       setIsActive(false);
     }
   };
@@ -1721,7 +1721,7 @@ TONE:
                         msg.role === 'user' ? "items-end" : "items-start"
                       )}>
                         <span className="text-[9px] font-bold uppercase tracking-widest text-dark/20">
-                          {msg.role === 'user' ? 'You' : 'Florir'}
+                          {msg.role === 'user' ? 'You' : 'Orati'}
                         </span>
                         <div className={cn(
                           "max-w-[90%] p-4 rounded-[24px] text-sm leading-relaxed shadow-sm transition-all duration-300",

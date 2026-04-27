@@ -139,7 +139,7 @@ export default function Landing() {
                   <div className="max-w-md">
                     <h2 className="text-4xl font-serif font-bold mb-6">Our Non-Profit Mission</h2>
                     <p className="text-cream/70 mb-8 leading-relaxed">
-                      Florir is a non-profit initiative dedicated to making high-quality language education accessible to everyone, everywhere. Every dollar from our supporters goes directly toward covering the high costs of real-time AI processing. We take $0 profit.
+                      Orati is a non-profit initiative dedicated to making high-quality language education accessible to everyone, everywhere. Every dollar from our supporters goes directly toward covering the high costs of real-time AI processing. We take $0 profit.
                     </p>
                     <Link 
                       to="/nonprofit" 

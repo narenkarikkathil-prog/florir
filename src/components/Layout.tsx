@@ -51,7 +51,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         <div className="container mx-auto px-4 h-16 flex items-center justify-between">
           <Link to={user ? '/dashboard' : '/'} className="flex items-center gap-2 group">
             <FlowerLogo className="text-gold" size={32} />
-            <span className="font-serif text-2xl font-bold tracking-tight text-dark">Florir</span>
+            <span className="font-serif text-2xl font-bold tracking-tight text-dark">Orati</span>
           </Link>
 
           {/* Desktop Nav */}
@@ -128,7 +128,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             <div className="col-span-1 md:col-span-2">
               <div className="flex items-center gap-2 mb-4">
                 <FlowerLogo className="text-gold" size={24} />
-                <span className="font-serif text-xl font-bold tracking-tight">Florir</span>
+                <span className="font-serif text-xl font-bold tracking-tight">Orati</span>
               </div>
               <p className="text-dark/60 max-w-sm text-sm leading-relaxed">
                 A speech-first language learning platform dedicated to helping you master French and Spanish through real-time AI conversations.
@@ -144,7 +144,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             <div>
               <h4 className="font-bold text-sm mb-4 uppercase tracking-wider text-dark/40">Mission</h4>
               <p className="text-xs text-dark/60 leading-relaxed mb-4">
-                Florir is a non-profit initiative dedicated to making high-quality language education accessible to everyone, everywhere.
+                Orati is a non-profit initiative dedicated to making high-quality language education accessible to everyone, everywhere.
               </p>
               <Link to="/nonprofit" className="text-xs font-bold text-gold hover:underline flex items-center gap-1">
                 Learn More <ArrowRight size={12} />
@@ -152,7 +152,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             </div>
           </div>
           <div className="mt-12 pt-8 border-t border-beige-mid/20 text-center text-xs text-dark/40">
-            © {new Date().getFullYear()} Florir. All rights reserved.
+            © {new Date().getFullYear()} Orati. All rights reserved.
           </div>
         </div>
       </footer>
