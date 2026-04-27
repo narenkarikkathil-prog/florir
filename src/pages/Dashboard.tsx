@@ -105,7 +105,7 @@ export default function Dashboard() {
           const timeInSeconds = profile.total_time || 0;
           const totalMinutes = timeInSeconds / 60;
           const level = profile.level_per_language?.[selectedLang] || 'Beginner 1';
-          
+
           // Calculate progress to next level
           let progress = 0;
           if (totalMinutes < 30) progress = (totalMinutes / 30) * 100;
@@ -160,7 +160,7 @@ export default function Dashboard() {
           </div>
           <p className="text-dark/50">Practice French and Spanish.</p>
         </div>
-        
+
         <div className="relative">
           <button
             onClick={() => setIsLangDropdownOpen(!isLangDropdownOpen)}
@@ -176,9 +176,9 @@ export default function Dashboard() {
           <AnimatePresence>
             {isLangDropdownOpen && (
               <>
-                <div 
-                  className="fixed inset-0 z-30" 
-                  onClick={() => setIsLangDropdownOpen(false)} 
+                <div
+                  className="fixed inset-0 z-30"
+                  onClick={() => setIsLangDropdownOpen(false)}
                 />
                 <motion.div
                   initial={{ opacity: 0, y: 10, scale: 0.95 }}
@@ -241,19 +241,19 @@ export default function Dashboard() {
               <motion.button
                 key={mode.id}
                 onClick={() => startSession(mode.id)}
-                whileHover={{ y: -4, shadow: "0 10px 25px -5px rgba(0, 0, 0, 0.1)" }}
+                whileHover={{ y: -4, boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.1)" }}
                 whileTap={{ scale: 0.98 }}
                 className="group p-6 bg-white rounded-[32px] border border-beige-mid/20 hover:border-gold/30 transition-all text-left flex flex-col h-full shadow-sm hover:shadow-xl relative overflow-hidden"
               >
                 {/* Subtle background glow on hover */}
                 <div className="absolute inset-0 bg-gold/0 group-hover:bg-gold/[0.02] transition-colors" />
-                
+
                 <div className={cn("w-14 h-14 rounded-2xl flex items-center justify-center mb-6 transition-transform group-hover:scale-110 relative z-10", mode.color)}>
                   {mode.icon}
                 </div>
                 <h3 className="text-xl font-serif font-bold mb-2 relative z-10">{mode.title}</h3>
                 <p className="text-sm text-dark/50 mb-8 flex-1 relative z-10 leading-relaxed">{mode.desc}</p>
-                
+
                 <div className="flex items-center justify-between mt-auto relative z-10">
                   <div className="flex-1 md:flex-none flex items-center justify-center md:justify-start gap-2 text-gold font-bold text-sm bg-gold/10 md:bg-gold/5 px-6 py-3 md:px-4 md:py-2 rounded-xl md:rounded-full group-hover:bg-gold group-hover:text-cream transition-all shadow-sm md:shadow-none">
                     Start Session <Play size={14} fill="currentColor" />
@@ -278,14 +278,14 @@ export default function Dashboard() {
               Orati is a non-profit initiative dedicated to making high-quality language education accessible to everyone, everywhere.
             </p>
             {activeTab === 'ap' ? (
-              <button 
+              <button
                 onClick={() => navigate('/nonprofit')}
                 className="w-full py-3 bg-white text-gold rounded-full font-bold text-sm hover:bg-beige transition-all shadow-md"
               >
                 Learn More
               </button>
             ) : (
-              <button 
+              <button
                 onClick={() => navigate('/nonprofit')}
                 className="w-full py-3 bg-white text-gold rounded-full font-bold text-sm hover:bg-beige transition-all shadow-md"
               >

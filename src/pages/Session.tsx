@@ -38,9 +38,9 @@ export default function Session() {
 
   const [isActive, setIsActive] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
-  const [transcript, setTranscript] = useState<{ 
-    role: 'user' | 'ai'; 
-    text: string; 
+  const [transcript, setTranscript] = useState<{
+    role: 'user' | 'ai';
+    text: string;
     timestamp: number;
     corrections?: { original: string; correction: string; explanation: string; severity: number; confidence: number }[];
     correctedSentence?: string;
@@ -53,8 +53,8 @@ export default function Session() {
   const [prevAccuracy, setPrevAccuracy] = useState(100);
   const [mistakes, setMistakes] = useState<{ original: string; correction: string; explanation: string; severity: number; confidence: number }[]>([]);
   const [lastCorrectedSentence, setLastCorrectedSentence] = useState<string | null>(null);
-  const [lastFeedback, setLastFeedback] = useState<{ 
-    correctedSentence: string; 
+  const [lastFeedback, setLastFeedback] = useState<{
+    correctedSentence: string;
     mistakes: { original: string; correction: string; explanation: string; severity: number; confidence: number }[];
     alternatives: string[];
   } | null>(null);
@@ -70,11 +70,11 @@ export default function Session() {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [isGeneratingQuiz, setIsGeneratingQuiz] = useState(false);
   const [wrongOptions, setWrongOptions] = useState<number[]>([]);
-  const [mcqQuestion, setMcqQuestion] = useState<{ 
+  const [mcqQuestion, setMcqQuestion] = useState<{
     type: 'mcq' | 'written';
-    question: string; 
-    options?: string[]; 
-    answer: string | number; 
+    question: string;
+    options?: string[];
+    answer: string | number;
     audioPrompt?: string;
   } | null>(null);
   const [selectedOption, setSelectedOption] = useState<number | null>(null);
@@ -97,9 +97,9 @@ export default function Session() {
   const transcriptEndRef = useRef<HTMLDivElement>(null);
 
   const SITUATIONS = [
-    { 
-      id: 'restaurant', 
-      title: 'At a Restaurant', 
+    {
+      id: 'restaurant',
+      title: 'At a Restaurant',
       icon: <Utensils size={24} className="text-orange-500" />,
       prompt: "You are a waiter at a French restaurant. The user is a customer.",
       subScenarios: [
@@ -109,9 +109,9 @@ export default function Session() {
         "Splitting the bill with a group of friends."
       ]
     },
-    { 
-      id: 'airport', 
-      title: 'Airport Check-in', 
+    {
+      id: 'airport',
+      title: 'Airport Check-in',
       icon: <Plane size={24} className="text-blue-500" />,
       prompt: "You are an airport check-in agent. The user is a passenger.",
       subScenarios: [
@@ -121,9 +121,9 @@ export default function Session() {
         "Asking for directions to the lounge or gate."
       ]
     },
-    { 
-      id: 'hotel', 
-      title: 'Hotel Reception', 
+    {
+      id: 'hotel',
+      title: 'Hotel Reception',
       icon: <Hotel size={24} className="text-indigo-500" />,
       prompt: "You are a hotel receptionist. The user is a guest.",
       subScenarios: [
@@ -133,9 +133,9 @@ export default function Session() {
         "Checking out early and disputing a minibar charge."
       ]
     },
-    { 
-      id: 'doctor', 
-      title: 'Doctor Visit', 
+    {
+      id: 'doctor',
+      title: 'Doctor Visit',
       icon: <Stethoscope size={24} className="text-red-500" />,
       prompt: "You are a doctor. The user is a patient.",
       subScenarios: [
@@ -145,9 +145,9 @@ export default function Session() {
         "Explaining a sports injury to a physiotherapist."
       ]
     },
-    { 
-      id: 'shopping', 
-      title: 'Local Market', 
+    {
+      id: 'shopping',
+      title: 'Local Market',
       icon: <ShoppingBag size={24} className="text-green-500" />,
       prompt: "You are a market vendor. The user is a shopper.",
       subScenarios: [
@@ -201,14 +201,14 @@ export default function Session() {
           type: { type: "STRING", enum: ["mcq", "written"] },
           question: { type: "STRING", description: "The question text (e.g., 'What did I just say?')" },
           audioPrompt: { type: "STRING", description: "The exact word or phrase you will speak out loud." },
-          options: { 
-            type: "ARRAY", 
+          options: {
+            type: "ARRAY",
             items: { type: "STRING" },
             description: "4 options for MCQ. Only required for type='mcq'."
           },
-          answer: { 
-            type: "STRING", 
-            description: "The correct answer. For MCQ, this should be the index (0-3) as a string. For written, the exact word/phrase." 
+          answer: {
+            type: "STRING",
+            description: "The correct answer. For MCQ, this should be the index (0-3) as a string. For written, the exact word/phrase."
           }
         },
         required: ["type", "question", "audioPrompt", "answer"]
@@ -313,7 +313,7 @@ export default function Session() {
     if (isActive && !(mode?.includes('vocabulary') || mode?.includes('listening'))) {
       const userMessages = transcript.filter(m => m.role === 'user');
       const totalUserTurns = userMessages.length;
-      
+
       if (totalUserTurns === 0) {
         setAccuracy(100);
         return;
@@ -323,17 +323,17 @@ export default function Session() {
       // Calculate accuracy based on errors per turn
       // Each error reduces accuracy based on severity
       const totalSeverity = mistakes.reduce((acc, m) => acc + m.severity, 0);
-      
+
       // Base accuracy starts at 100
       // We penalize based on severity relative to the number of turns
       // A severity 10 error in 1 turn = 0% accuracy
       // A severity 10 error in 10 turns = 90% accuracy
       const penalty = totalUserTurns > 0 ? (totalSeverity / totalUserTurns) * 10 : 0;
       const newAccuracy = Math.max(0, Math.min(100, 100 - penalty));
-      
+
       setPrevAccuracy(accuracy);
       setAccuracy(Math.round(newAccuracy));
-      
+
       // Update sub-scores
       setScores({
         grammar: Math.max(40, Math.min(100, 100 - (mistakes.filter(m => m.explanation.toLowerCase().includes('grammar')).length * 15))),
@@ -385,7 +385,7 @@ export default function Session() {
 
       if (timeSinceActivity > 15000) {
         console.log("No sound detected for 15s, auto-pausing...");
-        
+
         // Trigger the pause logic
         geminiRef.current?.pause();
         setIsPaused(true);
@@ -437,10 +437,10 @@ export default function Session() {
     const key = `${msgIndex}-${wordIndex}`;
     const cleanWord = wordText.replace(/[.,!?()[\]{}"']/g, "");
     if (!cleanWord) return;
-    
+
     // Set loading indicator
     setActiveWordTranslations(prev => ({ ...prev, [key]: "..." }));
-    
+
     const translation = await translateToEnglish(cleanWord);
     if (translation) {
       setActiveWordTranslations(prev => ({ ...prev, [key]: translation }));
@@ -465,7 +465,7 @@ export default function Session() {
   const playQuizAudio = async (text: string, retryCount = 0) => {
     const liveKey = import.meta.env.VITE_GEMINI_LIVE_API_KEY || import.meta.env.VITE_VERTEX_API_KEY || import.meta.env.GEMINI_API_KEY;
     const ttsKey = import.meta.env.VITE_GEMINI_TTS_API_KEY || import.meta.env.VITE_VERTEX_API_KEY || import.meta.env.GEMINI_API_KEY;
-    
+
     if (!ttsKey) return;
 
     if (!ttsKey) return;
@@ -496,7 +496,7 @@ export default function Session() {
       if (!geminiRef.current) {
         geminiRef.current = new GeminiService(liveKey, ttsKey);
       }
-      
+
       const base64Audio = await geminiRef.current.generateSpeech(text);
       if (base64Audio) {
         audioCacheRef.current[text] = base64Audio; // Cache it
@@ -506,7 +506,7 @@ export default function Session() {
       }
     } catch (error: any) {
       console.error("TTS Error:", error);
-      
+
       // Handle Quota Error (429) with retry and fallback
       let errorStr = "";
       try {
@@ -515,9 +515,9 @@ export default function Session() {
         errorStr = error?.message || "";
       }
 
-      const isQuotaError = errorStr.includes('429') || 
-                          errorStr.includes('RESOURCE_EXHAUSTED') ||
-                          error?.status === 'RESOURCE_EXHAUSTED';
+      const isQuotaError = errorStr.includes('429') ||
+        errorStr.includes('RESOURCE_EXHAUSTED') ||
+        error?.status === 'RESOURCE_EXHAUSTED';
 
       if (isQuotaError) {
         isQuotaExhaustedRef.current = true;
@@ -533,6 +533,8 @@ export default function Session() {
       } else {
         setVoiceStatus('error');
       }
+
+      playBrowserTTS(text);
     }
   };
 
@@ -542,10 +544,10 @@ export default function Session() {
 
   const prefetchAudio = async (text: string) => {
     if (!text || audioCacheRef.current[text] || prefetchedAudioRef.current[text] || isQuotaExhaustedRef.current) return;
-    
+
     const liveKey = import.meta.env.VITE_GEMINI_LIVE_API_KEY || import.meta.env.VITE_VERTEX_API_KEY || import.meta.env.GEMINI_API_KEY;
     const ttsKey = import.meta.env.VITE_GEMINI_TTS_API_KEY || import.meta.env.VITE_VERTEX_API_KEY || import.meta.env.GEMINI_API_KEY;
-    
+
     if (!ttsKey) return;
 
     try {
@@ -578,7 +580,7 @@ export default function Session() {
       quizAudioContextRef.current = new (window.AudioContext || (window as any).webkitAudioContext)({ sampleRate: 24000 });
     }
     const audioContext = quizAudioContextRef.current;
-    
+
     if (audioContext.state === 'suspended') {
       await audioContext.resume();
     }
@@ -586,7 +588,7 @@ export default function Session() {
     const binary = atob(base64Audio);
     const bytes = new Uint8Array(binary.length);
     for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
-    
+
     const pcm = new Int16Array(bytes.buffer);
     const float32 = new Float32Array(pcm.length);
     for (let i = 0; i < pcm.length; i++) float32[i] = pcm[i] / 32768.0;
@@ -631,7 +633,7 @@ export default function Session() {
       setIsAnswerCorrect(null);
       setCurrentQuestionIndex(index);
       setQuestionCount(index + 1);
-      
+
       // Play current audio
       playQuizAudio(q.audio_text);
 
@@ -647,7 +649,7 @@ export default function Session() {
   const startMcqSession = async () => {
     const liveKey = import.meta.env.VITE_GEMINI_LIVE_API_KEY || import.meta.env.VITE_VERTEX_API_KEY || import.meta.env.GEMINI_API_KEY;
     const ttsKey = import.meta.env.VITE_GEMINI_TTS_API_KEY || import.meta.env.VITE_VERTEX_API_KEY || import.meta.env.GEMINI_API_KEY;
-    
+
     if (!liveKey) {
       alert("Gemini API Key is missing. Please configure it in the Secrets panel.");
       return;
@@ -751,9 +753,9 @@ Return ONLY valid JSON in this structure:
                     progress: { type: Type.STRING },
                     type: { type: Type.STRING, enum: ["mcq", "typed"] },
                     audio_text: { type: Type.STRING },
-                    options: { 
-                      type: Type.ARRAY, 
-                      items: { type: Type.STRING } 
+                    options: {
+                      type: Type.ARRAY,
+                      items: { type: Type.STRING }
                     },
                     answer: { type: Type.STRING }
                   },
@@ -770,7 +772,7 @@ Return ONLY valid JSON in this structure:
       setQuizQuestions(quizData.questions);
       setCurrentQuestionIndex(0);
       setQuestionCount(1);
-      
+
       const firstQuestion = quizData.questions[0];
       setMcqQuestion({
         type: firstQuestion.type === 'mcq' ? 'mcq' : 'written',
@@ -828,14 +830,14 @@ Return ONLY valid JSON in this structure:
 
     const liveKey = import.meta.env.VITE_GEMINI_LIVE_API_KEY || import.meta.env.VITE_VERTEX_API_KEY || import.meta.env.GEMINI_API_KEY;
     const ttsKey = import.meta.env.VITE_GEMINI_TTS_API_KEY || import.meta.env.VITE_VERTEX_API_KEY || import.meta.env.GEMINI_API_KEY;
-    
+
     if (!liveKey) {
       alert("Gemini API Key is missing. Please configure it in the Secrets panel.");
       return;
     }
 
     geminiRef.current = new GeminiService(liveKey, ttsKey);
-    
+
     // Fetch user settings (with localStorage fallback)
     const localSettings = localStorage.getItem('user_settings');
     if (localSettings) {
@@ -852,7 +854,7 @@ Return ONLY valid JSON in this structure:
           .select('settings')
           .eq('id', user.id)
           .single();
-        
+
         if (profile?.settings) {
           geminiRef.current.setVoiceName(profile.settings.voice_name || 'Kore');
           geminiRef.current.setPlaybackRate(profile.settings.playback_speed || 1.3);
@@ -860,7 +862,7 @@ Return ONLY valid JSON in this structure:
         }
       }
     }
-    
+
     let currentSpeed = 1.0;
     const latestSettings = localStorage.getItem('user_settings');
     if (latestSettings) {
@@ -868,13 +870,13 @@ Return ONLY valid JSON in this structure:
     }
 
     let systemInstruction = `You are a helpful language learning assistant for ${lang}. IMPORTANT: You MUST adopt the persona of a young, energetic, and expressive female with a bright and friendly feminine voice. Always maintain this feminine persona. `;
-    
+
     if (currentSpeed < 1.0) {
       systemInstruction += `CRITICAL INSTRUCTION: You must speak EXTREMELY SLOWLY and deliberately. Insert distinct pauses after every word so the user can hear the pronunciation perfectly. `;
     } else if (currentSpeed > 1.0) {
       systemInstruction += `Speak energetically and rapidly. `;
     }
-    
+
     // Add difficulty guidance
     if (level === 'beginner') {
       systemInstruction += `The user is a beginner. Use simple, clear ${lang} (A1–A2 level). Use short, natural sentences. Speak as a native would, but simplified for a beginner. Avoid complex idioms or figures of speech. `;
@@ -965,7 +967,7 @@ TONE:
     lastAudioActivityRef.current = Date.now();
     totalSessionTimeRef.current = 0;
     startTimeRef.current = Date.now();
-    setTranscript([{ role: 'ai', text: 'Connecting to Orati...', timestamp: Date.now() }]);
+    setTranscript([{ role: 'ai', text: 'Connecting to Florir...', timestamp: Date.now() }]);
 
     try {
       await geminiRef.current.connect({
@@ -973,8 +975,8 @@ TONE:
         languageCode: LANGUAGE_CODES[lang] || 'en-US',
         voiceName: geminiRef.current.getVoiceName(),
         tools: [provideFeedbackTool],
-        initialMessage: mode === 'roleplay' 
-          ? `[SYSTEM: START THE ROLEPLAY NOW] Introduce the scene: ${currentSubScenario || 'a restaurant'} and greet me in ${lang} to start the roleplay. You MUST speak first. Do not wait for me to speak.` 
+        initialMessage: mode === 'roleplay'
+          ? `[SYSTEM: START THE ROLEPLAY NOW] Introduce the scene: ${currentSubScenario || 'a restaurant'} and greet me in ${lang} to start the roleplay. You MUST speak first. Do not wait for me to speak.`
           : (mode === 'conversation' ? `[SYSTEM: START THE CONVERSATION NOW] Greet me in ${lang} to start our conversation. You MUST speak first. Do not wait for me to speak.` : undefined),
         onVolume: (volume) => {
           // Threshold for "activity" - 0.01 is a reasonable RMS for speech
@@ -987,11 +989,11 @@ TONE:
           if (role === 'ai' || text) {
             lastAudioActivityRef.current = Date.now();
           }
-          
+
           if (toolCall && toolCall.name === 'provideFeedback') {
             console.log("FEEDBACK TOOL CALLED:", toolCall.args);
             const { correctedSentence, mistakes: rawMistakes, alternatives } = toolCall.args;
-            
+
             // Filter out mistakes with confidence < 30%
             const filteredMistakes = (rawMistakes || []).filter((m: any) => (m.confidence || 0) >= 30);
 
@@ -1000,7 +1002,7 @@ TONE:
               mistakes: filteredMistakes,
               alternatives: alternatives || []
             };
-            
+
             setLastFeedback(feedback);
             if (correctedSentence) {
               setLastCorrectedSentence(correctedSentence);
@@ -1037,15 +1039,15 @@ TONE:
           }
 
           if (!text.trim()) return;
-          
+
           setTranscript(prev => {
             const now = Date.now();
             // Remove connection messages
-            const filteredPrev = prev.filter(m => 
-              m.text !== 'Connecting to Orati...' && 
+            const filteredPrev = prev.filter(m =>
+              m.text !== 'Connecting to Florir...' &&
               !m.text.startsWith('Connection established!')
             );
-            
+
             if (filteredPrev.length === 0) {
               return [{ role, text, timestamp: now }];
             }
@@ -1053,7 +1055,7 @@ TONE:
             const lastMsg = filteredPrev[filteredPrev.length - 1];
             const lastTimestamp = lastMsg.timestamp || (now - 1000); // Fallback for missing timestamp
             const timeDiff = now - lastTimestamp;
-            
+
             // If same role and within a reasonable time window (10s), merge
             // We use a larger window for AI responses as they can have natural pauses
             const mergeWindow = role === 'ai' ? 10000 : 5000;
@@ -1061,18 +1063,18 @@ TONE:
             if (lastMsg.role === role && timeDiff < mergeWindow) {
               const normalizedNew = text.trim();
               const normalizedOld = lastMsg.text.trim();
-              
+
               // Refinement: New text starts with old text (common in streaming STT)
               if (normalizedNew.toLowerCase().startsWith(normalizedOld.toLowerCase())) {
                 const newTranscript = [...filteredPrev];
-                newTranscript[newTranscript.length - 1] = { 
-                  ...lastMsg, 
-                  text: normalizedNew, 
-                  timestamp: now 
+                newTranscript[newTranscript.length - 1] = {
+                  ...lastMsg,
+                  text: normalizedNew,
+                  timestamp: now
                 };
                 return newTranscript;
               }
-              
+
               // Refinement: Old text already contains new text (ignore late arrival of shorter chunk)
               if (normalizedOld.toLowerCase().includes(normalizedNew.toLowerCase())) {
                 return filteredPrev;
@@ -1082,14 +1084,14 @@ TONE:
               // Only append if the new text doesn't look like a refinement that failed the startsWith check
               const newTranscript = [...filteredPrev];
               const separator = (lastMsg.text.endsWith(' ') || text.startsWith(' ') || !lastMsg.text) ? '' : ' ';
-              newTranscript[newTranscript.length - 1] = { 
-                ...lastMsg, 
-                text: lastMsg.text + separator + text, 
-                timestamp: now 
+              newTranscript[newTranscript.length - 1] = {
+                ...lastMsg,
+                text: lastMsg.text + separator + text,
+                timestamp: now
               };
               return newTranscript;
             }
-            
+
             // New turn
             return [...filteredPrev, { role, text, timestamp: now }];
           });
@@ -1103,15 +1105,15 @@ TONE:
       });
 
       setTranscript(prev => {
-        const filtered = prev.filter(m => m.text !== 'Connecting to Orati...');
-        const introMsg = mode === 'roleplay' 
+        const filtered = prev.filter(m => m.text !== 'Connecting to Florir...');
+        const introMsg = mode === 'roleplay'
           ? `Connection established! Ready to speak. Setting the scene: You are at ${currentSubScenario || 'a restaurant'} where ${lang} is spoken.`
           : 'Connection established! Ready to speak.';
         return [{ role: 'ai', text: introMsg, timestamp: Date.now() }, ...filtered];
       });
     } catch (err) {
       console.error("Failed to connect:", err);
-      setTranscript([{ role: 'ai', text: 'Failed to connect to Orati. Please check your internet and API key.', timestamp: Date.now() }]);
+      setTranscript([{ role: 'ai', text: 'Failed to connect to Florir. Please check your internet and API key.', timestamp: Date.now() }]);
       setIsActive(false);
     }
   };
@@ -1120,7 +1122,7 @@ TONE:
     if (startTimeRef.current) {
       totalSessionTimeRef.current += (Date.now() - startTimeRef.current) / 1000;
     }
-    
+
     geminiRef.current?.stop();
     setIsActive(false);
     setIsPaused(false);
@@ -1140,7 +1142,7 @@ TONE:
         if (profile) {
           const newTotalTime = (profile.total_time || 0) + totalSessionTimeRef.current;
           const totalMinutes = newTotalTime / 60;
-          
+
           let newLevel: UserLevel = 'Beginner 1';
           if (totalMinutes >= 250) newLevel = 'Advanced 3';
           else if (totalMinutes >= 200) newLevel = 'Advanced 2';
@@ -1150,13 +1152,13 @@ TONE:
           else if (totalMinutes >= 60) newLevel = 'Intermediate 1';
           else if (totalMinutes >= 45) newLevel = 'Beginner 3';
           else if (totalMinutes >= 30) newLevel = 'Beginner 2';
-          
+
           const updatedLevels = { ...profile.level_per_language };
           updatedLevels[lang] = newLevel;
 
           await supabase
             .from('profiles')
-            .update({ 
+            .update({
               total_time: newTotalTime,
               level_per_language: updatedLevels
             })
@@ -1164,7 +1166,7 @@ TONE:
         }
       }
     }
-    
+
     navigate('/dashboard');
   };
 
@@ -1186,61 +1188,61 @@ TONE:
           <FlowerLogo className="text-gold shrink-0" size={32} />
           {/* Situation Badge - hidden on mobile, appears at bottom instead */}
           {mode === 'roleplay' && selectedSituation ? (
-          <div className="hidden md:flex items-center gap-3 bg-white px-5 py-2.5 rounded-full border border-beige/30 shadow-sm">
-            <span className="text-xl">{SITUATIONS.find(s => s.id === selectedSituation)?.icon}</span>
-            <div className="flex flex-col">
-              <span className="text-sm font-bold text-dark/80">{SITUATIONS.find(s => s.id === selectedSituation)?.title}</span>
-              {currentSubScenario && (
-                <span className="text-[10px] text-dark/40 italic leading-none mt-0.5">{currentSubScenario}</span>
+            <div className="hidden md:flex items-center gap-3 bg-white px-5 py-2.5 rounded-full border border-beige/30 shadow-sm">
+              <span className="text-xl">{SITUATIONS.find(s => s.id === selectedSituation)?.icon}</span>
+              <div className="flex flex-col">
+                <span className="text-sm font-bold text-dark/80">{SITUATIONS.find(s => s.id === selectedSituation)?.title}</span>
+                {currentSubScenario && (
+                  <span className="text-[10px] text-dark/40 italic leading-none mt-0.5">{currentSubScenario}</span>
+                )}
+              </div>
+              {!isActive && (
+                <div className="flex items-center gap-2 ml-2 border-l border-beige/30 pl-2">
+                  <button
+                    onClick={() => rerollSubScenario(selectedSituation)}
+                    title="Reroll scenario"
+                    className="p-1 hover:bg-beige/20 rounded-lg transition-all text-gold"
+                  >
+                    <Dices size={14} className="hover:scale-110 transition-transform" />
+                  </button>
+                  <button
+                    onClick={() => {
+                      setSelectedSituation(null);
+                      setCurrentSubScenario("");
+                      setIsDifficultySelected(false);
+                    }}
+                    className="text-[10px] uppercase tracking-widest text-gold font-bold hover:opacity-70 transition-opacity"
+                  >
+                    Change
+                  </button>
+                </div>
               )}
             </div>
-            {!isActive && (
-              <div className="flex items-center gap-2 ml-2 border-l border-beige/30 pl-2">
-                <button 
-                  onClick={() => rerollSubScenario(selectedSituation)}
-                  title="Reroll scenario"
-                  className="p-1 hover:bg-beige/20 rounded-lg transition-all text-gold"
-                >
-                  <Dices size={14} className="hover:scale-110 transition-transform" />
-                </button>
-                <button 
-                  onClick={() => {
-                    setSelectedSituation(null);
-                    setCurrentSubScenario("");
-                    setIsDifficultySelected(false);
-                  }}
-                  className="text-[10px] uppercase tracking-widest text-gold font-bold hover:opacity-70 transition-opacity"
-                >
-                  Change
-                </button>
-              </div>
-            )}
-          </div>
-        ) : (mode?.includes('vocabulary') || mode?.includes('listening')) ? (
-          <div className="hidden md:flex items-center gap-4">
-            <div className="flex items-center gap-3 bg-white px-5 py-2.5 rounded-full border border-beige/30 shadow-sm">
-              <BarChart3 size={18} className="text-gold" />
-              <span className="text-sm font-bold text-dark/80 capitalize">{level} {mode}</span>
-            </div>
-            {isActive && (
+          ) : (mode?.includes('vocabulary') || mode?.includes('listening')) ? (
+            <div className="hidden md:flex items-center gap-4">
               <div className="flex items-center gap-3 bg-white px-5 py-2.5 rounded-full border border-beige/30 shadow-sm">
-                <Hash size={18} className="text-gold" />
-                <span className="text-sm font-bold text-dark/80">Question {questionCount}/{totalQuestions}</span>
+                <BarChart3 size={18} className="text-gold" />
+                <span className="text-sm font-bold text-dark/80 capitalize">{level} {mode}</span>
               </div>
-            )}
-          </div>
-        ) : (
-          <div className="hidden md:flex items-center gap-3 bg-white px-5 py-2.5 rounded-full border border-beige/30 shadow-sm">
-            <span className="text-sm font-bold text-dark/80 capitalize">{mode} Mode</span>
-          </div>
-        )}
-      </div>
+              {isActive && (
+                <div className="flex items-center gap-3 bg-white px-5 py-2.5 rounded-full border border-beige/30 shadow-sm">
+                  <Hash size={18} className="text-gold" />
+                  <span className="text-sm font-bold text-dark/80">Question {questionCount}/{totalQuestions}</span>
+                </div>
+              )}
+            </div>
+          ) : (
+            <div className="hidden md:flex items-center gap-3 bg-white px-5 py-2.5 rounded-full border border-beige/30 shadow-sm">
+              <span className="text-sm font-bold text-dark/80 capitalize">{mode} Mode</span>
+            </div>
+          )}
+        </div>
 
         {/* Action Icons */}
         <div className="flex items-center gap-4">
           {!(mode?.includes('vocabulary') || mode?.includes('listening')) && (
             <>
-              <button 
+              <button
                 onClick={() => setActivePanel(activePanel === 'transcript' ? 'none' : 'transcript')}
                 className={cn(
                   "p-3 rounded-2xl transition-all",
@@ -1251,13 +1253,13 @@ TONE:
               </button>
             </>
           )}
-          <button 
+          <button
             onClick={() => setIsSettingsOpen(true)}
             className="p-3 bg-white text-dark/40 hover:bg-beige/20 rounded-2xl border border-beige/10 transition-all"
           >
             <Sliders size={22} />
           </button>
-          <button 
+          <button
             onClick={endSession}
             className="p-3 bg-white text-dark/40 hover:bg-red-50 hover:text-red-500 rounded-2xl border border-beige/10 transition-all ml-2"
           >
@@ -1269,7 +1271,7 @@ TONE:
       {/* Center Content */}
       <div className="flex-1 flex flex-col md:flex-row items-center justify-center relative z-10 px-4 md:px-20 gap-8 md:gap-12">
         {mode === 'roleplay' && !selectedSituation ? (
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             className="w-full max-w-2xl grid grid-cols-1 md:grid-cols-2 gap-4"
@@ -1302,7 +1304,7 @@ TONE:
                   </div>
                 </button>
                 {selectedSituation === s.id && (
-                  <button 
+                  <button
                     onClick={(e) => {
                       e.stopPropagation();
                       rerollSubScenario(s.id);
@@ -1317,7 +1319,7 @@ TONE:
             ))}
           </motion.div>
         ) : ((mode === 'roleplay' && selectedSituation) || mode === 'conversation') && !isDifficultySelected ? (
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             className="w-full max-w-md bg-white p-10 rounded-[40px] shadow-xl border border-beige-mid/20 text-center"
@@ -1327,7 +1329,7 @@ TONE:
             </div>
             <h2 className="text-2xl md:text-3xl font-serif font-bold mb-2">Select Difficulty</h2>
             <p className="text-dark/50 mb-8 text-sm">Choose your level for this {mode} session.</p>
-            
+
             <div className="grid grid-cols-1 gap-3 mb-8">
               {(['beginner', 'intermediate', 'hard'] as const).map((l) => (
                 <button
@@ -1335,8 +1337,8 @@ TONE:
                   onClick={() => setLevel(l)}
                   className={cn(
                     "p-5 rounded-2xl border-2 transition-all font-bold text-lg capitalize",
-                    level === l 
-                      ? "border-gold bg-gold/5 text-gold shadow-sm" 
+                    level === l
+                      ? "border-gold bg-gold/5 text-gold shadow-sm"
                       : "border-beige-mid/10 hover:border-beige-mid/30 text-dark/40"
                   )}
                 >
@@ -1354,9 +1356,9 @@ TONE:
             >
               Start Session
             </button>
-            
+
             {mode === 'roleplay' && (
-              <button 
+              <button
                 onClick={() => {
                   setSelectedSituation(null);
                   setIsDifficultySelected(false);
@@ -1369,7 +1371,7 @@ TONE:
           </motion.div>
         ) : (mode?.includes('vocabulary') || mode?.includes('listening')) ? (
           !isActive ? (
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               className="w-full max-w-md bg-white p-10 rounded-[40px] shadow-xl border border-beige-mid/20 text-center"
@@ -1379,7 +1381,7 @@ TONE:
               </div>
               <h2 className="text-2xl md:text-3xl font-serif font-bold mb-2">Select Difficulty</h2>
               <p className="text-dark/50 mb-8 text-sm">Choose your level for this vocabulary session.</p>
-              
+
               <div className="grid grid-cols-1 gap-3 mb-8">
                 {(['beginner', 'intermediate', 'hard'] as const).map((l) => (
                   <button
@@ -1387,8 +1389,8 @@ TONE:
                     onClick={() => setLevel(l)}
                     className={cn(
                       "p-5 rounded-2xl border-2 transition-all font-bold text-lg capitalize",
-                      level === l 
-                        ? "border-gold bg-gold/5 text-gold shadow-sm" 
+                      level === l
+                        ? "border-gold bg-gold/5 text-gold shadow-sm"
                         : "border-beige-mid/10 hover:border-beige-mid/30 text-dark/40"
                     )}
                   >
@@ -1405,14 +1407,14 @@ TONE:
               </button>
             </motion.div>
           ) : mcqQuestion ? (
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               className="w-full max-w-xl bg-white p-8 md:p-12 rounded-[40px] shadow-xl border border-beige-mid/20"
             >
               <div className="flex items-center justify-between mb-8">
                 <div className="flex items-center gap-4">
-                  <button 
+                  <button
                     onClick={() => playQuizAudio(mcqQuestion.audioPrompt || '')}
                     className="w-12 h-12 bg-gold/10 rounded-2xl flex items-center justify-center text-gold hover:bg-gold/20 transition-all"
                   >
@@ -1421,7 +1423,7 @@ TONE:
                   <div className="flex flex-col">
                     <h3 className="text-2xl font-serif font-bold">Listen and Answer</h3>
                     {voiceStatus === 'standard' && (
-                      <motion.span 
+                      <motion.span
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         className="text-[10px] font-bold text-dark/30 uppercase tracking-widest flex items-center gap-1 mt-1"
@@ -1435,13 +1437,13 @@ TONE:
                   {mcqQuestion.type === 'written' && (
                     <div className="flex items-center gap-1.5 bg-red-50 px-3 py-1.5 rounded-full">
                       {[...Array(3)].map((_, i) => (
-                        <Heart 
-                          key={i} 
-                          size={16} 
+                        <Heart
+                          key={i}
+                          size={16}
                           className={cn(
                             "transition-all",
                             i < attemptsLeft ? "text-red-500 fill-red-500" : "text-red-200"
-                          )} 
+                          )}
                         />
                       ))}
                     </div>
@@ -1451,16 +1453,16 @@ TONE:
                   </div>
                 </div>
               </div>
-              
+
               <p className="text-xl font-medium mb-8 text-dark/80">{mcqQuestion.question}</p>
-              
+
               {mcqQuestion.type === 'mcq' ? (
                 <div className="grid grid-cols-1 gap-3">
                   {mcqQuestion.options?.map((opt, i) => {
                     const isSelected = selectedOption === i;
                     const isWrong = wrongOptions.includes(i);
                     const isCorrect = i === parseInt(mcqQuestion.answer as string);
-                    
+
                     return (
                       <button
                         key={i}
@@ -1509,7 +1511,7 @@ TONE:
                 </div>
               ) : (
                 <div className="space-y-6">
-                  <input 
+                  <input
                     type="text"
                     value={writtenAnswer}
                     onChange={(e) => setWrittenAnswer(e.target.value)}
@@ -1520,10 +1522,10 @@ TONE:
                         lastAudioActivityRef.current = Date.now();
                         const userAns = writtenAnswer.trim().toLowerCase();
                         const correctAns = (mcqQuestion.answer as string).toLowerCase();
-                        
+
                         // Exact match
                         const exact = userAns === correctAns;
-                        
+
                         // Fuzzy match: Levenshtein distance
                         const levenshtein = (a: string, b: string): number => {
                           const m = a.length, n = b.length;
@@ -1532,22 +1534,22 @@ TONE:
                           for (let j = 0; j <= n; j++) dp[0][j] = j;
                           for (let i = 1; i <= m; i++) {
                             for (let j = 1; j <= n; j++) {
-                              dp[i][j] = a[i-1] === b[j-1]
-                                ? dp[i-1][j-1]
-                                : 1 + Math.min(dp[i-1][j], dp[i][j-1], dp[i-1][j-1]);
+                              dp[i][j] = a[i - 1] === b[j - 1]
+                                ? dp[i - 1][j - 1]
+                                : 1 + Math.min(dp[i - 1][j], dp[i][j - 1], dp[i - 1][j - 1]);
                             }
                           }
                           return dp[m][n];
                         };
-                        
+
                         // Strip accents for comparison too
                         const stripAccents = (s: string) => s.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
                         const accentMatch = stripAccents(userAns) === stripAccents(correctAns);
-                        
+
                         const dist = levenshtein(userAns, correctAns);
                         const maxAllowedDist = correctAns.length <= 4 ? 1 : 2;
                         const fuzzyMatch = dist <= maxAllowedDist && dist > 0;
-                        
+
                         if (exact || accentMatch || fuzzyMatch) {
                           setIsAnswerCorrect(true);
                           setCorrectCount(prev => prev + 1);
@@ -1559,7 +1561,7 @@ TONE:
                           const nextAttempts = attemptsLeft - 1;
                           setAttemptsLeft(nextAttempts);
                           setAccuracy(prev => Math.max(0, prev - 10));
-                          
+
                           if (nextAttempts === 0) {
                             setIsAnswerCorrect(false);
                           }
@@ -1568,7 +1570,7 @@ TONE:
                     }}
                   />
                   {isAnswerCorrect === false && attemptsLeft === 0 && (
-                    <motion.div 
+                    <motion.div
                       initial={{ opacity: 0, y: -10 }}
                       animate={{ opacity: 1, y: 0 }}
                       className="text-center space-y-2"
@@ -1578,7 +1580,7 @@ TONE:
                     </motion.div>
                   )}
                   {isAnswerCorrect === false && attemptsLeft > 0 && (
-                    <motion.p 
+                    <motion.p
                       initial={{ opacity: 0, y: -10 }}
                       animate={{ opacity: 1, y: 0 }}
                       className="text-red-500 font-medium text-center"
@@ -1587,13 +1589,13 @@ TONE:
                     </motion.p>
                   )}
                   {isAnswerCorrect === true && (
-                    <motion.p 
+                    <motion.p
                       initial={{ opacity: 0, y: -10 }}
                       animate={{ opacity: 1, y: 0 }}
                       className="text-green-500 font-medium text-center flex items-center justify-center gap-2"
                     >
-                      <CheckCircle2 size={18} /> 
-                      {writtenAnswer.includes('✓') 
+                      <CheckCircle2 size={18} />
+                      {writtenAnswer.includes('✓')
                         ? <>Close enough! Correct: <span className="text-gold font-bold ml-1">{mcqQuestion.answer}</span></>
                         : 'Correct!'
                       }
@@ -1603,7 +1605,7 @@ TONE:
               )}
 
               {(isAnswerCorrect === true || (isAnswerCorrect === false && attemptsLeft === 0)) && (
-                <motion.div 
+                <motion.div
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   className="mt-8 flex justify-center"
@@ -1625,9 +1627,9 @@ TONE:
           )
         ) : (
           <>
-            <motion.div 
+            <motion.div
               layout
-              animate={{ 
+              animate={{
                 scale: activePanel === 'transcript' ? 0.75 : 1,
                 x: activePanel === 'transcript' ? (window.innerWidth > 768 ? -50 : 0) : 0,
                 y: activePanel === 'transcript' ? 0 : 0
@@ -1638,8 +1640,8 @@ TONE:
                 activePanel === 'transcript' ? "hidden md:flex" : "flex"
               )}
             >
-              <motion.div 
-                animate={{ 
+              <motion.div
+                animate={{
                   scale: isActive && !isPaused ? [1, 1.05, 1] : 1,
                   boxShadow: isActive && !isPaused ? [
                     '0 0 0 0px rgba(196, 151, 106, 0.2)',
@@ -1647,8 +1649,8 @@ TONE:
                     '0 0 0 0px rgba(196, 151, 106, 0)'
                   ] : 'none'
                 }}
-                transition={{ 
-                  repeat: Infinity, 
+                transition={{
+                  repeat: Infinity,
                   duration: 2,
                   boxShadow: { repeat: Infinity, duration: 2, ease: "easeOut" }
                 }}
@@ -1658,15 +1660,15 @@ TONE:
                   onClick={toggleSession}
                   className={cn(
                     "w-48 h-48 md:w-56 md:h-56 rounded-full flex items-center justify-center transition-all shadow-[0_20px_50px_-12px_rgba(196,151,106,0.3)] relative z-10",
-                    isActive && !isPaused ? "bg-gold text-white" : 
-                    isPaused ? "bg-yellow-500 text-white" :
-                    "bg-gold text-white hover:scale-105"
+                    isActive && !isPaused ? "bg-gold text-white" :
+                      isPaused ? "bg-yellow-500 text-white" :
+                        "bg-gold text-white hover:scale-105"
                   )}
                 >
                   <Mic size={isActive && !isPaused ? 80 : 72} className={cn(isActive && !isPaused && "animate-pulse")} />
                 </button>
               </motion.div>
-              
+
               <div className="mt-10 text-center">
                 <h2 className="text-xl font-medium text-dark/40 tracking-wide">
                   {isActive ? (isPaused ? "Session Paused" : "I'm listening...") : "Tap to speak"}
@@ -1687,7 +1689,7 @@ TONE:
                   <div className="flex items-center justify-between mb-6">
                     <h3 className="text-xl font-serif font-bold">Transcript</h3>
                     <div className="flex items-center gap-2">
-                      <button 
+                      <button
                         onClick={() => setShowTranslations(!showTranslations)}
                         className={cn(
                           "px-3 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-wider transition-all flex items-center gap-2",
@@ -1697,7 +1699,7 @@ TONE:
                         <Languages size={12} />
                         {showTranslations ? "Word Translate Active" : "Tap Words to Translate"}
                       </button>
-                      <button 
+                      <button
                         onClick={() => setTranscript([])}
                         className="p-2 hover:bg-beige rounded-full transition-all text-dark/40 hover:text-red-500"
                         title="Clear Transcript"
@@ -1710,7 +1712,7 @@ TONE:
                     </div>
                   </div>
 
-                  <div 
+                  <div
                     ref={transcriptScrollRef}
                     className="flex-1 overflow-y-auto pr-2 custom-scrollbar space-y-6"
                   >
@@ -1721,7 +1723,7 @@ TONE:
                         msg.role === 'user' ? "items-end" : "items-start"
                       )}>
                         <span className="text-[9px] font-bold uppercase tracking-widest text-dark/20">
-                          {msg.role === 'user' ? 'You' : 'Orati'}
+                          {msg.role === 'user' ? 'You' : 'Florir'}
                         </span>
                         <div className={cn(
                           "max-w-[90%] p-4 rounded-[24px] text-sm leading-relaxed shadow-sm transition-all duration-300",
@@ -1734,7 +1736,7 @@ TONE:
                                 const translation = activeWordTranslations[key];
                                 return (
                                   <span key={wIdx} className="relative group inline-block">
-                                    <span 
+                                    <span
                                       onClick={() => handleWordClick(i, wIdx, word)}
                                       className="cursor-pointer hover:bg-gold/30 hover:text-gold-dark rounded transition-colors px-1"
                                       title="Tap to translate this word"
@@ -1757,7 +1759,7 @@ TONE:
 
                         {/* Inline Correction for User Messages */}
                         {msg.role === 'user' && msg.correctedSentence && msg.correctedSentence !== msg.text && (
-                          <motion.div 
+                          <motion.div
                             initial={{ opacity: 0, y: -10 }}
                             animate={{ opacity: 1, y: 0 }}
                             className="max-w-[90%] mt-1 p-4 bg-green-50 border border-green-100 rounded-[24px] rounded-tr-none text-xs text-green-900 flex flex-col gap-2 shadow-sm"
@@ -1769,7 +1771,7 @@ TONE:
                             <p className="font-medium italic text-sm">"{msg.correctedSentence}"</p>
                             {showTryAgain && (
                               <div className="mt-2 flex items-center gap-2">
-                                <button 
+                                <button
                                   onClick={() => {
                                     // Logic to "try again" - maybe clear last message or just highlight
                                     console.log("Try again clicked for:", msg.correctedSentence);
@@ -1797,9 +1799,9 @@ TONE:
                                     <ChevronRight size={10} className="text-green-300" />
                                     <span className={cn(
                                       "font-bold",
-                                      c.severity > 7 ? "text-red-600" : 
-                                      c.severity > 4 ? "text-orange-600" :
-                                      "text-green-600"
+                                      c.severity > 7 ? "text-red-600" :
+                                        c.severity > 4 ? "text-orange-600" :
+                                          "text-green-600"
                                     )}>{c.correction}</span>
                                   </div>
                                 ))}
@@ -1811,16 +1813,16 @@ TONE:
                     ))}
                     <div ref={transcriptEndRef} />
                   </div>
-                  
+
                   {/* Inline Mobile Mic (Shows only inside transcript when active on small screens) */}
                   <div className="md:hidden mt-4 pt-4 border-t border-beige/20 flex flex-col items-center gap-2">
                     <button
                       onClick={toggleSession}
                       className={cn(
                         "w-16 h-16 rounded-full flex items-center justify-center transition-all shadow-[0_10px_25px_-5px_rgba(196,151,106,0.4)] relative",
-                        isActive && !isPaused ? "bg-gold text-white" : 
-                        isPaused ? "bg-yellow-500 text-white" :
-                        "bg-gold text-white"
+                        isActive && !isPaused ? "bg-gold text-white" :
+                          isPaused ? "bg-yellow-500 text-white" :
+                            "bg-gold text-white"
                       )}
                     >
                       <Mic size={24} className={cn(isActive && !isPaused && "animate-pulse")} />
@@ -1838,7 +1840,7 @@ TONE:
 
       {/* Bottom Info Section */}
       <div className="mt-auto px-4 md:px-10 pb-6 pt-4 flex flex-col gap-4 z-10">
-        
+
         {/* Mobile Settings Badges (Moved to bottom) */}
         <div className="md:hidden flex flex-wrap justify-center gap-2 mt-2">
           {mode === 'roleplay' && selectedSituation ? (
@@ -1847,12 +1849,12 @@ TONE:
               <span className="font-bold text-dark/80">{SITUATIONS.find(s => s.id === selectedSituation)?.title}</span>
             </div>
           ) : (mode?.includes('vocabulary') || mode?.includes('listening')) ? (
-             <div className="flex items-center gap-2 bg-white/80 backdrop-blur-sm px-4 py-2 rounded-full border border-beige/30 shadow-sm text-sm font-bold text-dark/80 capitalize">
-               {level} {mode}
-             </div>
+            <div className="flex items-center gap-2 bg-white/80 backdrop-blur-sm px-4 py-2 rounded-full border border-beige/30 shadow-sm text-sm font-bold text-dark/80 capitalize">
+              {level} {mode}
+            </div>
           ) : (
             <div className="flex items-center gap-2 bg-white/80 backdrop-blur-sm px-4 py-2 rounded-full border border-beige/30 shadow-sm text-sm font-bold text-dark/80 capitalize">
-               {mode} Mode
+              {mode} Mode
             </div>
           )}
         </div>
@@ -1861,61 +1863,61 @@ TONE:
         {!(mode?.includes('vocabulary') || mode?.includes('listening')) && isActive && (
           <div className="flex flex-col md:flex-row items-center md:items-end justify-between gap-6 w-full">
             {/* Accuracy Card */}
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="bg-white p-6 rounded-[32px] shadow-[0_12px_32px_-8px_rgba(44,35,24,0.06)] border border-beige/20 min-w-[200px]"
-          >
-            <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-dark/30 block mb-3">Live Accuracy</span>
-            <div className="flex items-baseline gap-3">
-              <span className="text-4xl font-serif font-bold text-dark">{accuracy}%</span>
-              {accuracy !== prevAccuracy && (
-                <span className={cn(
-                  "text-sm font-bold",
-                  accuracy > prevAccuracy ? "text-green-500" : "text-red-500"
-                )}>
-                  {accuracy > prevAccuracy ? '+' : ''}{accuracy - prevAccuracy}%
-                </span>
-              )}
-            </div>
-          </motion.div>
-
-          {/* Recent Correction Card */}
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="bg-white p-6 rounded-[32px] shadow-[0_12px_32px_-8px_rgba(44,35,24,0.06)] border border-beige/20 max-w-[320px] w-full"
-          >
-            <div className="flex items-center justify-between mb-3">
-              <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-dark/30">Recent Correction</span>
-              {lastFeedback && lastFeedback.mistakes.length > 0 && <AlertCircle size={14} className="text-red-400 animate-pulse" />}
-            </div>
-            {lastFeedback ? (
-              <div className="space-y-3">
-                <div className="text-sm text-dark font-medium leading-relaxed bg-green-50/50 p-3 rounded-2xl border border-green-100/50 italic">
-                  "{lastFeedback.correctedSentence}"
-                </div>
-                {lastFeedback.mistakes.length > 0 && (
-                  <div className="flex flex-wrap gap-1.5">
-                    {lastFeedback.mistakes.map((m, i) => (
-                      <span key={i} className="text-[9px] font-bold uppercase tracking-widest text-red-500 bg-red-50 px-2 py-1 rounded-lg">
-                        {m.original} → {m.correction}
-                      </span>
-                    ))}
-                  </div>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="bg-white p-6 rounded-[32px] shadow-[0_12px_32px_-8px_rgba(44,35,24,0.06)] border border-beige/20 min-w-[200px]"
+            >
+              <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-dark/30 block mb-3">Live Accuracy</span>
+              <div className="flex items-baseline gap-3">
+                <span className="text-4xl font-serif font-bold text-dark">{accuracy}%</span>
+                {accuracy !== prevAccuracy && (
+                  <span className={cn(
+                    "text-sm font-bold",
+                    accuracy > prevAccuracy ? "text-green-500" : "text-red-500"
+                  )}>
+                    {accuracy > prevAccuracy ? '+' : ''}{accuracy - prevAccuracy}%
+                  </span>
                 )}
               </div>
-            ) : (
-              <p className="text-sm text-dark/20 italic">No corrections yet</p>
-            )}
-          </motion.div>
+            </motion.div>
+
+            {/* Recent Correction Card */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="bg-white p-6 rounded-[32px] shadow-[0_12px_32px_-8px_rgba(44,35,24,0.06)] border border-beige/20 max-w-[320px] w-full"
+            >
+              <div className="flex items-center justify-between mb-3">
+                <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-dark/30">Recent Correction</span>
+                {lastFeedback && lastFeedback.mistakes.length > 0 && <AlertCircle size={14} className="text-red-400 animate-pulse" />}
+              </div>
+              {lastFeedback ? (
+                <div className="space-y-3">
+                  <div className="text-sm text-dark font-medium leading-relaxed bg-green-50/50 p-3 rounded-2xl border border-green-100/50 italic">
+                    "{lastFeedback.correctedSentence}"
+                  </div>
+                  {lastFeedback.mistakes.length > 0 && (
+                    <div className="flex flex-wrap gap-1.5">
+                      {lastFeedback.mistakes.map((m, i) => (
+                        <span key={i} className="text-[9px] font-bold uppercase tracking-widest text-red-500 bg-red-50 px-2 py-1 rounded-lg">
+                          {m.original} → {m.correction}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <p className="text-sm text-dark/20 italic">No corrections yet</p>
+              )}
+            </motion.div>
           </div>
         )}
       </div>
 
       {/* Settings Modal */}
-      <SettingsModal 
-        isOpen={isSettingsOpen} 
+      <SettingsModal
+        isOpen={isSettingsOpen}
         onClose={() => {
           setIsSettingsOpen(false);
           // Apply settings immediately if session is active
@@ -1925,7 +1927,7 @@ TONE:
             geminiRef.current.setVoiceName(parsed.voice_name || 'Kore');
             geminiRef.current.setPlaybackRate(parsed.playback_speed || 1.3);
           }
-        }} 
+        }}
       />
     </div>
   );
@@ -1959,10 +1961,10 @@ function AccuracyBar({ label, value }: { label: string, value: number }) {
         <span>{value}%</span>
       </div>
       <div className="h-1.5 bg-beige rounded-full overflow-hidden">
-        <motion.div 
+        <motion.div
           initial={{ width: 0 }}
           animate={{ width: `${value}%` }}
-          className="h-full bg-gold rounded-full" 
+          className="h-full bg-gold rounded-full"
         />
       </div>
     </div>
