@@ -181,6 +181,20 @@ export default function Landing() {
           </div>
         </section>
       )}
+      {/* Footer */}
+      <footer className="py-10 px-4 border-t border-beige-mid/20">
+        <div className="container mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-dark/35">
+          <div className="flex items-center gap-2">
+            <FlowerLogo size={14} className="text-gold/60" />
+            <span>© {new Date().getFullYear()} Orati — Non-Profit Language Learning</span>
+          </div>
+          <div className="flex items-center gap-5 font-medium">
+            <Link to="/privacy" className="hover:text-gold transition-colors">Privacy Policy</Link>
+            <Link to="/terms" className="hover:text-gold transition-colors">Terms of Service</Link>
+            <Link to="/nonprofit" className="hover:text-gold transition-colors">Our Mission</Link>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }

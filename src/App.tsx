@@ -12,6 +12,8 @@ import Session from './pages/Session';
 import APSession from './pages/APSession';
 import Demo from './pages/Demo';
 import NonProfit from './pages/NonProfit';
+import PrivacyPolicy from './pages/PrivacyPolicy';
+import TermsOfService from './pages/TermsOfService';
 import { useEffect, useState } from 'react';
 import { supabase } from './lib/supabase';
 
@@ -52,6 +54,8 @@ export default function App() {
           <Route path="/" element={<Landing />} />
           <Route path="/demo" element={<Demo />} />
           <Route path="/nonprofit" element={<NonProfit />} />
+          <Route path="/privacy" element={<PrivacyPolicy />} />
+          <Route path="/terms" element={<TermsOfService />} />
           <Route path="/auth" element={user ? <Navigate to="/dashboard" /> : <Auth />} />
           <Route path="/dashboard" element={user ? <Dashboard /> : <Navigate to="/auth" />} />
           <Route path="/session/ap-simulated" element={user ? <APSession mode="ap-simulated" /> : <Navigate to="/auth" />} />
