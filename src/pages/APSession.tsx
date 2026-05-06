@@ -8,6 +8,22 @@ import { Language } from '@/src/types';
 import { supabase } from '@/src/lib/supabase';
 import { Modality } from '@google/genai';
 
+// Fetch audio from Supabase Storage if available, return base64 PCM or null
+async function fetchStorageAudio(bucket: string, path: string): Promise<string | null> {
+  if (!supabase) return null;
+  try {
+    const { data, error } = await supabase.storage.from(bucket).download(path);
+    if (error || !data) return null;
+    const arrayBuffer = await data.arrayBuffer();
+    const bytes = new Uint8Array(arrayBuffer);
+    let binary = '';
+    for (let i = 0; i < bytes.length; i++) binary += String.fromCharCode(bytes[i]);
+    return btoa(binary);
+  } catch {
+    return null;
+  }
+}
+
 // ─── AP Conversation Prompts (20, progressively harder) ─── 
 
 const AP_CONVERSATIONS: {
@@ -239,41 +255,12 @@ const AP_CONVERSATIONS: {
   },
 ];
 
-// ─── AP Cultural Comparison Prompts (20, progressively harder) ───
 
-const AP_CULTURAL_COMPARISONS: {
-  id: number;
-  title: string;
-  difficulty: string;
-  prompt: string;
-}[] = [
-  { id: 1, title: "School Life", difficulty: "Easy", prompt: "Comparez le système scolaire de votre pays avec celui de la France. Parlez des horaires, des matières, et de la vie des élèves." },
-  { id: 2, title: "Family Meals", difficulty: "Easy", prompt: "Comparez les habitudes alimentaires et les repas en famille dans votre culture et dans une communauté francophone." },
-  { id: 3, title: "Sports and Leisure", difficulty: "Easy", prompt: "Comparez le rôle du sport dans la vie quotidienne de votre pays et dans un pays francophone." },
-  { id: 4, title: "Holidays and Celebrations", difficulty: "Easy", prompt: "Comparez une fête importante dans votre culture avec une fête célébrée dans un pays francophone." },
-  { id: 5, title: "Social Media Usage", difficulty: "Medium", prompt: "Comparez l'utilisation des réseaux sociaux par les jeunes dans votre pays et dans un pays francophone. Discutez des avantages et des inconvénients." },
-  { id: 6, title: "Education Systems", difficulty: "Medium", prompt: "Comparez l'importance des examens dans le système éducatif de votre pays avec le baccalauréat en France." },
-  { id: 7, title: "Urban vs Rural Life", difficulty: "Medium", prompt: "Comparez la vie urbaine et la vie rurale dans votre pays et dans un pays francophone. Quel mode de vie préférez-vous ?" },
-  { id: 8, title: "Fashion and Identity", difficulty: "Medium", prompt: "Comparez le rôle de la mode dans l'expression de l'identité personnelle dans votre culture et dans la culture française." },
-  { id: 9, title: "Music and Culture", difficulty: "Medium", prompt: "Comparez l'influence de la musique sur la culture des jeunes dans votre pays et dans un pays francophone." },
-  { id: 10, title: "Environmental Awareness", difficulty: "Medium", prompt: "Comparez les attitudes envers l'environnement et le développement durable dans votre pays et dans un pays francophone." },
-  { id: 11, title: "Work-Life Balance", difficulty: "Hard", prompt: "Comparez l'équilibre entre la vie professionnelle et la vie personnelle dans votre pays avec celui de la France. Discutez des congés, des horaires de travail, et de la qualité de vie." },
-  { id: 12, title: "Healthcare Systems", difficulty: "Hard", prompt: "Comparez le système de santé de votre pays avec le système de santé français. Discutez de l'accessibilité, du coût, et de la qualité des soins." },
-  { id: 13, title: "Immigration Policies", difficulty: "Hard", prompt: "Comparez les politiques d'immigration de votre pays avec celles de la France. Comment ces politiques affectent-elles la société ?" },
-  { id: 14, title: "Art and Architecture", difficulty: "Hard", prompt: "Comparez le rôle de l'art et de l'architecture dans le patrimoine culturel de votre pays et de la France." },
-  { id: 15, title: "Gender Equality", difficulty: "Hard", prompt: "Comparez les progrès en matière d'égalité des sexes dans votre pays et dans un pays francophone. Quels défis restent à relever ?" },
-  { id: 16, title: "Cuisine and Gastronomy", difficulty: "Advanced", prompt: "Comparez la philosophie culinaire de votre pays avec la gastronomie française. Discutez du rôle de la cuisine dans l'identité nationale et de la reconnaissance par l'UNESCO." },
-  { id: 17, title: "Colonial Legacy", difficulty: "Advanced", prompt: "Comparez l'impact de l'histoire coloniale sur la société et la culture dans votre pays et dans un pays francophone. Comment cet héritage influence-t-il les relations internationales aujourd'hui ?" },
-  { id: 18, title: "Youth Activism", difficulty: "Advanced", prompt: "Comparez le rôle de l'activisme des jeunes dans votre pays et dans un pays francophone. Comment les jeunes influencent-ils le changement social et politique ?" },
-  { id: 19, title: "Technology and Privacy", difficulty: "Advanced", prompt: "Comparez les attitudes envers la technologie et la protection de la vie privée dans votre pays et en France, notamment en ce qui concerne le RGPD." },
-  { id: 20, title: "Literature and Society", difficulty: "Advanced", prompt: "Comparez le rôle de la littérature dans la formation de l'identité nationale dans votre pays et dans le monde francophone. Citez des exemples d'œuvres influentes." },
-];
+type APPhase = 'select' | 'preview' | 'conversation' | 'turn-feedback' | 'grading' | 'results';
 
-// ─── Types ─── 
+interface TurnFeedback { score: number; comment: string; tip: string; }
 
-type APPhase = 'select' | 'preview' | 'conversation' | 'recording' | 'grading' | 'results';
-
-// ─── Component ─── 
+// ─── Component ───
 
 export default function APSession({ mode }: { mode: 'ap-simulated' | 'ap-speaking' }) {
   const [searchParams] = useSearchParams();
@@ -292,6 +279,8 @@ export default function APSession({ mode }: { mode: 'ap-simulated' | 'ap-speakin
   const [isGrading, setIsGrading] = useState(false);
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [showTranscript, setShowTranscript] = useState(false);
+  const [turnFeedbacks, setTurnFeedbacks] = useState<TurnFeedback[]>([]);
+  const [currentTurnFeedback, setCurrentTurnFeedback] = useState<TurnFeedback | null>(null);
 
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
@@ -302,9 +291,9 @@ export default function APSession({ mode }: { mode: 'ap-simulated' | 'ap-speakin
   const currentRecordingRef = useRef<string>('');
   const isSpeakingRef = useRef<boolean>(false);
   const shouldRecordRef = useRef<boolean>(false);
+  const turnFeedbacksRef = useRef<TurnFeedback[]>([]);
 
-  const isConversation = mode === 'ap-simulated';
-  const prompts = isConversation ? AP_CONVERSATIONS : AP_CULTURAL_COMPARISONS;
+  const prompts = AP_CONVERSATIONS;
 
   // Load completed IDs from Supabase (with localStorage fallback)
   useEffect(() => {
@@ -401,44 +390,54 @@ export default function APSession({ mode }: { mode: 'ap-simulated' | 'ap-speakin
     }
   };
 
-  // ─── TTS: Play AI speech using Gemini TTS (with mutex) ─── 
-  const speakText = useCallback(async (text: string): Promise<void> => {
-    // Mutex to prevent double playback
+  // ─── TTS: Play AI speech — try Storage first, then live TTS ─── 
+  const playBase64Audio = useCallback(async (base64Audio: string, sampleRate: number = 24000): Promise<void> => {
+    if (!audioContextRef.current || audioContextRef.current.state === 'closed') {
+      audioContextRef.current = new AudioContext();
+    }
+    const binary = atob(base64Audio);
+    const bytes = new Uint8Array(binary.length);
+    for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+    const pcm = new Int16Array(bytes.buffer);
+    const float32 = new Float32Array(pcm.length);
+    for (let i = 0; i < pcm.length; i++) float32[i] = pcm[i] / 32768.0;
+    const buffer = audioContextRef.current.createBuffer(1, float32.length, sampleRate);
+    buffer.getChannelData(0).set(float32);
+    const source = audioContextRef.current.createBufferSource();
+    source.buffer = buffer;
+    source.connect(audioContextRef.current.destination);
+    return new Promise<void>((resolve) => {
+      source.onended = () => resolve();
+      source.start();
+    });
+  }, []);
+
+  const speakText = useCallback(async (text: string, storagePath?: string): Promise<void> => {
     if (isSpeakingRef.current || !geminiRef.current) return;
     isSpeakingRef.current = true;
     setIsSpeaking(true);
     try {
+      // Try Supabase Storage first if a path is provided
+      if (storagePath) {
+        const storageAudio = await fetchStorageAudio('ap-audio', storagePath);
+        if (storageAudio) {
+          await playBase64Audio(storageAudio, 24000);
+          isSpeakingRef.current = false;
+          setIsSpeaking(false);
+          return;
+        }
+      }
+      // Fallback: live TTS generation
       const base64Audio = await geminiRef.current.generateSpeech(text, 'Kore');
       if (base64Audio) {
-        if (!audioContextRef.current || audioContextRef.current.state === 'closed') {
-          audioContextRef.current = new AudioContext();
-        }
-        const binary = atob(base64Audio);
-        const bytes = new Uint8Array(binary.length);
-        for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
-        const pcm = new Int16Array(bytes.buffer);
-        const float32 = new Float32Array(pcm.length);
-        for (let i = 0; i < pcm.length; i++) float32[i] = pcm[i] / 32768.0;
-        const buffer = audioContextRef.current.createBuffer(1, float32.length, 24000);
-        buffer.getChannelData(0).set(float32);
-        const source = audioContextRef.current.createBufferSource();
-        source.buffer = buffer;
-        source.connect(audioContextRef.current.destination);
-        return new Promise<void>((resolve) => {
-          source.onended = () => {
-            isSpeakingRef.current = false;
-            setIsSpeaking(false);
-            resolve();
-          };
-          source.start();
-        });
+        await playBase64Audio(base64Audio, 24000);
       }
     } catch (e) {
       console.error('TTS error:', e);
     }
     isSpeakingRef.current = false;
     setIsSpeaking(false);
-  }, []);
+  }, [playBase64Audio]);
 
   // ─── STT: Browser Speech Recognition (with proper accumulation) ─── 
   const accumulatedTextRef = useRef<string>('');
@@ -583,7 +582,33 @@ export default function APSession({ mode }: { mode: 'ap-simulated' | 'ap-speakin
     }, 1000);
   };
 
-  // ─── AP Conversation Flow ─── 
+  // ─── Per-turn grading ───
+  const gradeTurn = async (
+    conv: typeof AP_CONVERSATIONS[0],
+    turnIdx: number,
+    userResponse: string
+  ): Promise<TurnFeedback> => {
+    if (!geminiRef.current) return { score: 3, comment: 'Good effort!', tip: 'Keep practicing.' };
+    try {
+      const res = await geminiRef.current.generateContent({
+        model: 'gemini-2.5-flash',
+        contents: `You are a supportive ${lang} language coach grading a single turn of a conversation practice.
+
+Conversation topic: ${conv.title}
+AI said: "${conv.turns[turnIdx].text}"
+Student responded: "${userResponse || '(no response)'}"
+
+Return ONLY valid JSON (no markdown):
+{"score":<1-5>,"comment":"<one encouraging sentence about what they did well or how to improve>","tip":"<one specific grammar or vocab tip>"}`,
+      });
+      const json = JSON.parse((res.text || '').replace(/```json\s*/g,'').replace(/```\s*/g,'').trim());
+      return json as TurnFeedback;
+    } catch {
+      return { score: 3, comment: 'Nice try! Keep going.', tip: 'Try to use more complex sentences.' };
+    }
+  };
+
+  // ─── AP Conversation Flow ───
   const userResponsesRef = useRef<string[]>([]);
 
   const startConversation = async () => {
@@ -616,39 +641,31 @@ export default function APSession({ mode }: { mode: 'ap-simulated' | 'ap-speakin
     setPhase('conversation');
     setCurrentTurnIndex(turnIdx);
 
-    // AI speaks (timer hidden during this)
-    await speakText(conv.turns[turnIdx].text);
+    // AI speaks — try storage audio first
+    const storagePath = `${lang.toLowerCase()}/conversation/${conv.id}/${turnIdx}.pcm`;
+    await speakText(conv.turns[turnIdx].text, storagePath);
 
-    // NOW start STT + 20s timer for user response
+    // Start STT + 20s timer for user response
     await startSTT();
     startTimer(20, async () => {
       const response = stopSTT();
-      console.log(`[Turn ${turnIdx + 1}] User said: "${response}"`);
       userResponsesRef.current = [...userResponsesRef.current, response];
       setUserResponses([...userResponsesRef.current]);
-      // Move to next turn
-      await runConversationTurn(conv, turnIdx + 1);
+
+      // Grade this turn immediately
+      setPhase('turn-feedback');
+      setCurrentTurnFeedback(null);
+      const feedback = await gradeTurn(conv, turnIdx, response);
+      setCurrentTurnFeedback(feedback);
+      turnFeedbacksRef.current = [...turnFeedbacksRef.current, feedback];
+      setTurnFeedbacks([...turnFeedbacksRef.current]);
+
+      // Auto-advance to next turn after 4s
+      setTimeout(() => runConversationTurn(conv, turnIdx + 1), 4000);
     });
   };
 
-  // ─── AP Cultural Comparison Flow ─── 
-  const startCulturalComparison = () => {
-    if (!selectedPromptId) return;
-    setPhase('recording');
-    setUserResponses([]);
-
-    // 2 minute timer
-    startSTT();
-    startTimer(120, async () => {
-      const response = stopSTT();
-      setUserResponses([response]);
-      setPhase('grading');
-      const prompt = AP_CULTURAL_COMPARISONS.find(p => p.id === selectedPromptId)!;
-      await gradeCulturalComparison(prompt, response);
-    });
-  };
-
-  // ─── Grading (single Gemini text call — cheap) ─── 
+  // ─── Final overall grading ───
   const gradeConversation = async (conv: typeof AP_CONVERSATIONS[0], responses: string[]) => {
     setIsGrading(true);
     try {
@@ -694,40 +711,6 @@ Return ONLY valid JSON (no markdown, no code fences):
     setPhase('results');
   };
 
-  const gradeCulturalComparison = async (prompt: typeof AP_CULTURAL_COMPARISONS[0], response: string) => {
-    setIsGrading(true);
-    try {
-      if (!geminiRef.current) return;
-      const genResponse = await geminiRef.current.generateContent({
-        model: 'gemini-2.5-flash',
-        contents: `You are an AP French exam grader. Grade this cultural comparison speaking task out of 5 using AP standards.
-
-Prompt: ${prompt.prompt}
-Student response (2 min): ${response || '(no response)'}
-
-Return ONLY valid JSON (no markdown, no code fences):
-{
-  "score": <1-5>,
-  "treatmentOfTopic": { "score": <1-5>, "comment": "<brief>" },
-  "comparison": { "score": <1-5>, "comment": "<brief>" },
-  "vocabulary": { "score": <1-5>, "comment": "<brief>" },
-  "grammar": { "score": <1-5>, "comment": "<brief>" },
-  "overallComment": "<2-3 sentences>",
-  "tips": ["<tip1>", "<tip2>", "<tip3>"]
-}`,
-      });
-      const text = genResponse.text || '';
-      const jsonStr = text.replace(/```json\s*/g, '').replace(/```\s*/g, '').trim();
-      const result = JSON.parse(jsonStr);
-      setGradeResult(result);
-      saveCompleted(selectedPromptId!);
-    } catch (e) {
-      console.error('Grading error:', e);
-      setGradeResult({ score: 0, overallComment: 'Unable to grade. Please try again.', tips: [] });
-    }
-    setIsGrading(false);
-    setPhase('results');
-  };
 
   const resetSession = () => {
     setPhase('select');
@@ -735,30 +718,54 @@ Return ONLY valid JSON (no markdown, no code fences):
     setCurrentTurnIndex(0);
     setUserResponses([]);
     setGradeResult(null);
+    setTurnFeedbacks([]);
+    setCurrentTurnFeedback(null);
+    turnFeedbacksRef.current = [];
     setTimer(0);
     if (timerRef.current) clearInterval(timerRef.current);
     if (recognitionRef.current) { try { recognitionRef.current.stop(); } catch {} }
   };
 
-  // ─── Render: Prompt Selection ─── 
+  // ─── Render: Per-turn feedback ───
+  const renderTurnFeedback = () => {
+    const conv = AP_CONVERSATIONS.find(c => c.id === selectedPromptId)!;
+    const isLast = currentTurnIndex + 1 >= conv.turns.length;
+    return (
+      <div className="space-y-6 text-center">
+        <p className="text-xs font-bold uppercase tracking-wider text-dark/30">Turn {currentTurnIndex + 1} of {conv.turns.length}</p>
+        {!currentTurnFeedback ? (
+          <div className="py-12 space-y-4">
+            <div className="w-12 h-12 border-4 border-gold border-t-transparent rounded-full animate-spin mx-auto" />
+            <p className="text-dark/50 font-serif">Checking your response...</p>
+          </div>
+        ) : (
+          <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="space-y-4">
+            <div className="bg-gradient-to-br from-gold/10 to-petal/10 rounded-3xl p-8 border border-gold/20">
+              <div className="flex justify-center gap-1 mb-4">
+                {[1,2,3,4,5].map(s => <Star key={s} size={24} className={s <= currentTurnFeedback.score ? 'text-gold fill-gold' : 'text-beige-mid/30'} />)}
+              </div>
+              <p className="text-dark/70 leading-relaxed mb-3">{currentTurnFeedback.comment}</p>
+              <p className="text-sm text-gold font-bold">💡 {currentTurnFeedback.tip}</p>
+            </div>
+            <p className="text-xs text-dark/30">{isLast ? 'Calculating final score...' : 'Next round starting in 4 seconds...'}</p>
+          </motion.div>
+        )}
+      </div>
+    );
+  };
+
+  // ─── Render: Prompt Selection ───
   const renderSelect = () => {
     const nextUncompletedId = prompts.find(p => !completedIds.includes(p.id))?.id;
-    
     return (
       <div className="space-y-6">
         <div className="flex items-center justify-between mb-2">
-          <h2 className="text-xl md:text-2xl font-serif font-bold">
-            {isConversation ? 'AP Simulated Conversation' : 'Cultural Comparison Speaking'}
-          </h2>
+          <h2 className="text-xl md:text-2xl font-serif font-bold">Conversation Practice</h2>
           <span className="text-sm text-dark/40 font-bold">
             {completedIds.length} / {prompts.length} completed
           </span>
         </div>
-        <p className="text-dark/50 text-sm mb-4">
-          {isConversation 
-            ? 'Practice AP-style conversations. The AI speaks, then you have 20 seconds to respond.' 
-            : 'Speak for 2 minutes comparing cultures. Graded on AP standards.'}
-        </p>
+        <p className="text-dark/50 text-sm mb-4">The AI speaks, then you have 20 seconds to respond. 5 rounds — feedback after each one.</p>
 
         {/* Progress bar */}
         <div className="w-full h-2 bg-beige-mid/20 rounded-full overflow-hidden">
@@ -822,7 +829,7 @@ Return ONLY valid JSON (no markdown, no code fences):
             className="flex gap-3"
           >
             <button
-              onClick={() => isConversation ? startConversation() : startCulturalComparison()}
+              onClick={() => startConversation()}
               className="flex-1 py-4 bg-gold text-cream rounded-full font-bold text-lg hover:bg-gold/90 transition-all shadow-lg shadow-gold/20"
             >
               {completedIds.includes(selectedPromptId) ? 'Redo' : 'Start'} →
@@ -949,38 +956,6 @@ Return ONLY valid JSON (no markdown, no code fences):
     );
   };
 
-  // ─── Render: Cultural Comparison Recording ─── 
-  const renderRecording = () => {
-    const prompt = AP_CULTURAL_COMPARISONS.find(p => p.id === selectedPromptId)!;
-    const minutes = Math.floor(timer / 60);
-    const seconds = timer % 60;
-    return (
-      <div className="space-y-8">
-        <div className="bg-gold/10 rounded-3xl p-6 border border-gold/20">
-          <p className="text-sm text-gold font-bold uppercase tracking-wider mb-3">Prompt</p>
-          <p className="text-dark/70 text-lg leading-relaxed font-serif">{prompt.prompt}</p>
-        </div>
-        
-        <div className="text-center space-y-4">
-          <div className="inline-flex items-center gap-3 px-6 py-3 bg-red-50 border border-red-200 rounded-full">
-            <div className="w-3 h-3 rounded-full bg-red-500 animate-pulse" />
-            <span className="font-bold text-red-600">Speaking — {minutes}:{seconds.toString().padStart(2, '0')}</span>
-          </div>
-          <div className="text-5xl md:text-7xl font-bold text-gold font-mono">
-            {minutes}:{seconds.toString().padStart(2, '0')}
-          </div>
-          <div className="w-64 mx-auto h-2 bg-beige-mid/20 rounded-full overflow-hidden">
-            <motion.div 
-              className="h-full bg-gradient-to-r from-gold to-petal rounded-full"
-              style={{ width: `${(timer / 120) * 100}%` }}
-            />
-          </div>
-          <p className="text-dark/40 text-sm">Speak in {lang} for the full 2 minutes</p>
-        </div>
-      </div>
-    );
-  };
-
   // ─── Render: Grading spinner ─── 
   const renderGrading = () => (
     <div className="text-center space-y-6 py-12">
@@ -990,23 +965,16 @@ Return ONLY valid JSON (no markdown, no code fences):
     </div>
   );
 
-  // ─── Render: Results ─── 
+  // ─── Render: Results ───
   const renderResults = () => {
     if (!gradeResult) return null;
     const score = gradeResult.score || 0;
-    const categories = isConversation
-      ? [
-          { label: 'Conversation Flow', data: gradeResult.maintainingConversation },
-          { label: 'Vocabulary', data: gradeResult.vocabulary },
-          { label: 'Grammar', data: gradeResult.grammar },
-          { label: 'Pronunciation', data: gradeResult.pronunciation },
-        ]
-      : [
-          { label: 'Treatment of Topic', data: gradeResult.treatmentOfTopic },
-          { label: 'Cultural Comparison', data: gradeResult.comparison },
-          { label: 'Vocabulary', data: gradeResult.vocabulary },
-          { label: 'Grammar', data: gradeResult.grammar },
-        ];
+    const categories = [
+      { label: 'Conversation Flow', data: gradeResult.maintainingConversation },
+      { label: 'Vocabulary', data: gradeResult.vocabulary },
+      { label: 'Grammar', data: gradeResult.grammar },
+      { label: 'Pronunciation', data: gradeResult.pronunciation },
+    ];
 
     return (
       <div className="space-y-6">
@@ -1097,9 +1065,7 @@ Return ONLY valid JSON (no markdown, no code fences):
             <ArrowLeft size={20} />
           </button>
           <div>
-            <h1 className="text-xl font-serif font-bold">
-              {isConversation ? 'AP Conversation' : 'AP Cultural Comparison'}
-            </h1>
+            <h1 className="text-xl font-serif font-bold">Conversation Practice</h1>
             <p className="text-xs text-dark/40">{lang}</p>
           </div>
         </div>
@@ -1116,7 +1082,7 @@ Return ONLY valid JSON (no markdown, no code fences):
             {phase === 'select' && renderSelect()}
             {phase === 'preview' && renderPreview()}
             {phase === 'conversation' && renderConversation()}
-            {phase === 'recording' && renderRecording()}
+            {phase === 'turn-feedback' && renderTurnFeedback()}
             {phase === 'grading' && renderGrading()}
             {phase === 'results' && renderResults()}
           </motion.div>
