@@ -281,6 +281,7 @@ export default function APSession({ mode }: { mode: 'ap-simulated' | 'ap-speakin
   const [showTranscript, setShowTranscript] = useState(false);
   const [turnFeedbacks, setTurnFeedbacks] = useState<TurnFeedback[]>([]);
   const [currentTurnFeedback, setCurrentTurnFeedback] = useState<TurnFeedback | null>(null);
+  const [currentTranscript, setCurrentTranscript] = useState('');
 
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
@@ -292,6 +293,7 @@ export default function APSession({ mode }: { mode: 'ap-simulated' | 'ap-speakin
   const isSpeakingRef = useRef<boolean>(false);
   const shouldRecordRef = useRef<boolean>(false);
   const turnFeedbacksRef = useRef<TurnFeedback[]>([]);
+  const userAudiosRef = useRef<string[]>([]);
 
   const prompts = AP_CONVERSATIONS;
 
@@ -451,14 +453,22 @@ export default function APSession({ mode }: { mode: 'ap-simulated' | 'ap-speakin
       const stream = await navigator.mediaDevices.getUserMedia({ 
         audio: microphoneId ? { deviceId: { exact: microphoneId } } : true 
       });
-      mediaRecorderRef.current = new MediaRecorder(stream);
+      const mimeType = [
+        'audio/webm;codecs=opus', 
+        'audio/webm', 
+        'audio/ogg;codecs=opus', 
+        'audio/mp4',
+        'audio/wav'
+      ].find(t => MediaRecorder.isTypeSupported(t)) || '';
+      
+      mediaRecorderRef.current = new MediaRecorder(stream, { mimeType });
       audioChunksRef.current = [];
       mediaRecorderRef.current.ondataavailable = (e) => {
         if (e.data.size > 0) audioChunksRef.current.push(e.data);
       };
       mediaRecorderRef.current.start(1000);
     } catch (e) {
-      console.warn('Mic permission denied:', e);
+      console.warn('MediaRecorder/Mic error:', e);
     }
 
     const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
@@ -472,6 +482,7 @@ export default function APSession({ mode }: { mode: 'ap-simulated' | 'ap-speakin
     // Reset ALL transcript state for this recording session
     accumulatedTextRef.current = '';
     currentRecordingRef.current = '';
+    setCurrentTranscript('');
     shouldRecordRef.current = true;
 
     const createRecognition = () => {
@@ -489,6 +500,7 @@ export default function APSession({ mode }: { mode: 'ap-simulated' | 'ap-speakin
         }
         // APPEND to accumulated text (from previous auto-restarts)
         currentRecordingRef.current = accumulatedTextRef.current + sessionTranscript;
+        setCurrentTranscript(currentRecordingRef.current);
         console.log('[STT] Captured:', currentRecordingRef.current);
       };
 
@@ -528,26 +540,65 @@ export default function APSession({ mode }: { mode: 'ap-simulated' | 'ap-speakin
     try {
       recognition.start();
       recognitionRef.current = recognition;
-      setIsRecording(true);
     } catch (e) {
-      console.error('Failed to start STT:', e);
+      console.error('Failed to start SpeechRecognition:', e);
     }
+    
+    // Always set recording state to true if we at least tried to start
+    setIsRecording(true);
   }, [lang]);
 
-  const stopSTT = useCallback((): string => {
+  const stopSTT = useCallback(async (): Promise<{ text: string; audioBase64: string | null }> => {
     shouldRecordRef.current = false;
     if (recognitionRef.current) {
       try { recognitionRef.current.stop(); } catch {}
       recognitionRef.current = null;
     }
+    
+    let audioBase64: string | null = null;
     if (mediaRecorderRef.current && mediaRecorderRef.current.state !== 'inactive') {
-      try { mediaRecorderRef.current.stop(); } catch {}
+      const stopPromise = new Promise<void>((resolve) => {
+        const timeout = setTimeout(() => {
+          console.warn('[STT] MediaRecorder stop timed out');
+          resolve();
+        }, 3000);
+        mediaRecorderRef.current!.onstop = () => {
+          clearTimeout(timeout);
+          resolve();
+        };
+      });
+      
+      try {
+        mediaRecorderRef.current.stop();
+        await stopPromise;
+      } catch (e) {
+        console.error('[STT] Error stopping MediaRecorder:', e);
+      }
+      
+      if (audioChunksRef.current.length > 0) {
+        try {
+          const audioBlob = new Blob(audioChunksRef.current, { type: 'audio/webm' });
+          audioBase64 = await new Promise<string>((resolve) => {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+              const base64 = (reader.result as string).split(',')[1];
+              resolve(base64);
+            };
+            reader.readAsDataURL(audioBlob);
+          });
+        } catch (e) {
+          console.error('[STT] Error processing audio blob:', e);
+        }
+      }
+      
       mediaRecorderRef.current.stream.getTracks().forEach(t => t.stop());
     }
+    
     setIsRecording(false);
     const result = currentRecordingRef.current;
+    setCurrentTranscript('');
     console.log('[STT] Final captured text:', result);
-    return result;
+    return { text: result, audioBase64 };
   }, []);
 
   // Listen for device changes (like changing default mic in Chrome)
@@ -586,24 +637,43 @@ export default function APSession({ mode }: { mode: 'ap-simulated' | 'ap-speakin
   const gradeTurn = async (
     conv: typeof AP_CONVERSATIONS[0],
     turnIdx: number,
-    userResponse: string
+    userResponse: string,
+    audioBase64: string | null
   ): Promise<TurnFeedback> => {
     if (!geminiRef.current) return { score: 3, comment: 'Good effort!', tip: 'Keep practicing.' };
     try {
-      const res = await geminiRef.current.generateContent({
-        model: 'gemini-2.5-flash',
-        contents: `You are a supportive ${lang} language coach grading a single turn of a conversation practice.
-
+      const parts: any[] = [
+        { text: `You are a supportive ${lang} language coach grading a single turn of a conversation practice.
+        
 Conversation topic: ${conv.title}
 AI said: "${conv.turns[turnIdx].text}"
 Student responded: "${userResponse || '(no response)'}"
 
+Please analyze the student's response (both text transcript and audio if provided) for grammar, pronunciation, and accuracy.
+
 Return ONLY valid JSON (no markdown):
-{"score":<1-5>,"comment":"<one encouraging sentence about what they did well or how to improve>","tip":"<one specific grammar or vocab tip>"}`,
+{"score":<1-5>,"comment":"<one encouraging sentence about what they did well or how to improve>","tip":"<one specific grammar or vocab tip>"}` }
+      ];
+
+      if (audioBase64) {
+        parts.push({
+          inlineData: {
+            mimeType: "audio/webm",
+            data: audioBase64
+          }
+        });
+      }
+
+      const res = await geminiRef.current.generateContent({
+        model: 'gemini-2.5-flash',
+        contents: [{ role: 'user', parts }],
       });
-      const json = JSON.parse((res.text || '').replace(/```json\s*/g,'').replace(/```\s*/g,'').trim());
+      
+      const resText = typeof res === 'string' ? res : res.text || '';
+      const json = JSON.parse(resText.replace(/```json\s*/g,'').replace(/```\s*/g,'').trim());
       return json as TurnFeedback;
-    } catch {
+    } catch (e) {
+      console.error('[Grading] Turn grading error:', e);
       return { score: 3, comment: 'Nice try! Keep going.', tip: 'Try to use more complex sentences.' };
     }
   };
@@ -618,6 +688,7 @@ Return ONLY valid JSON (no markdown):
     setCurrentTurnIndex(0);
     setUserResponses([]);
     userResponsesRef.current = [];
+    userAudiosRef.current = [];
 
     // 60s preview
     startTimer(60, () => runConversationTurn(conv, 0));
@@ -648,20 +719,31 @@ Return ONLY valid JSON (no markdown):
     // Start STT + 20s timer for user response
     await startSTT();
     startTimer(20, async () => {
-      const response = stopSTT();
-      userResponsesRef.current = [...userResponsesRef.current, response];
-      setUserResponses([...userResponsesRef.current]);
+      try {
+        console.log('[Turn] Turn time up, stopping STT...');
+        const { text: response, audioBase64 } = await stopSTT();
+        
+        userResponsesRef.current = [...userResponsesRef.current, response];
+        userAudiosRef.current = [...userAudiosRef.current, audioBase64 || ''];
+        setUserResponses([...userResponsesRef.current]);
 
-      // Grade this turn immediately
-      setPhase('turn-feedback');
-      setCurrentTurnFeedback(null);
-      const feedback = await gradeTurn(conv, turnIdx, response);
-      setCurrentTurnFeedback(feedback);
-      turnFeedbacksRef.current = [...turnFeedbacksRef.current, feedback];
-      setTurnFeedbacks([...turnFeedbacksRef.current]);
+        // Grade this turn immediately
+        setPhase('turn-feedback');
+        setCurrentTurnFeedback(null);
+        
+        console.log('[Turn] Sending for turn grading...');
+        const feedback = await gradeTurn(conv, turnIdx, response, audioBase64);
+        setCurrentTurnFeedback(feedback);
+        turnFeedbacksRef.current = [...turnFeedbacksRef.current, feedback];
+        setTurnFeedbacks([...turnFeedbacksRef.current]);
 
-      // Auto-advance to next turn after 4s
-      setTimeout(() => runConversationTurn(conv, turnIdx + 1), 4000);
+        // Auto-advance to next turn after 4s
+        setTimeout(() => runConversationTurn(conv, turnIdx + 1), 4000);
+      } catch (err) {
+        console.error('[Turn] Error in turn completion:', err);
+        // Fallback: move to next turn anyway
+        setTimeout(() => runConversationTurn(conv, turnIdx + 1), 2000);
+      }
     });
   };
 
@@ -669,22 +751,16 @@ Return ONLY valid JSON (no markdown):
   const gradeConversation = async (conv: typeof AP_CONVERSATIONS[0], responses: string[]) => {
     setIsGrading(true);
     try {
-      const liveKey = import.meta.env.VITE_GEMINI_LIVE_API_KEY || import.meta.env.VITE_VERTEX_API_KEY;
-      if (!liveKey || !geminiRef.current) return;
+      const liveKey = import.meta.env.VITE_GEMINI_LIVE_API_KEY || import.meta.env.VITE_GEMINI_TTS_API_KEY || import.meta.env.VITE_VERTEX_API_KEY;
+      if (!geminiRef.current) return;
 
-      const transcriptText = conv.turns.map((t, i) => 
-        `AI: ${t.text}\nUser: ${responses[i] || '(no response)'}`
-      ).join('\n\n');
-
-      const response = await geminiRef.current.generateContent({
-        model: 'gemini-2.5-flash',
-        contents: `You are an AP French exam grader. Grade this simulated conversation out of 5 using AP standards.
+      const parts: any[] = [
+        { text: `You are an AP ${lang} exam grader. Grade this simulated conversation out of 5 using AP standards.
 
 Conversation topic: ${conv.title}
 Introduction: ${conv.intro}
 
-Transcript:
-${transcriptText}
+I will provide the transcript and the audio for each of the student's responses. Please evaluate the overall flow, vocabulary, grammar, and pronunciation.
 
 Return ONLY valid JSON (no markdown, no code fences):
 {
@@ -695,7 +771,24 @@ Return ONLY valid JSON (no markdown, no code fences):
   "pronunciation": { "score": <1-5>, "comment": "<brief>" },
   "overallComment": "<2-3 sentences>",
   "tips": ["<tip1>", "<tip2>", "<tip3>"]
-}`,
+}` }
+      ];
+
+      responses.forEach((resp, i) => {
+        parts.push({ text: `Turn ${i+1} User Response: ${resp || '(no response)'}` });
+        if (userAudiosRef.current[i]) {
+          parts.push({
+            inlineData: {
+              mimeType: "audio/webm",
+              data: userAudiosRef.current[i]
+            }
+          });
+        }
+      });
+
+      const response = await geminiRef.current.generateContent({
+        model: 'gemini-2.5-flash',
+        contents: [{ role: 'user', parts }],
       });
       
       const text = response.text || '';
@@ -720,7 +813,8 @@ Return ONLY valid JSON (no markdown, no code fences):
     setGradeResult(null);
     setTurnFeedbacks([]);
     setCurrentTurnFeedback(null);
-    turnFeedbacksRef.current = [];
+    userResponsesRef.current = [];
+    userAudiosRef.current = [];
     setTimer(0);
     if (timerRef.current) clearInterval(timerRef.current);
     if (recognitionRef.current) { try { recognitionRef.current.stop(); } catch {} }
@@ -932,8 +1026,8 @@ Return ONLY valid JSON (no markdown, no code fences):
           </AnimatePresence>
         </motion.div>
 
-        {/* Timer + Recording indicator */}
-        {isRecording && (
+        {/* Timer + Recording indicator — only show when user is speaking, NOT during AI speech */}
+        {isRecording && !isSpeaking && (
           <motion.div 
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -949,6 +1043,39 @@ Return ONLY valid JSON (no markdown, no code fences):
                 className="h-full bg-gold rounded-full"
                 style={{ width: `${(timer / 20) * 100}%` }}
               />
+            </div>
+
+            {/* User Real-time Transcript */}
+            <AnimatePresence>
+              {currentTranscript && (
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0 }}
+                  className="max-w-md mx-auto p-4 bg-white/50 border border-beige-mid/20 rounded-2xl shadow-sm backdrop-blur-sm"
+                >
+                  <p className="text-sm font-serif italic text-dark/60 leading-relaxed">
+                    "{currentTranscript}"
+                  </p>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </motion.div>
+        )}
+        {/* Show AI speaking indicator */}
+        {isSpeaking && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="text-center"
+          >
+            <div className="inline-flex items-center gap-3 px-6 py-3 bg-gold/10 border border-gold/20 rounded-full">
+              <div className="flex gap-1">
+                {[0,1,2].map(i => (
+                  <div key={i} className="w-1.5 h-4 bg-gold rounded-full animate-bounce" style={{ animationDelay: `${i * 0.15}s` }} />
+                ))}
+              </div>
+              <span className="font-bold text-gold">AI Partner is speaking...</span>
             </div>
           </motion.div>
         )}
@@ -969,78 +1096,177 @@ Return ONLY valid JSON (no markdown, no code fences):
   const renderResults = () => {
     if (!gradeResult) return null;
     const score = gradeResult.score || 0;
+    const pct = (score / 5) * 100;
+    const scoreLabel = score >= 5 ? 'Excellent!' : score >= 4 ? 'Great Job!' : score >= 3 ? 'Good Effort' : score >= 2 ? 'Keep Practicing' : 'Just Getting Started';
+    const scoreColor = score >= 4 ? 'text-green-600' : score >= 3 ? 'text-gold' : 'text-orange-500';
+    const conv = AP_CONVERSATIONS.find(c => c.id === selectedPromptId)!;
+
     const categories = [
-      { label: 'Conversation Flow', data: gradeResult.maintainingConversation },
-      { label: 'Vocabulary', data: gradeResult.vocabulary },
-      { label: 'Grammar', data: gradeResult.grammar },
-      { label: 'Pronunciation', data: gradeResult.pronunciation },
+      { label: 'Conversation Flow', icon: '💬', data: gradeResult.maintainingConversation },
+      { label: 'Vocabulary', icon: '📚', data: gradeResult.vocabulary },
+      { label: 'Grammar', icon: '✏️', data: gradeResult.grammar },
+      { label: 'Pronunciation', icon: '🎙️', data: gradeResult.pronunciation },
     ];
+
+    const circumference = 2 * Math.PI * 44;
+    const dashOffset = circumference * (1 - pct / 100);
 
     return (
       <div className="space-y-6">
-        {/* Score header */}
-        <div className="text-center bg-gradient-to-br from-gold/10 to-petal/10 rounded-[32px] p-8 border border-gold/20">
-          <div className="flex items-center justify-center gap-1 mb-3">
+        {/* Hero Score Card */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="relative overflow-hidden rounded-[32px] bg-gradient-to-br from-dark via-dark/95 to-dark/90 p-8 text-center text-cream shadow-2xl"
+        >
+          {/* Background glow */}
+          <div className="absolute inset-0 bg-gradient-to-br from-gold/20 via-transparent to-petal/10 pointer-events-none" />
+
+          <p className="text-gold/70 text-xs font-bold uppercase tracking-widest mb-6">{conv?.title}</p>
+
+          {/* SVG Score Ring */}
+          <div className="relative w-32 h-32 mx-auto mb-4">
+            <svg className="w-32 h-32 -rotate-90" viewBox="0 0 100 100">
+              <circle cx="50" cy="50" r="44" fill="none" stroke="rgba(255,255,255,0.08)" strokeWidth="8" />
+              <circle
+                cx="50" cy="50" r="44" fill="none"
+                stroke="#C9A84C"
+                strokeWidth="8"
+                strokeLinecap="round"
+                strokeDasharray={circumference}
+                strokeDashoffset={dashOffset}
+                style={{ transition: 'stroke-dashoffset 1s ease' }}
+              />
+            </svg>
+            <div className="absolute inset-0 flex flex-col items-center justify-center">
+              <span className="text-3xl font-bold text-gold">{score}</span>
+              <span className="text-xs text-cream/40 font-medium">/5</span>
+            </div>
+          </div>
+
+          <p className={cn('text-2xl font-serif font-bold mb-1', scoreColor)}>{scoreLabel}</p>
+          <div className="flex justify-center gap-1 mt-2">
             {[1,2,3,4,5].map(s => (
-              <Star key={s} size={28} className={s <= score ? "text-gold fill-gold" : "text-beige-mid/30"} />
+              <Star key={s} size={18} className={s <= score ? 'text-gold fill-gold' : 'text-cream/15'} />
             ))}
           </div>
-          <div className="text-4xl md:text-5xl font-bold text-gold mb-2">{score} / 5</div>
-          <p className="text-dark/50 text-sm">AP Score</p>
-        </div>
+        </motion.div>
 
-        {/* Category breakdown */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          {categories.map((cat, i) => (
-            <div key={i} className="bg-white rounded-2xl border border-beige-mid/20 p-4">
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-sm font-bold text-dark/70">{cat.label}</span>
-                <span className="text-sm font-bold text-gold">{cat.data?.score || 0}/5</span>
+        {/* Category Breakdown */}
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.1 }}
+          className="bg-white rounded-3xl border border-beige-mid/20 p-6 shadow-sm space-y-5"
+        >
+          <h3 className="font-serif font-bold text-dark">Score Breakdown</h3>
+          {categories.map((cat, i) => {
+            const s = cat.data?.score || 0;
+            const barColor = s >= 4 ? 'bg-green-400' : s >= 3 ? 'bg-gold' : 'bg-orange-400';
+            return (
+              <div key={i}>
+                <div className="flex items-center justify-between mb-1.5">
+                  <span className="text-sm font-bold text-dark/70 flex items-center gap-1.5">
+                    <span>{cat.icon}</span> {cat.label}
+                  </span>
+                  <span className="text-sm font-bold text-dark">{s}/5</span>
+                </div>
+                <div className="w-full h-2 bg-beige-mid/20 rounded-full overflow-hidden mb-1">
+                  <motion.div
+                    className={cn('h-full rounded-full', barColor)}
+                    initial={{ width: 0 }}
+                    animate={{ width: `${(s / 5) * 100}%` }}
+                    transition={{ delay: 0.2 + i * 0.08, duration: 0.6, ease: 'easeOut' }}
+                  />
+                </div>
+                <p className="text-xs text-dark/40 leading-snug">{cat.data?.comment || ''}</p>
               </div>
-              <div className="w-full h-1.5 bg-beige-mid/20 rounded-full overflow-hidden mb-2">
-                <div 
-                  className="h-full bg-gold rounded-full transition-all" 
-                  style={{ width: `${((cat.data?.score || 0) / 5) * 100}%` }}
-                />
-              </div>
-              <p className="text-xs text-dark/40">{cat.data?.comment || ''}</p>
-            </div>
-          ))}
-        </div>
+            );
+          })}
+        </motion.div>
 
-        {/* Overall comment */}
-        <div className="bg-white rounded-2xl border border-beige-mid/20 p-6">
-          <h3 className="font-serif font-bold mb-2">Overall Feedback</h3>
-          <p className="text-dark/60 text-sm leading-relaxed">{gradeResult.overallComment}</p>
-        </div>
+        {/* Overall Feedback */}
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2 }}
+          className="bg-gold/5 border border-gold/20 rounded-3xl p-6"
+        >
+          <h3 className="font-serif font-bold text-dark mb-2 flex items-center gap-2">
+            <span>🧑‍🏫</span> Coach Feedback
+          </h3>
+          <p className="text-dark/65 text-sm leading-relaxed">{gradeResult.overallComment}</p>
+        </motion.div>
 
         {/* Tips */}
         {gradeResult.tips?.length > 0 && (
-          <div className="bg-blue-50/50 rounded-2xl border border-blue-200/30 p-6">
-            <h3 className="font-serif font-bold mb-3 text-blue-700">Tips to Improve</h3>
-            <ul className="space-y-2">
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 }}
+            className="bg-white border border-beige-mid/20 rounded-3xl p-6 shadow-sm"
+          >
+            <h3 className="font-serif font-bold text-dark mb-4 flex items-center gap-2">
+              <span>💡</span> Tips to Improve
+            </h3>
+            <ul className="space-y-3">
               {gradeResult.tips.map((tip: string, i: number) => (
-                <li key={i} className="flex items-start gap-2 text-sm text-blue-600">
-                  <ChevronRight size={14} className="shrink-0 mt-0.5" />
-                  <span>{tip}</span>
+                <li key={i} className="flex items-start gap-3">
+                  <span className="w-6 h-6 rounded-full bg-gold/10 text-gold text-xs font-bold flex items-center justify-center shrink-0 mt-0.5">{i + 1}</span>
+                  <span className="text-sm text-dark/65 leading-relaxed">{tip}</span>
                 </li>
               ))}
             </ul>
-          </div>
+          </motion.div>
+        )}
+
+        {/* Turn-by-Turn Review */}
+        {turnFeedbacks.length > 0 && (
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4 }}
+            className="bg-white border border-beige-mid/20 rounded-3xl p-6 shadow-sm"
+          >
+            <h3 className="font-serif font-bold text-dark mb-4 flex items-center gap-2">
+              <span>📋</span> Turn-by-Turn Review
+            </h3>
+            <div className="space-y-3">
+              {turnFeedbacks.map((tf, i) => (
+                <div key={i} className="flex items-start gap-3 p-3 rounded-2xl bg-beige/30">
+                  <div className="shrink-0 w-8 h-8 rounded-full bg-white border border-beige-mid/30 flex items-center justify-center text-xs font-bold text-dark/40">{i + 1}</div>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2 mb-1">
+                      <div className="flex gap-0.5">
+                        {[1,2,3,4,5].map(s => (
+                          <Star key={s} size={12} className={s <= tf.score ? 'text-gold fill-gold' : 'text-beige-mid/30'} />
+                        ))}
+                      </div>
+                    </div>
+                    <p className="text-xs text-dark/60 leading-snug">{tf.comment}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </motion.div>
         )}
 
         {/* Actions */}
-        <div className="flex flex-col sm:flex-row gap-3">
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.5 }}
+          className="flex flex-col sm:flex-row gap-3 pb-8"
+        >
           <button
             onClick={resetSession}
-            className="flex-1 py-4 bg-white border-2 border-beige-mid/20 rounded-full font-bold hover:bg-beige/30 transition-all flex items-center justify-center gap-2"
+            className="flex-1 py-4 bg-white border-2 border-beige-mid/30 rounded-full font-bold hover:bg-beige/30 transition-all flex items-center justify-center gap-2 text-dark/70"
           >
             <RotateCcw size={16} /> Back to Prompts
           </button>
           <button
             onClick={() => {
               resetSession();
-              // Select the next prompt
               const nextId = prompts.find(p => !completedIds.includes(p.id) && p.id !== selectedPromptId)?.id;
               if (nextId) setSelectedPromptId(nextId);
             }}
@@ -1048,7 +1274,7 @@ Return ONLY valid JSON (no markdown, no code fences):
           >
             Next Prompt →
           </button>
-        </div>
+        </motion.div>
       </div>
     );
   };

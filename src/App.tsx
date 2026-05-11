@@ -13,6 +13,8 @@ import APSession from './pages/APSession';
 import VocabSession from './pages/VocabSession';
 import EssayTips from './pages/EssayTips';
 import AdminAudioUpload from './pages/AdminAudioUpload';
+import PrivacyPolicy from './pages/PrivacyPolicy';
+import TermsOfService from './pages/TermsOfService';
 import Demo from './pages/Demo';
 import NonProfit from './pages/NonProfit';
 import { useEffect, useState } from 'react';
@@ -70,6 +72,10 @@ export default function App() {
 
           {/* Admin — Audio Upload (not linked from nav) */}
           <Route path="/admin/audio-upload" element={<AdminAudioUpload />} />
+
+          {/* Legal */}
+          <Route path="/privacy" element={<PrivacyPolicy />} />
+          <Route path="/terms" element={<TermsOfService />} />
 
           {/* General session catch-all */}
           <Route path="/session/:mode" element={user ? <Session /> : <Navigate to="/auth" />} />

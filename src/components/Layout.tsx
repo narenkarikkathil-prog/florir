@@ -151,8 +151,15 @@ export default function Layout({ children }: { children: React.ReactNode }) {
               </Link>
             </div>
           </div>
-          <div className="mt-12 pt-8 border-t border-beige-mid/20 text-center text-xs text-dark/40">
-            © {new Date().getFullYear()} Orati. All rights reserved.
+          <div className="mt-12 pt-8 border-t border-beige-mid/20 flex flex-col md:flex-row items-center justify-between gap-4">
+            <p className="text-center text-xs text-dark/40 order-2 md:order-1">
+              © {new Date().getFullYear()} Orati. All rights reserved.
+            </p>
+            <div className="flex items-center gap-6 text-xs text-dark/40 order-1 md:order-2">
+              <Link to="/privacy" className="hover:text-gold transition-colors font-medium">Privacy Policy</Link>
+              <Link to="/terms" className="hover:text-gold transition-colors font-medium">Terms of Service</Link>
+              <Link to="/nonprofit" className="hover:text-gold transition-colors font-medium">Non-Profit</Link>
+            </div>
           </div>
         </div>
       </footer>
