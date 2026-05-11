@@ -1,0 +1,1634 @@
+{
+  "French": {
+    "easy": [
+      {
+        "english": "to be",
+        "target": "être"
+      },
+      {
+        "english": "to have",
+        "target": "avoir"
+      },
+      {
+        "english": "to go",
+        "target": "aller"
+      },
+      {
+        "english": "to do / make",
+        "target": "faire"
+      },
+      {
+        "english": "to say / tell",
+        "target": "dire"
+      },
+      {
+        "english": "to see",
+        "target": "voir"
+      },
+      {
+        "english": "to want",
+        "target": "vouloir"
+      },
+      {
+        "english": "to come",
+        "target": "venir"
+      },
+      {
+        "english": "to know (fact)",
+        "target": "savoir"
+      },
+      {
+        "english": "to take",
+        "target": "prendre"
+      },
+      {
+        "english": "to give",
+        "target": "donner"
+      },
+      {
+        "english": "to eat",
+        "target": "manger"
+      },
+      {
+        "english": "to drink",
+        "target": "boire"
+      },
+      {
+        "english": "to speak / talk",
+        "target": "parler"
+      },
+      {
+        "english": "to listen",
+        "target": "écouter"
+      },
+      {
+        "english": "to look / watch",
+        "target": "regarder"
+      },
+      {
+        "english": "to work",
+        "target": "travailler"
+      },
+      {
+        "english": "to play",
+        "target": "jouer"
+      },
+      {
+        "english": "to walk",
+        "target": "marcher"
+      },
+      {
+        "english": "to run",
+        "target": "courir"
+      },
+      {
+        "english": "to sleep",
+        "target": "dormir"
+      },
+      {
+        "english": "to live",
+        "target": "vivre"
+      },
+      {
+        "english": "to love / like",
+        "target": "aimer"
+      },
+      {
+        "english": "to need",
+        "target": "avoir besoin de"
+      },
+      {
+        "english": "to think",
+        "target": "penser"
+      },
+      {
+        "english": "to call",
+        "target": "appeler"
+      },
+      {
+        "english": "to ask",
+        "target": "demander"
+      },
+      {
+        "english": "to answer",
+        "target": "répondre"
+      },
+      {
+        "english": "to read",
+        "target": "lire"
+      },
+      {
+        "english": "to write",
+        "target": "écrire"
+      },
+      {
+        "english": "to buy",
+        "target": "acheter"
+      },
+      {
+        "english": "to open",
+        "target": "ouvrir"
+      },
+      {
+        "english": "to close",
+        "target": "fermer"
+      },
+      {
+        "english": "to sit",
+        "target": "s'asseoir"
+      },
+      {
+        "english": "to stand",
+        "target": "se lever"
+      },
+      {
+        "english": "to wait",
+        "target": "attendre"
+      },
+      {
+        "english": "to arrive",
+        "target": "arriver"
+      },
+      {
+        "english": "to leave / depart",
+        "target": "partir"
+      },
+      {
+        "english": "to stop",
+        "target": "s'arrêter"
+      },
+      {
+        "english": "to start",
+        "target": "commencer"
+      },
+      {
+        "english": "to finish",
+        "target": "finir"
+      },
+      {
+        "english": "to know (person)",
+        "target": "connaître"
+      },
+      {
+        "english": "to find",
+        "target": "trouver"
+      },
+      {
+        "english": "to put / place",
+        "target": "mettre"
+      },
+      {
+        "english": "to bring",
+        "target": "apporter"
+      },
+      {
+        "english": "to carry",
+        "target": "porter"
+      },
+      {
+        "english": "to show",
+        "target": "montrer"
+      },
+      {
+        "english": "to use",
+        "target": "utiliser"
+      },
+      {
+        "english": "to help",
+        "target": "aider"
+      },
+      {
+        "english": "to sing",
+        "target": "chanter"
+      },
+      {
+        "english": "to dance",
+        "target": "danser"
+      },
+      {
+        "english": "to cook",
+        "target": "cuisiner"
+      },
+      {
+        "english": "to clean",
+        "target": "nettoyer"
+      },
+      {
+        "english": "to wash",
+        "target": "laver"
+      },
+      {
+        "english": "to swim",
+        "target": "nager"
+      },
+      {
+        "english": "to travel",
+        "target": "voyager"
+      },
+      {
+        "english": "to pay",
+        "target": "payer"
+      },
+      {
+        "english": "to sell",
+        "target": "vendre"
+      },
+      {
+        "english": "to learn",
+        "target": "apprendre"
+      },
+      {
+        "english": "to teach",
+        "target": "enseigner"
+      },
+      {
+        "english": "to smile",
+        "target": "sourire"
+      },
+      {
+        "english": "to laugh",
+        "target": "rire"
+      },
+      {
+        "english": "to cry",
+        "target": "pleurer"
+      },
+      {
+        "english": "to try",
+        "target": "essayer"
+      },
+      {
+        "english": "to return",
+        "target": "revenir / retourner"
+      },
+      {
+        "english": "to send",
+        "target": "envoyer"
+      },
+      {
+        "english": "to receive",
+        "target": "recevoir"
+      }
+    ],
+    "medium": [
+      {
+        "english": "to understand",
+        "target": "comprendre"
+      },
+      {
+        "english": "to remember",
+        "target": "se souvenir"
+      },
+      {
+        "english": "to forget",
+        "target": "oublier"
+      },
+      {
+        "english": "to lose",
+        "target": "perdre"
+      },
+      {
+        "english": "to change",
+        "target": "changer"
+      },
+      {
+        "english": "to feel",
+        "target": "sentir / ressentir"
+      },
+      {
+        "english": "to believe",
+        "target": "croire"
+      },
+      {
+        "english": "to follow",
+        "target": "suivre"
+      },
+      {
+        "english": "to grow",
+        "target": "grandir / pousser"
+      },
+      {
+        "english": "to fall",
+        "target": "tomber"
+      },
+      {
+        "english": "to meet",
+        "target": "rencontrer"
+      },
+      {
+        "english": "to drive",
+        "target": "conduire"
+      },
+      {
+        "english": "to let / allow",
+        "target": "laisser / permettre"
+      },
+      {
+        "english": "to keep",
+        "target": "garder"
+      },
+      {
+        "english": "to break",
+        "target": "casser / briser"
+      },
+      {
+        "english": "to build",
+        "target": "construire / bâtir"
+      },
+      {
+        "english": "to choose",
+        "target": "choisir"
+      },
+      {
+        "english": "to cut",
+        "target": "couper"
+      },
+      {
+        "english": "to draw",
+        "target": "dessiner"
+      },
+      {
+        "english": "to dream",
+        "target": "rêver"
+      },
+      {
+        "english": "to drive",
+        "target": "conduire"
+      },
+      {
+        "english": "to eat out",
+        "target": "manger au restaurant"
+      },
+      {
+        "english": "to expect",
+        "target": "s'attendre à"
+      },
+      {
+        "english": "to explain",
+        "target": "expliquer"
+      },
+      {
+        "english": "to fly",
+        "target": "voler"
+      },
+      {
+        "english": "to happen",
+        "target": "se passer / arriver"
+      },
+      {
+        "english": "to hide",
+        "target": "cacher / se cacher"
+      },
+      {
+        "english": "to hold",
+        "target": "tenir"
+      },
+      {
+        "english": "to introduce",
+        "target": "présenter"
+      },
+      {
+        "english": "to invite",
+        "target": "inviter"
+      },
+      {
+        "english": "to jump",
+        "target": "sauter"
+      },
+      {
+        "english": "to kiss",
+        "target": "embrasser / faire la bise"
+      },
+      {
+        "english": "to knock",
+        "target": "frapper"
+      },
+      {
+        "english": "to mean",
+        "target": "signifier / vouloir dire"
+      },
+      {
+        "english": "to miss",
+        "target": "manquer / rater"
+      },
+      {
+        "english": "to mix",
+        "target": "mélanger"
+      },
+      {
+        "english": "to move",
+        "target": "bouger / déménager"
+      },
+      {
+        "english": "to notice",
+        "target": "remarquer / noter"
+      },
+      {
+        "english": "to paint",
+        "target": "peindre"
+      },
+      {
+        "english": "to pass",
+        "target": "passer"
+      },
+      {
+        "english": "to pick up",
+        "target": "ramasser / récupérer"
+      },
+      {
+        "english": "to plan",
+        "target": "planifier / prévoir"
+      },
+      {
+        "english": "to play (music)",
+        "target": "jouer de"
+      },
+      {
+        "english": "to prepare",
+        "target": "préparer"
+      },
+      {
+        "english": "to promise",
+        "target": "promettre"
+      },
+      {
+        "english": "to pull",
+        "target": "tirer"
+      },
+      {
+        "english": "to push",
+        "target": "pousser"
+      },
+      {
+        "english": "to reach",
+        "target": "atteindre"
+      },
+      {
+        "english": "to repair / fix",
+        "target": "réparer"
+      },
+      {
+        "english": "to rest",
+        "target": "se reposer"
+      },
+      {
+        "english": "to save",
+        "target": "sauver / économiser"
+      },
+      {
+        "english": "to share",
+        "target": "partager"
+      },
+      {
+        "english": "to spend (time)",
+        "target": "passer (du temps)"
+      },
+      {
+        "english": "to spend (money)",
+        "target": "dépenser"
+      },
+      {
+        "english": "to suggest",
+        "target": "suggérer / proposer"
+      },
+      {
+        "english": "to support",
+        "target": "soutenir / appuyer"
+      },
+      {
+        "english": "to surprise",
+        "target": "surprendre"
+      },
+      {
+        "english": "to throw",
+        "target": "lancer / jeter"
+      },
+      {
+        "english": "to touch",
+        "target": "toucher"
+      },
+      {
+        "english": "to turn",
+        "target": "tourner"
+      },
+      {
+        "english": "to visit",
+        "target": "visiter / rendre visite"
+      },
+      {
+        "english": "to wake up",
+        "target": "se réveiller"
+      },
+      {
+        "english": "to wear",
+        "target": "porter"
+      },
+      {
+        "english": "to win",
+        "target": "gagner"
+      },
+      {
+        "english": "to wish / hope",
+        "target": "souhaiter / espérer"
+      },
+      {
+        "english": "to worry",
+        "target": "s'inquiéter"
+      },
+      {
+        "english": "to accept",
+        "target": "accepter"
+      }
+    ],
+    "hard": [
+      {
+        "english": "to achieve",
+        "target": "réaliser / accomplir"
+      },
+      {
+        "english": "to acquire",
+        "target": "acquérir"
+      },
+      {
+        "english": "to admit",
+        "target": "admettre"
+      },
+      {
+        "english": "to assume",
+        "target": "supposer / présumer"
+      },
+      {
+        "english": "to attribute",
+        "target": "attribuer"
+      },
+      {
+        "english": "to avoid",
+        "target": "éviter"
+      },
+      {
+        "english": "to behave",
+        "target": "se comporter"
+      },
+      {
+        "english": "to consider",
+        "target": "considérer"
+      },
+      {
+        "english": "to convince",
+        "target": "convaincre"
+      },
+      {
+        "english": "to correspond",
+        "target": "correspondre"
+      },
+      {
+        "english": "to deal with",
+        "target": "traiter / s'occuper de"
+      },
+      {
+        "english": "to depend",
+        "target": "dépendre"
+      },
+      {
+        "english": "to deserve",
+        "target": "mériter"
+      },
+      {
+        "english": "to distinguish",
+        "target": "distinguer"
+      },
+      {
+        "english": "to establish",
+        "target": "établir"
+      },
+      {
+        "english": "to exceed",
+        "target": "dépasser / excéder"
+      },
+      {
+        "english": "to exist",
+        "target": "exister"
+      },
+      {
+        "english": "to fulfill",
+        "target": "accomplir / remplir"
+      },
+      {
+        "english": "to implement",
+        "target": "mettre en œuvre"
+      },
+      {
+        "english": "to imply",
+        "target": "impliquer / sous-entendre"
+      },
+      {
+        "english": "to include",
+        "target": "inclure"
+      },
+      {
+        "english": "to influence",
+        "target": "influencer / influir"
+      },
+      {
+        "english": "to maintain",
+        "target": "maintenir"
+      },
+      {
+        "english": "to manage",
+        "target": "gérer / diriger"
+      },
+      {
+        "english": "to obtain",
+        "target": "obtenir"
+      },
+      {
+        "english": "to overcome",
+        "target": "surmonter"
+      },
+      {
+        "english": "to pretend",
+        "target": "faire semblant"
+      },
+      {
+        "english": "to recognize",
+        "target": "reconnaître"
+      },
+      {
+        "english": "to refer",
+        "target": "se référer / renvoyer à"
+      },
+      {
+        "english": "to reflect",
+        "target": "réfléchir / refléter"
+      },
+      {
+        "english": "to replace",
+        "target": "remplacer"
+      },
+      {
+        "english": "to resolve",
+        "target": "résoudre"
+      },
+      {
+        "english": "to submit",
+        "target": "soumettre"
+      },
+      {
+        "english": "to accomplish",
+        "target": "accomplir"
+      },
+      {
+        "english": "to adapt",
+        "target": "s'adapter"
+      },
+      {
+        "english": "to analyze",
+        "target": "analyser"
+      },
+      {
+        "english": "to anticipate",
+        "target": "anticiper"
+      },
+      {
+        "english": "to challenge",
+        "target": "remettre en question / défier"
+      },
+      {
+        "english": "to clarify",
+        "target": "clarifier"
+      },
+      {
+        "english": "to collaborate",
+        "target": "collaborer"
+      },
+      {
+        "english": "to communicate",
+        "target": "communiquer"
+      },
+      {
+        "english": "to concentrate",
+        "target": "se concentrer"
+      },
+      {
+        "english": "to confront",
+        "target": "confronter / affronter"
+      },
+      {
+        "english": "to contribute",
+        "target": "contribuer"
+      },
+      {
+        "english": "to debate",
+        "target": "débattre"
+      },
+      {
+        "english": "to define",
+        "target": "définir"
+      },
+      {
+        "english": "to demonstrate",
+        "target": "démontrer"
+      },
+      {
+        "english": "to derive",
+        "target": "dériver / tirer"
+      },
+      {
+        "english": "to emphasize",
+        "target": "souligner / mettre l'accent sur"
+      },
+      {
+        "english": "to encounter",
+        "target": "rencontrer / faire face à"
+      },
+      {
+        "english": "to enhance",
+        "target": "améliorer / renforcer"
+      },
+      {
+        "english": "to estimate",
+        "target": "estimer / évaluer"
+      },
+      {
+        "english": "to evaluate",
+        "target": "évaluer"
+      },
+      {
+        "english": "to generate",
+        "target": "générer"
+      },
+      {
+        "english": "to guarantee",
+        "target": "garantir"
+      },
+      {
+        "english": "to identify",
+        "target": "identifier"
+      },
+      {
+        "english": "to integrate",
+        "target": "intégrer"
+      },
+      {
+        "english": "to negotiate",
+        "target": "négocier"
+      },
+      {
+        "english": "to perceive",
+        "target": "percevoir"
+      },
+      {
+        "english": "to persist",
+        "target": "persister"
+      },
+      {
+        "english": "to predict",
+        "target": "prédire / prévoir"
+      },
+      {
+        "english": "to prioritize",
+        "target": "prioriser / hiérarchiser"
+      },
+      {
+        "english": "to proceed",
+        "target": "procéder / continuer"
+      },
+      {
+        "english": "to propose",
+        "target": "proposer"
+      },
+      {
+        "english": "to pursue",
+        "target": "poursuivre"
+      },
+      {
+        "english": "to reject",
+        "target": "rejeter / refuser"
+      },
+      {
+        "english": "to rely on",
+        "target": "compter sur / se fier à"
+      },
+      {
+        "english": "to require",
+        "target": "exiger / nécessiter"
+      }
+    ]
+  },
+  "Spanish": {
+    "easy": [
+      {
+        "english": "to be",
+        "target": "ser / estar"
+      },
+      {
+        "english": "to have",
+        "target": "tener / haber"
+      },
+      {
+        "english": "to go",
+        "target": "ir"
+      },
+      {
+        "english": "to do / make",
+        "target": "hacer"
+      },
+      {
+        "english": "to say / tell",
+        "target": "decir"
+      },
+      {
+        "english": "to see",
+        "target": "ver"
+      },
+      {
+        "english": "to want",
+        "target": "querer"
+      },
+      {
+        "english": "to come",
+        "target": "venir"
+      },
+      {
+        "english": "to know (fact)",
+        "target": "saber"
+      },
+      {
+        "english": "to take",
+        "target": "tomar"
+      },
+      {
+        "english": "to give",
+        "target": "dar"
+      },
+      {
+        "english": "to eat",
+        "target": "comer"
+      },
+      {
+        "english": "to drink",
+        "target": "beber"
+      },
+      {
+        "english": "to speak / talk",
+        "target": "hablar"
+      },
+      {
+        "english": "to listen",
+        "target": "escuchar"
+      },
+      {
+        "english": "to look / watch",
+        "target": "mirar"
+      },
+      {
+        "english": "to work",
+        "target": "trabajar"
+      },
+      {
+        "english": "to play",
+        "target": "jugar"
+      },
+      {
+        "english": "to walk",
+        "target": "caminar"
+      },
+      {
+        "english": "to run",
+        "target": "correr"
+      },
+      {
+        "english": "to sleep",
+        "target": "dormir"
+      },
+      {
+        "english": "to live",
+        "target": "vivir"
+      },
+      {
+        "english": "to love / like",
+        "target": "amar / gustar"
+      },
+      {
+        "english": "to need",
+        "target": "necesitar"
+      },
+      {
+        "english": "to think",
+        "target": "pensar"
+      },
+      {
+        "english": "to call",
+        "target": "llamar"
+      },
+      {
+        "english": "to ask",
+        "target": "preguntar"
+      },
+      {
+        "english": "to answer",
+        "target": "responder"
+      },
+      {
+        "english": "to read",
+        "target": "leer"
+      },
+      {
+        "english": "to write",
+        "target": "escribir"
+      },
+      {
+        "english": "to buy",
+        "target": "comprar"
+      },
+      {
+        "english": "to open",
+        "target": "abrir"
+      },
+      {
+        "english": "to close",
+        "target": "cerrar"
+      },
+      {
+        "english": "to sit",
+        "target": "sentarse"
+      },
+      {
+        "english": "to stand",
+        "target": "levantarse"
+      },
+      {
+        "english": "to wait",
+        "target": "esperar"
+      },
+      {
+        "english": "to arrive",
+        "target": "llegar"
+      },
+      {
+        "english": "to leave / depart",
+        "target": "salir"
+      },
+      {
+        "english": "to stop",
+        "target": "parar / detenerse"
+      },
+      {
+        "english": "to start",
+        "target": "empezar"
+      },
+      {
+        "english": "to finish",
+        "target": "terminar"
+      },
+      {
+        "english": "to know (person)",
+        "target": "conocer"
+      },
+      {
+        "english": "to find",
+        "target": "encontrar"
+      },
+      {
+        "english": "to put / place",
+        "target": "poner"
+      },
+      {
+        "english": "to bring",
+        "target": "traer"
+      },
+      {
+        "english": "to carry",
+        "target": "llevar"
+      },
+      {
+        "english": "to show",
+        "target": "mostrar"
+      },
+      {
+        "english": "to use",
+        "target": "usar"
+      },
+      {
+        "english": "to help",
+        "target": "ayudar"
+      },
+      {
+        "english": "to sing",
+        "target": "cantar"
+      },
+      {
+        "english": "to dance",
+        "target": "bailar"
+      },
+      {
+        "english": "to cook",
+        "target": "cocinar"
+      },
+      {
+        "english": "to clean",
+        "target": "limpiar"
+      },
+      {
+        "english": "to wash",
+        "target": "lavar"
+      },
+      {
+        "english": "to swim",
+        "target": "nadar"
+      },
+      {
+        "english": "to travel",
+        "target": "viajar"
+      },
+      {
+        "english": "to pay",
+        "target": "pagar"
+      },
+      {
+        "english": "to sell",
+        "target": "vender"
+      },
+      {
+        "english": "to learn",
+        "target": "aprender"
+      },
+      {
+        "english": "to teach",
+        "target": "enseñar"
+      },
+      {
+        "english": "to smile",
+        "target": "sonreír"
+      },
+      {
+        "english": "to laugh",
+        "target": "reír"
+      },
+      {
+        "english": "to cry",
+        "target": "llorar"
+      },
+      {
+        "english": "to try",
+        "target": "intentar"
+      },
+      {
+        "english": "to return",
+        "target": "volver / regresar"
+      },
+      {
+        "english": "to send",
+        "target": "enviar"
+      },
+      {
+        "english": "to receive",
+        "target": "recibir"
+      }
+    ],
+    "medium": [
+      {
+        "english": "to understand",
+        "target": "entender / comprender"
+      },
+      {
+        "english": "to remember",
+        "target": "recordar"
+      },
+      {
+        "english": "to forget",
+        "target": "olvidar"
+      },
+      {
+        "english": "to lose",
+        "target": "perder"
+      },
+      {
+        "english": "to change",
+        "target": "cambiar"
+      },
+      {
+        "english": "to feel",
+        "target": "sentir / sentirse"
+      },
+      {
+        "english": "to believe",
+        "target": "creer"
+      },
+      {
+        "english": "to follow",
+        "target": "seguir"
+      },
+      {
+        "english": "to grow",
+        "target": "crecer"
+      },
+      {
+        "english": "to fall",
+        "target": "caer"
+      },
+      {
+        "english": "to meet",
+        "target": "conocer / encontrarse"
+      },
+      {
+        "english": "to drive",
+        "target": "conducir / manejar"
+      },
+      {
+        "english": "to let / allow",
+        "target": "dejar / permitir"
+      },
+      {
+        "english": "to keep",
+        "target": "guardar / quedarse"
+      },
+      {
+        "english": "to break",
+        "target": "romper"
+      },
+      {
+        "english": "to build",
+        "target": "construir"
+      },
+      {
+        "english": "to choose",
+        "target": "elegir / escoger"
+      },
+      {
+        "english": "to cut",
+        "target": "cortar"
+      },
+      {
+        "english": "to draw",
+        "target": "dibujar"
+      },
+      {
+        "english": "to dream",
+        "target": "soñar"
+      },
+      {
+        "english": "to drive",
+        "target": "manejar"
+      },
+      {
+        "english": "to eat out",
+        "target": "comer fuera"
+      },
+      {
+        "english": "to expect",
+        "target": "esperar / anticipar"
+      },
+      {
+        "english": "to explain",
+        "target": "explicar"
+      },
+      {
+        "english": "to fly",
+        "target": "volar"
+      },
+      {
+        "english": "to happen",
+        "target": "pasar / ocurrir / suceder"
+      },
+      {
+        "english": "to hide",
+        "target": "esconder / esconderse"
+      },
+      {
+        "english": "to hold",
+        "target": "sostener / aguantar"
+      },
+      {
+        "english": "to introduce",
+        "target": "presentar"
+      },
+      {
+        "english": "to invite",
+        "target": "invitar"
+      },
+      {
+        "english": "to jump",
+        "target": "saltar"
+      },
+      {
+        "english": "to kiss",
+        "target": "besar"
+      },
+      {
+        "english": "to knock",
+        "target": "golpear / llamar"
+      },
+      {
+        "english": "to mean",
+        "target": "significar / querer decir"
+      },
+      {
+        "english": "to miss",
+        "target": "extrañar / perder"
+      },
+      {
+        "english": "to mix",
+        "target": "mezclar"
+      },
+      {
+        "english": "to move",
+        "target": "mover / mudarse"
+      },
+      {
+        "english": "to notice",
+        "target": "notar / darse cuenta"
+      },
+      {
+        "english": "to paint",
+        "target": "pintar"
+      },
+      {
+        "english": "to pass",
+        "target": "pasar"
+      },
+      {
+        "english": "to pick up",
+        "target": "recoger / levantar"
+      },
+      {
+        "english": "to plan",
+        "target": "planear / planificar"
+      },
+      {
+        "english": "to play (music)",
+        "target": "tocar"
+      },
+      {
+        "english": "to prepare",
+        "target": "preparar"
+      },
+      {
+        "english": "to promise",
+        "target": "prometer"
+      },
+      {
+        "english": "to pull",
+        "target": "jalar / tirar"
+      },
+      {
+        "english": "to push",
+        "target": "empujar"
+      },
+      {
+        "english": "to reach",
+        "target": "alcanzar / llegar a"
+      },
+      {
+        "english": "to repair / fix",
+        "target": "reparar / arreglar"
+      },
+      {
+        "english": "to rest",
+        "target": "descansar"
+      },
+      {
+        "english": "to save",
+        "target": "guardar / salvar / ahorrar"
+      },
+      {
+        "english": "to share",
+        "target": "compartir"
+      },
+      {
+        "english": "to spend (time)",
+        "target": "pasar (tiempo)"
+      },
+      {
+        "english": "to spend (money)",
+        "target": "gastar"
+      },
+      {
+        "english": "to suggest",
+        "target": "sugerir / proponer"
+      },
+      {
+        "english": "to support",
+        "target": "apoyar / sostener"
+      },
+      {
+        "english": "to surprise",
+        "target": "sorprender"
+      },
+      {
+        "english": "to throw",
+        "target": "lanzar / tirar"
+      },
+      {
+        "english": "to touch",
+        "target": "tocar"
+      },
+      {
+        "english": "to turn",
+        "target": "girar / voltear"
+      },
+      {
+        "english": "to visit",
+        "target": "visitar"
+      },
+      {
+        "english": "to wake up",
+        "target": "despertarse"
+      },
+      {
+        "english": "to wear",
+        "target": "llevar / usar / vestir"
+      },
+      {
+        "english": "to win",
+        "target": "ganar"
+      },
+      {
+        "english": "to wish / hope",
+        "target": "desear / esperar"
+      },
+      {
+        "english": "to worry",
+        "target": "preocuparse"
+      },
+      {
+        "english": "to accept",
+        "target": "aceptar"
+      }
+    ],
+    "hard": [
+      {
+        "english": "to achieve",
+        "target": "lograr / alcanzar"
+      },
+      {
+        "english": "to acquire",
+        "target": "adquirir"
+      },
+      {
+        "english": "to admit",
+        "target": "admitir"
+      },
+      {
+        "english": "to assume",
+        "target": "asumir / suponer"
+      },
+      {
+        "english": "to attribute",
+        "target": "atribuir"
+      },
+      {
+        "english": "to avoid",
+        "target": "evitar"
+      },
+      {
+        "english": "to behave",
+        "target": "comportarse"
+      },
+      {
+        "english": "to consider",
+        "target": "considerar"
+      },
+      {
+        "english": "to convince",
+        "target": "convencer"
+      },
+      {
+        "english": "to correspond",
+        "target": "corresponder"
+      },
+      {
+        "english": "to deal with",
+        "target": "tratar / encargarse de"
+      },
+      {
+        "english": "to depend",
+        "target": "depender"
+      },
+      {
+        "english": "to deserve",
+        "target": "merecer"
+      },
+      {
+        "english": "to distinguish",
+        "target": "distinguir"
+      },
+      {
+        "english": "to establish",
+        "target": "establecer"
+      },
+      {
+        "english": "to exceed",
+        "target": "exceder / superar"
+      },
+      {
+        "english": "to exist",
+        "target": "existir"
+      },
+      {
+        "english": "to fulfill",
+        "target": "cumplir / realizar"
+      },
+      {
+        "english": "to implement",
+        "target": "implementar / llevar a cabo"
+      },
+      {
+        "english": "to imply",
+        "target": "implicar / suponer"
+      },
+      {
+        "english": "to include",
+        "target": "incluir"
+      },
+      {
+        "english": "to influence",
+        "target": "influir / influenciar"
+      },
+      {
+        "english": "to maintain",
+        "target": "mantener"
+      },
+      {
+        "english": "to manage",
+        "target": "gestionar / manejar"
+      },
+      {
+        "english": "to obtain",
+        "target": "obtener"
+      },
+      {
+        "english": "to overcome",
+        "target": "superar / vencer"
+      },
+      {
+        "english": "to pretend",
+        "target": "fingir"
+      },
+      {
+        "english": "to recognize",
+        "target": "reconocer"
+      },
+      {
+        "english": "to refer",
+        "target": "referirse / remitir"
+      },
+      {
+        "english": "to reflect",
+        "target": "reflexionar / reflejar"
+      },
+      {
+        "english": "to replace",
+        "target": "reemplazar / sustituir"
+      },
+      {
+        "english": "to resolve",
+        "target": "resolver"
+      },
+      {
+        "english": "to submit",
+        "target": "someter / enviar"
+      },
+      {
+        "english": "to accomplish",
+        "target": "lograr / llevar a cabo"
+      },
+      {
+        "english": "to adapt",
+        "target": "adaptarse"
+      },
+      {
+        "english": "to analyze",
+        "target": "analizar"
+      },
+      {
+        "english": "to anticipate",
+        "target": "anticipar"
+      },
+      {
+        "english": "to challenge",
+        "target": "desafiar / cuestionar"
+      },
+      {
+        "english": "to clarify",
+        "target": "aclarar"
+      },
+      {
+        "english": "to collaborate",
+        "target": "colaborar"
+      },
+      {
+        "english": "to communicate",
+        "target": "comunicarse"
+      },
+      {
+        "english": "to concentrate",
+        "target": "concentrarse"
+      },
+      {
+        "english": "to confront",
+        "target": "enfrentar / confrontar"
+      },
+      {
+        "english": "to contribute",
+        "target": "contribuir"
+      },
+      {
+        "english": "to debate",
+        "target": "debatir"
+      },
+      {
+        "english": "to define",
+        "target": "definir"
+      },
+      {
+        "english": "to demonstrate",
+        "target": "demostrar"
+      },
+      {
+        "english": "to derive",
+        "target": "derivar"
+      },
+      {
+        "english": "to emphasize",
+        "target": "enfatizar / destacar"
+      },
+      {
+        "english": "to encounter",
+        "target": "encontrar / toparse con"
+      },
+      {
+        "english": "to enhance",
+        "target": "mejorar / realzar"
+      },
+      {
+        "english": "to estimate",
+        "target": "estimar / calcular"
+      },
+      {
+        "english": "to evaluate",
+        "target": "evaluar"
+      },
+      {
+        "english": "to generate",
+        "target": "generar"
+      },
+      {
+        "english": "to guarantee",
+        "target": "garantizar"
+      },
+      {
+        "english": "to identify",
+        "target": "identificar"
+      },
+      {
+        "english": "to integrate",
+        "target": "integrar"
+      },
+      {
+        "english": "to negotiate",
+        "target": "negociar"
+      },
+      {
+        "english": "to perceive",
+        "target": "percibir"
+      },
+      {
+        "english": "to persist",
+        "target": "persistir"
+      },
+      {
+        "english": "to predict",
+        "target": "predecir / pronosticar"
+      },
+      {
+        "english": "to prioritize",
+        "target": "priorizar"
+      },
+      {
+        "english": "to proceed",
+        "target": "proceder / continuar"
+      },
+      {
+        "english": "to propose",
+        "target": "proponer"
+      },
+      {
+        "english": "to pursue",
+        "target": "perseguir"
+      },
+      {
+        "english": "to reject",
+        "target": "rechazar"
+      },
+      {
+        "english": "to rely on",
+        "target": "depender de / confiar en"
+      },
+      {
+        "english": "to require",
+        "target": "requerir / exigir"
+      }
+    ]
+  }
+}

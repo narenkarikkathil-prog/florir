@@ -12,6 +12,9 @@ import Session from './pages/Session';
 import APSession from './pages/APSession';
 import Demo from './pages/Demo';
 import NonProfit from './pages/NonProfit';
+import VerbDashboard from './pages/VerbDashboard';
+import VerbPractice from './pages/VerbPractice';
+import TypeSession from './pages/TypeSession';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import TermsOfService from './pages/TermsOfService';
 import { useEffect, useState } from 'react';
@@ -60,6 +63,9 @@ export default function App() {
           <Route path="/dashboard" element={user ? <Dashboard /> : <Navigate to="/auth" />} />
           <Route path="/session/ap-simulated" element={user ? <APSession mode="ap-simulated" /> : <Navigate to="/auth" />} />
           <Route path="/session/ap-speaking" element={user ? <APSession mode="ap-speaking" /> : <Navigate to="/auth" />} />
+          <Route path="/type-session" element={user ? <TypeSession /> : <Navigate to="/auth" />} />
+          <Route path="/verbs" element={user ? <VerbDashboard /> : <Navigate to="/auth" />} />
+          <Route path="/verbs/practice/:mode" element={user ? <VerbPractice /> : <Navigate to="/auth" />} />
           <Route path="/session/:mode" element={user ? <Session /> : <Navigate to="/auth" />} />
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>

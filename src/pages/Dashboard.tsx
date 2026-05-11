@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'motion/react';
-import { Mic, BookOpen, MessageSquare, GraduationCap, Play, Trophy, Clock, AlertCircle, ChevronDown, Globe } from 'lucide-react';
+import { Mic, BookOpen, MessageSquare, GraduationCap, Play, Trophy, Clock, AlertCircle, ChevronDown, Globe, Keyboard, BookCheck } from 'lucide-react';
 import { cn } from '@/src/lib/utils';
 import { Language, UserLevel } from '@/src/types';
 import { supabase } from '@/src/lib/supabase';
@@ -29,6 +29,20 @@ const generalModes = [
     desc: 'Talk about anything and get live feedback.',
     icon: <MessageSquare size={24} />,
     color: 'bg-purple-50 text-purple-600',
+  },
+  {
+    id: 'type-session',
+    title: 'Text Conversation',
+    desc: 'Type with the AI and get real-time feedback.',
+    icon: <Keyboard size={24} />,
+    color: 'bg-indigo-50 text-indigo-600',
+  },
+  {
+    id: 'verbs',
+    title: 'Verb Mastery',
+    desc: 'Spaced-repetition verb practice (MCQ & Writing).',
+    icon: <BookCheck size={24} />,
+    color: 'bg-rose-50 text-rose-600',
   },
 ];
 
@@ -131,7 +145,13 @@ export default function Dashboard() {
   }, [selectedLang]);
 
   const startSession = (modeId: string) => {
-    navigate(`/session/${modeId}?lang=${selectedLang}`);
+    if (modeId === 'type-session') {
+      navigate(`/type-session?lang=${selectedLang}`);
+    } else if (modeId === 'verbs') {
+      navigate(`/verbs?lang=${selectedLang}`);
+    } else {
+      navigate(`/session/${modeId}?lang=${selectedLang}`);
+    }
   };
 
   const allLanguages: Language[] = [
