@@ -18,7 +18,7 @@ Orati is operated as a non-profit educational initiative. Our goal is to make hi
     title: '2. Eligibility',
     body: `You may use Orati if:
 
-• You are 13 years of age or older, or have verifiable parental or guardian consent if under 13
+• You are at least 14 years of age or older, or have verifiable parental or guardian consent if under 14
 • You are not prohibited from using the Service under applicable law
 • You will comply with these Terms and all applicable local, national, and international laws
 

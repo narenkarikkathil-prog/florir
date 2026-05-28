@@ -135,6 +135,11 @@ export default function Auth() {
             {loading ? 'Processing...' : isSignUp ? 'Sign Up' : 'Login'}
             {!loading && <ArrowRight size={20} />}
           </button>
+          {isSignUp && (
+            <p className="text-xs text-center text-dark/40 mt-3">
+              By signing up, you agree to our <a href="/terms" className="underline hover:text-gold transition-colors">Terms and Conditions</a>.
+            </p>
+          )}
         </form>
 
         <div className="mt-8 flex items-center gap-4">
