@@ -2,41 +2,140 @@ import tailwindcss from '@tailwindcss/vite';
 import react from '@vitejs/plugin-react';
 import path from 'path';
 import { defineConfig, loadEnv } from 'vite';
+import { GoogleGenAI, Modality } from '@google/genai';
 
-export default defineConfig(({mode}) => {
+export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, '.', '');
-  const geminiKey = env.VITE_GEMINI_API_KEY || env.GEMINI_API_KEY || '';
+  const geminiKey = env.GEMINI_API_KEY || env.VITE_GEMINI_API_KEY || '';
   const supabaseUrl = env.VITE_SUPABASE_URL || env.SUPABASE_URL || '';
   const supabaseAnon = env.VITE_SUPABASE_ANON_KEY || env.SUPABASE_ANON_KEY || '';
 
   return {
     plugins: [
-      react(), 
+      react(),
       tailwindcss(),
       {
-        name: 'local-token-plugin',
+        name: 'local-api-gemini-middleware',
         configureServer(server) {
-          server.middlewares.use('/api/gemini/token', (req, res) => {
-            res.setHeader('Content-Type', 'application/json');
-            if (geminiKey) {
-              res.end(JSON.stringify({ apiKey: geminiKey }));
-            } else {
-              res.statusCode = 404;
-              res.end(JSON.stringify({ error: 'No Gemini API key configured in environment.' }));
+          server.middlewares.use(async (req, res, next) => {
+            if (!req.url?.startsWith('/api/gemini/')) {
+              return next();
             }
+
+            res.setHeader('Content-Type', 'application/json');
+
+            if (!geminiKey) {
+              res.statusCode = 500;
+              res.end(JSON.stringify({ error: 'GEMINI_API_KEY is not configured in .env' }));
+              return;
+            }
+
+            // 1. /api/gemini/token
+            if (req.url === '/api/gemini/token') {
+              try {
+                const expireTime = new Date(Date.now() + 30 * 60 * 1000).toISOString();
+                const tokenRes = await fetch('https://generativelanguage.googleapis.com/v1beta/auth_tokens', {
+                  method: 'POST',
+                  headers: {
+                    'x-goog-api-key': geminiKey,
+                    'Content-Type': 'application/json',
+                  },
+                  body: JSON.stringify({
+                    config: {
+                      uses: 1,
+                      expireTime,
+                      liveConnectConstraints: {
+                        model: 'models/gemini-2.5-flash',
+                        config: { responseModalities: ['AUDIO'] },
+                      },
+                    },
+                  }),
+                });
+                if (tokenRes.ok) {
+                  const data = await tokenRes.json();
+                  if (data?.name) {
+                    res.end(JSON.stringify({
+                      token: data.name,
+                      isEphemeral: true,
+                      endpoint: `wss://generativelanguage.googleapis.com/ws/google.ai.generativelanguage.v1alpha.GenerativeService.BidiGenerateContentConstrained?access_token=${data.name}`,
+                    }));
+                    return;
+                  }
+                }
+              } catch {}
+
+              res.end(JSON.stringify({ token: geminiKey, isEphemeral: false }));
+              return;
+            }
+
+            // Parse body helper
+            const readJson = () => new Promise<any>((resolve, reject) => {
+              let body = '';
+              req.on('data', chunk => { body += chunk; });
+              req.on('end', () => {
+                try { resolve(body ? JSON.parse(body) : {}); } catch (e) { reject(e); }
+              });
+              req.on('error', reject);
+            });
+
+            // 2. /api/gemini/tts
+            if (req.url === '/api/gemini/tts' && req.method === 'POST') {
+              try {
+                const { text, voice, rate } = await readJson();
+                const ai = new GoogleGenAI({ apiKey: geminiKey });
+                let finalText = text || '';
+                const numRate = Number(rate) || 1.0;
+                if (numRate < 0.9) finalText = finalText.split(' ').join('... ');
+                else if (numRate > 1.1) finalText = `Say this very rapidly: ${finalText}`;
+
+                const response = await ai.models.generateContent({
+                  model: 'gemini-3.5-flash',
+                  contents: [{ parts: [{ text: finalText }] }],
+                  config: {
+                    responseModalities: [Modality.AUDIO],
+                    speechConfig: {
+                      voiceConfig: { prebuiltVoiceConfig: { voiceName: voice || 'Kore' } },
+                    },
+                  },
+                });
+                const audio = response.candidates?.[0]?.content?.parts?.[0]?.inlineData?.data || null;
+                res.end(JSON.stringify({ audio }));
+              } catch (e: any) {
+                res.statusCode = 500;
+                res.end(JSON.stringify({ error: e?.message || 'TTS generation failed' }));
+              }
+              return;
+            }
+
+            // 3. /api/gemini/generate
+            if (req.url === '/api/gemini/generate' && req.method === 'POST') {
+              try {
+                const { model, contents, config } = await readJson();
+                const ai = new GoogleGenAI({ apiKey: geminiKey });
+                const response = await ai.models.generateContent({
+                  model: model || 'gemini-3.5-flash-lite',
+                  contents,
+                  config: config || undefined,
+                });
+                const text = response.text || response.candidates?.[0]?.content?.parts?.[0]?.text || '';
+                res.end(JSON.stringify({ text }));
+              } catch (e: any) {
+                res.statusCode = 500;
+                res.end(JSON.stringify({ error: e?.message || 'Generation failed' }));
+              }
+              return;
+            }
+
+            next();
           });
-        }
-      }
+        },
+      },
     ],
     define: {
-      'import.meta.env.VITE_GEMINI_API_KEY': JSON.stringify(geminiKey),
-      'import.meta.env.GEMINI_API_KEY': JSON.stringify(geminiKey),
       'import.meta.env.VITE_SUPABASE_URL': JSON.stringify(supabaseUrl),
       'import.meta.env.SUPABASE_URL': JSON.stringify(supabaseUrl),
       'import.meta.env.VITE_SUPABASE_ANON_KEY': JSON.stringify(supabaseAnon),
       'import.meta.env.SUPABASE_ANON_KEY': JSON.stringify(supabaseAnon),
-      'process.env.GEMINI_API_KEY': JSON.stringify(geminiKey),
-      'process.env.VITE_GEMINI_API_KEY': JSON.stringify(geminiKey),
     },
     build: {
       chunkSizeWarningLimit: 1000,
@@ -56,8 +155,6 @@ export default defineConfig(({mode}) => {
       },
     },
     server: {
-      // HMR is disabled in AI Studio via DISABLE_HMR env var.
-      // Do not modify—file watching is disabled to prevent flickering during agent edits.
       hmr: process.env.DISABLE_HMR !== 'true',
     },
   };

@@ -759,7 +759,7 @@ export default function Session() {
     try {
       geminiRef.current = await GeminiService.create();
     } catch {
-      alert("Gemini API Key is missing. Please configure VITE_GEMINI_API_KEY in your environment variables or Vercel project settings.");
+      alert("Gemini API Key is missing. Please configure GEMINI_API_KEY in your environment variables or Vercel project settings.");
       return;
     }
 

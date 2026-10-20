@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { X, MessageSquare, AlertCircle, ChevronRight, CheckCircle2, Sliders, Dices, Utensils, Plane, Hotel, Stethoscope, ShoppingBag, Send, Languages, Volume2, VolumeX, Eye, EyeOff } from 'lucide-react';
 import { cn } from '@/src/lib/utils';
 import { GoogleGenAI, Type } from "@google/genai";
-import { GeminiService, getGeminiApiKey } from '@/src/services/gemini';
+import { GeminiService } from '@/src/services/gemini';
 import { Language, UserLevel } from '@/src/types';
 import { supabase } from '@/src/lib/supabase';
 import { FlowerLogo, BloomingFlower } from '@/src/components/FlowerLogo';
@@ -122,7 +122,6 @@ export default function TypeSession() {
   const [isResponseHidden, setIsResponseHidden] = useState(false);
   
   const transcriptScrollRef = useRef<HTMLDivElement>(null);
-  const aiRef = useRef<GoogleGenAI | null>(null);
   const audioContextRef = useRef<AudioContext | null>(null);
   const currentAudioSourceRef = useRef<AudioBufferSourceNode | null>(null);
   const ttsServiceRef = useRef<GeminiService | null>(null);
@@ -249,13 +248,14 @@ export default function TypeSession() {
   };
 
   const startSession = async () => {
-    const apiKey = await getGeminiApiKey();
-    if (!apiKey) {
-      alert("Gemini API Key is missing. Please configure VITE_GEMINI_API_KEY in your environment variables or Vercel project settings.");
-      return;
+    if (!ttsServiceRef.current) {
+      try {
+        ttsServiceRef.current = await GeminiService.create();
+      } catch (e) {
+        console.warn("Gemini service init deferred:", e);
+      }
     }
 
-    aiRef.current = new GoogleGenAI({ apiKey });
     setIsActive(true);
     
     // Initial AI greeting
@@ -281,7 +281,10 @@ export default function TypeSession() {
     systemInstruction += `\n\nIMPORTANT: ALWAYS respond in ${lang}.`;
 
     try {
-      const response = await aiRef.current.models.generateContent({
+      if (!ttsServiceRef.current) {
+        ttsServiceRef.current = await GeminiService.create();
+      }
+      const response = await ttsServiceRef.current.generateContent({
         model: "gemini-3.5-flash-lite",
         contents: systemInstruction,
       });
@@ -322,7 +325,10 @@ export default function TypeSession() {
       }));
       // Replace the last user message with the system instruction included as context for this turn, or just pass system instruction in config.
       
-      const response = await aiRef.current?.models.generateContent({
+      if (!ttsServiceRef.current) {
+        ttsServiceRef.current = await GeminiService.create();
+      }
+      const response = await ttsServiceRef.current.generateContent({
         model: "gemini-3.5-flash-lite",
         contents: chatHistory,
         config: {

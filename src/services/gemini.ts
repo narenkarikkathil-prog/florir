@@ -1,40 +1,23 @@
 import { GoogleGenAI, LiveServerMessage, Modality } from "@google/genai";
 
-let cachedApiKey = "";
+let cachedToken = "";
 
 /**
- * Resolves the Google AI Studio Gemini API key.
- * 1. Checks in-memory cache.
- * 2. Checks client environment variables (VITE_GEMINI_API_KEY, GEMINI_API_KEY).
- * 3. Falls back to serverless function /api/gemini/token (reads server-side secrets on Vercel).
+ * Resolves a token for client-side Live Audio connection.
+ * Communicates with the serverless backend /api/gemini/token which holds
+ * the private GEMINI_API_KEY securely on the server.
  */
 export async function getGeminiApiKey(): Promise<string> {
-  if (cachedApiKey) return cachedApiKey;
+  if (cachedToken) return cachedToken;
 
-  const envKey =
-    (typeof import.meta !== "undefined" && import.meta.env && (
-      import.meta.env.VITE_GEMINI_API_KEY ||
-      import.meta.env.GEMINI_API_KEY
-    )) ||
-    (typeof process !== "undefined" && process.env && (
-      process.env.VITE_GEMINI_API_KEY ||
-      process.env.GEMINI_API_KEY
-    ));
-
-  if (envKey && typeof envKey === "string" && envKey.trim()) {
-    cachedApiKey = envKey.trim();
-    return cachedApiKey;
-  }
-
-  // Fallback to Vercel Serverless Function /api/gemini/token
   try {
     const res = await fetch("/api/gemini/token");
     if (res.ok) {
       const data = await res.json();
-      const resolved = data.apiKey || data.token;
+      const resolved = data.token || data.apiKey;
       if (resolved && typeof resolved === "string" && resolved.trim()) {
-        cachedApiKey = resolved.trim();
-        return cachedApiKey;
+        cachedToken = resolved.trim();
+        return cachedToken;
       }
     }
   } catch {
@@ -45,8 +28,8 @@ export async function getGeminiApiKey(): Promise<string> {
 }
 
 export class GeminiService {
-  private liveAi: GoogleGenAI;
-  private ttsAi: GoogleGenAI;
+  private liveAi: GoogleGenAI | null = null;
+  private ttsAi: GoogleGenAI | null = null;
   private session: any = null;
   private audioContext: AudioContext | null = null;
   private stream: MediaStream | null = null;
@@ -57,21 +40,16 @@ export class GeminiService {
   private deviceChangeListenerAdded: boolean = false;
   private boundHandleDeviceChange: (() => void) | null = null;
 
-  constructor(apiKey: string) {
-    this.liveAi = new GoogleGenAI({ apiKey });
-    this.ttsAi = new GoogleGenAI({ apiKey });
+  constructor(apiKeyOrToken?: string) {
+    if (apiKeyOrToken) {
+      this.liveAi = new GoogleGenAI({ apiKey: apiKeyOrToken });
+      this.ttsAi = new GoogleGenAI({ apiKey: apiKeyOrToken });
+    }
   }
 
   static async create(customApiKey?: string): Promise<GeminiService> {
-    const key = customApiKey || await getGeminiApiKey();
-
-    if (key) {
-      return new GeminiService(key);
-    }
-
-    throw new Error(
-      'Gemini API key is missing. Please set VITE_GEMINI_API_KEY (or GEMINI_API_KEY) in your environment variables or Vercel project settings.'
-    );
+    const token = customApiKey || await getGeminiApiKey();
+    return new GeminiService(token || undefined);
   }
 
   setPlaybackRate(rate: number) {
@@ -106,6 +84,15 @@ export class GeminiService {
     this.nextStartTime = this.audioContext.currentTime;
 
     try {
+      if (!this.liveAi) {
+        const token = await getGeminiApiKey();
+        if (token) {
+          this.liveAi = new GoogleGenAI({ apiKey: token });
+        } else {
+          throw new Error('GEMINI_API_KEY is not configured in your server environment variables.');
+        }
+      }
+
       if (config.onRawMessage) config.onRawMessage({ type: 'AI_LIVE_CONNECT_CALL' });
       this.session = await this.liveAi.live.connect({
         model: "gemini-3.1-flash-live-preview",
@@ -416,37 +403,78 @@ export class GeminiService {
     this.audioContext = null;
   }
 
-  // TTS Methods
-  async generateSpeech(text: string, voiceName?: string) {
+  // TTS Methods (Proxied through backend server to keep API key private)
+  async generateSpeech(text: string, voiceName?: string): Promise<string | null> {
     const finalVoice = voiceName || this.voiceName;
-    
-    let finalText = text;
-    if (this.playbackRate < 1.0) {
-      finalText = text.split(' ').join('... ');
-    } else if (this.playbackRate > 1.0) {
-      finalText = `Say this very rapidly: ${text}`;
-    } else {
-      finalText = `Say clearly: ${text}`;
-    }
 
-    const response = await this.ttsAi.models.generateContent({
-      model: "gemini-3.5-flash",
-      contents: [{ parts: [{ text: finalText }] }],
-      config: {
-        responseModalities: [Modality.AUDIO],
-        speechConfig: {
-          voiceConfig: {
-            prebuiltVoiceConfig: { voiceName: finalVoice },
+    try {
+      const res = await fetch('/api/gemini/tts', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          text,
+          voice: finalVoice,
+          rate: this.playbackRate,
+        }),
+      });
+
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({ error: 'TTS request failed' }));
+        throw new Error(err.error || `TTS failed with status ${res.status}`);
+      }
+
+      const data = await res.json();
+      return data.audio || null;
+    } catch (e) {
+      if (this.ttsAi) {
+        let finalText = text;
+        if (this.playbackRate < 1.0) {
+          finalText = text.split(' ').join('... ');
+        } else if (this.playbackRate > 1.0) {
+          finalText = `Say this very rapidly: ${text}`;
+        } else {
+          finalText = `Say clearly: ${text}`;
+        }
+        const response = await this.ttsAi.models.generateContent({
+          model: "gemini-3.5-flash",
+          contents: [{ parts: [{ text: finalText }] }],
+          config: {
+            responseModalities: [Modality.AUDIO],
+            speechConfig: {
+              voiceConfig: {
+                prebuiltVoiceConfig: { voiceName: finalVoice },
+              },
+            },
           },
-        },
-      },
-    });
-    return response.candidates?.[0]?.content?.parts?.[0]?.inlineData?.data;
+        });
+        return response.candidates?.[0]?.content?.parts?.[0]?.inlineData?.data || null;
+      }
+      throw e;
+    }
   }
 
-  // Content Generation Methods
-  async generateContent(params: any) {
-    if (!params.model) params.model = "gemini-3.5-flash-lite";
-    return this.liveAi.models.generateContent(params);
+  // Content Generation Methods (Proxied through backend server to keep API key private)
+  async generateContent(params: any): Promise<{ text: string }> {
+    try {
+      const res = await fetch('/api/gemini/generate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(params),
+      });
+
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({ error: 'Generation request failed' }));
+        throw new Error(err.error || `Generation failed with status ${res.status}`);
+      }
+
+      return await res.json();
+    } catch (e) {
+      if (this.liveAi) {
+        if (!params.model) params.model = "gemini-3.5-flash-lite";
+        const response = await this.liveAi.models.generateContent(params);
+        return { text: response.text || '' };
+      }
+      throw e;
+    }
   }
 }
