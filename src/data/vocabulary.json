@@ -1,0 +1,7262 @@
+{
+  "French": {
+    "beginner": [
+      {
+        "id": "fr-beg-001",
+        "type": "mcq",
+        "audio_text": "la pomme",
+        "options": [
+          "la pêche",
+          "la poire",
+          "la prune",
+          "la pomme"
+        ],
+        "answer": "3",
+        "translation": "the apple"
+      },
+      {
+        "id": "fr-beg-002",
+        "type": "mcq",
+        "audio_text": "le pain",
+        "options": [
+          "le train",
+          "le pain",
+          "le vin",
+          "le bain"
+        ],
+        "answer": "1",
+        "translation": "the bread"
+      },
+      {
+        "id": "fr-beg-003",
+        "type": "mcq",
+        "audio_text": "le fromage",
+        "options": [
+          "le village",
+          "le garage",
+          "le ménage",
+          "le fromage"
+        ],
+        "answer": "3",
+        "translation": "the cheese"
+      },
+      {
+        "id": "fr-beg-004",
+        "type": "mcq",
+        "audio_text": "l'eau",
+        "options": [
+          "le lait",
+          "le thé",
+          "le sel",
+          "l'eau"
+        ],
+        "answer": "3",
+        "translation": "the water"
+      },
+      {
+        "id": "fr-beg-005",
+        "type": "mcq",
+        "audio_text": "le café",
+        "options": [
+          "le thé",
+          "le jus",
+          "le lait",
+          "le café"
+        ],
+        "answer": "3",
+        "translation": "the coffee"
+      },
+      {
+        "id": "fr-beg-006",
+        "type": "mcq",
+        "audio_text": "le lait",
+        "options": [
+          "le sel",
+          "l'eau",
+          "le lait",
+          "le miel"
+        ],
+        "answer": "2",
+        "translation": "the milk"
+      },
+      {
+        "id": "fr-beg-007",
+        "type": "mcq",
+        "audio_text": "le croissant",
+        "options": [
+          "le bonbon",
+          "le poisson",
+          "le garçon",
+          "le croissant"
+        ],
+        "answer": "3",
+        "translation": "the croissant"
+      },
+      {
+        "id": "fr-beg-008",
+        "type": "mcq",
+        "audio_text": "le poulet",
+        "options": [
+          "le filet",
+          "le paquet",
+          "le poulet",
+          "le volet"
+        ],
+        "answer": "2",
+        "translation": "the chicken"
+      },
+      {
+        "id": "fr-beg-009",
+        "type": "mcq",
+        "audio_text": "la salade",
+        "options": [
+          "la parade",
+          "la balade",
+          "la salade",
+          "l'orangeade"
+        ],
+        "answer": "2",
+        "translation": "the salad"
+      },
+      {
+        "id": "fr-beg-010",
+        "type": "mcq",
+        "audio_text": "la soupe",
+        "options": [
+          "la poupe",
+          "la coupe",
+          "la soupe",
+          "la troupe"
+        ],
+        "answer": "2",
+        "translation": "the soup"
+      },
+      {
+        "id": "fr-beg-011",
+        "type": "mcq",
+        "audio_text": "le gâteau",
+        "options": [
+          "le manteau",
+          "le chapeau",
+          "le gâteau",
+          "le couteau"
+        ],
+        "answer": "2",
+        "translation": "the cake"
+      },
+      {
+        "id": "fr-beg-012",
+        "type": "mcq",
+        "audio_text": "le sucre",
+        "options": [
+          "le sel",
+          "le sucre",
+          "l'huile",
+          "le beurre"
+        ],
+        "answer": "1",
+        "translation": "the sugar"
+      },
+      {
+        "id": "fr-beg-013",
+        "type": "mcq",
+        "audio_text": "le sel",
+        "options": [
+          "le ciel",
+          "le sol",
+          "le miel",
+          "le sel"
+        ],
+        "answer": "3",
+        "translation": "the salt"
+      },
+      {
+        "id": "fr-beg-014",
+        "type": "mcq",
+        "audio_text": "le beurre",
+        "options": [
+          "la fleur",
+          "la peur",
+          "l'heure",
+          "le beurre"
+        ],
+        "answer": "3",
+        "translation": "the butter"
+      },
+      {
+        "id": "fr-beg-015",
+        "type": "mcq",
+        "audio_text": "le poisson",
+        "options": [
+          "le poisson",
+          "la boisson",
+          "la prison",
+          "la maison"
+        ],
+        "answer": "0",
+        "translation": "the fish"
+      },
+      {
+        "id": "fr-beg-016",
+        "type": "mcq",
+        "audio_text": "la fraise",
+        "options": [
+          "la framboise",
+          "la chaise",
+          "la fraise",
+          "la braise"
+        ],
+        "answer": "2",
+        "translation": "the strawberry"
+      },
+      {
+        "id": "fr-beg-017",
+        "type": "mcq",
+        "audio_text": "la banane",
+        "options": [
+          "la cabane",
+          "la tisane",
+          "la canne",
+          "la banane"
+        ],
+        "answer": "3",
+        "translation": "the banana"
+      },
+      {
+        "id": "fr-beg-018",
+        "type": "mcq",
+        "audio_text": "le riz",
+        "options": [
+          "le lit",
+          "le prix",
+          "le riz",
+          "le nid"
+        ],
+        "answer": "2",
+        "translation": "the rice"
+      },
+      {
+        "id": "fr-beg-019",
+        "type": "mcq",
+        "audio_text": "l'oeuf",
+        "options": [
+          "l'oeuf",
+          "la veuve",
+          "le neuf",
+          "le boeuf"
+        ],
+        "answer": "0",
+        "translation": "the egg"
+      },
+      {
+        "id": "fr-beg-020",
+        "type": "mcq",
+        "audio_text": "la viande",
+        "options": [
+          "la bande",
+          "la légende",
+          "la commande",
+          "la viande"
+        ],
+        "answer": "3",
+        "translation": "the meat"
+      },
+      {
+        "id": "fr-beg-021",
+        "type": "mcq",
+        "audio_text": "la maison",
+        "options": [
+          "la prison",
+          "la maison",
+          "la saison",
+          "la raison"
+        ],
+        "answer": "1",
+        "translation": "the house"
+      },
+      {
+        "id": "fr-beg-022",
+        "type": "mcq",
+        "audio_text": "la porte",
+        "options": [
+          "la corde",
+          "la tarte",
+          "la porte",
+          "la carte"
+        ],
+        "answer": "2",
+        "translation": "the door"
+      },
+      {
+        "id": "fr-beg-023",
+        "type": "mcq",
+        "audio_text": "la fenêtre",
+        "options": [
+          "le prêtre",
+          "le maître",
+          "la fenêtre",
+          "la lettre"
+        ],
+        "answer": "2",
+        "translation": "the window"
+      },
+      {
+        "id": "fr-beg-024",
+        "type": "mcq",
+        "audio_text": "la table",
+        "options": [
+          "la table",
+          "l'étable",
+          "le câble",
+          "le sable"
+        ],
+        "answer": "0",
+        "translation": "the table"
+      },
+      {
+        "id": "fr-beg-025",
+        "type": "mcq",
+        "audio_text": "la chaise",
+        "options": [
+          "la braise",
+          "la chaise",
+          "la fraise",
+          "la caisse"
+        ],
+        "answer": "1",
+        "translation": "the chair"
+      },
+      {
+        "id": "fr-beg-026",
+        "type": "mcq",
+        "audio_text": "le lit",
+        "options": [
+          "le lit",
+          "le riz",
+          "le pli",
+          "le nid"
+        ],
+        "answer": "0",
+        "translation": "the bed"
+      },
+      {
+        "id": "fr-beg-027",
+        "type": "mcq",
+        "audio_text": "le livre",
+        "options": [
+          "le lièvre",
+          "le cuivre",
+          "le tigre",
+          "le livre"
+        ],
+        "answer": "3",
+        "translation": "the book"
+      },
+      {
+        "id": "fr-beg-028",
+        "type": "mcq",
+        "audio_text": "le stylo",
+        "options": [
+          "le vélo",
+          "le stylo",
+          "le piano",
+          "le solo"
+        ],
+        "answer": "1",
+        "translation": "the pen"
+      },
+      {
+        "id": "fr-beg-029",
+        "type": "mcq",
+        "audio_text": "le sac",
+        "options": [
+          "le sac",
+          "le bac",
+          "le lac",
+          "le parc"
+        ],
+        "answer": "0",
+        "translation": "the bag"
+      },
+      {
+        "id": "fr-beg-030",
+        "type": "mcq",
+        "audio_text": "la clé",
+        "options": [
+          "le pré",
+          "le blé",
+          "le thé",
+          "la clé"
+        ],
+        "answer": "3",
+        "translation": "the key"
+      },
+      {
+        "id": "fr-beg-031",
+        "type": "mcq",
+        "audio_text": "la montre",
+        "options": [
+          "la montre",
+          "la fenêtre",
+          "l'ombre",
+          "le monstre"
+        ],
+        "answer": "0",
+        "translation": "the watch"
+      },
+      {
+        "id": "fr-beg-032",
+        "type": "mcq",
+        "audio_text": "le miroir",
+        "options": [
+          "le manoir",
+          "le tiroir",
+          "le miroir",
+          "le couloir"
+        ],
+        "answer": "2",
+        "translation": "the mirror"
+      },
+      {
+        "id": "fr-beg-033",
+        "type": "mcq",
+        "audio_text": "le téléphone",
+        "options": [
+          "le saxophone",
+          "le téléphone",
+          "l'écouteur",
+          "le mégaphone"
+        ],
+        "answer": "1",
+        "translation": "the telephone"
+      },
+      {
+        "id": "fr-beg-034",
+        "type": "mcq",
+        "audio_text": "la voiture",
+        "options": [
+          "la nature",
+          "la peinture",
+          "la ceinture",
+          "la voiture"
+        ],
+        "answer": "3",
+        "translation": "the car"
+      },
+      {
+        "id": "fr-beg-035",
+        "type": "mcq",
+        "audio_text": "le vélo",
+        "options": [
+          "le zéro",
+          "le métro",
+          "le vélo",
+          "le stylo"
+        ],
+        "answer": "2",
+        "translation": "the bicycle"
+      },
+      {
+        "id": "fr-beg-036",
+        "type": "mcq",
+        "audio_text": "le train",
+        "options": [
+          "le grain",
+          "le pain",
+          "le bain",
+          "le train"
+        ],
+        "answer": "3",
+        "translation": "the train"
+      },
+      {
+        "id": "fr-beg-037",
+        "type": "mcq",
+        "audio_text": "l'avion",
+        "options": [
+          "l'oignon",
+          "le pigeon",
+          "le camion",
+          "l'avion"
+        ],
+        "answer": "3",
+        "translation": "the airplane"
+      },
+      {
+        "id": "fr-beg-038",
+        "type": "mcq",
+        "audio_text": "le bateau",
+        "options": [
+          "le plateau",
+          "le bateau",
+          "le manteau",
+          "le château"
+        ],
+        "answer": "1",
+        "translation": "the boat"
+      },
+      {
+        "id": "fr-beg-039",
+        "type": "mcq",
+        "audio_text": "la lampe",
+        "options": [
+          "la rampe",
+          "la chambre",
+          "la lampe",
+          "la tempe"
+        ],
+        "answer": "2",
+        "translation": "the lamp"
+      },
+      {
+        "id": "fr-beg-040",
+        "type": "mcq",
+        "audio_text": "la boîte",
+        "options": [
+          "la droite",
+          "la boîte",
+          "la pointe",
+          "la route"
+        ],
+        "answer": "1",
+        "translation": "the box"
+      },
+      {
+        "id": "fr-beg-041",
+        "type": "mcq",
+        "audio_text": "la mère",
+        "options": [
+          "le père",
+          "le frère",
+          "la mère",
+          "la terre"
+        ],
+        "answer": "2",
+        "translation": "the mother"
+      },
+      {
+        "id": "fr-beg-042",
+        "type": "mcq",
+        "audio_text": "le père",
+        "options": [
+          "le père",
+          "la mère",
+          "le frère",
+          "le verre"
+        ],
+        "answer": "0",
+        "translation": "the father"
+      },
+      {
+        "id": "fr-beg-043",
+        "type": "mcq",
+        "audio_text": "le frère",
+        "options": [
+          "le père",
+          "la mère",
+          "le frère",
+          "le pré"
+        ],
+        "answer": "2",
+        "translation": "the brother"
+      },
+      {
+        "id": "fr-beg-044",
+        "type": "mcq",
+        "audio_text": "la soeur",
+        "options": [
+          "le coeur",
+          "la fleur",
+          "la soeur",
+          "la peur"
+        ],
+        "answer": "2",
+        "translation": "the sister"
+      },
+      {
+        "id": "fr-beg-045",
+        "type": "mcq",
+        "audio_text": "le fils",
+        "options": [
+          "le lit",
+          "le bus",
+          "la fille",
+          "le fils"
+        ],
+        "answer": "3",
+        "translation": "the son"
+      },
+      {
+        "id": "fr-beg-046",
+        "type": "mcq",
+        "audio_text": "la fille",
+        "options": [
+          "la bille",
+          "la grille",
+          "la famille",
+          "la fille"
+        ],
+        "answer": "3",
+        "translation": "the daughter/girl"
+      },
+      {
+        "id": "fr-beg-047",
+        "type": "mcq",
+        "audio_text": "l'ami",
+        "options": [
+          "l'ami",
+          "le mari",
+          "le cri",
+          "l'abri"
+        ],
+        "answer": "0",
+        "translation": "the friend"
+      },
+      {
+        "id": "fr-beg-048",
+        "type": "mcq",
+        "audio_text": "l'enfant",
+        "options": [
+          "l'enfant",
+          "la dent",
+          "le vent",
+          "l'argent"
+        ],
+        "answer": "0",
+        "translation": "the child"
+      },
+      {
+        "id": "fr-beg-049",
+        "type": "mcq",
+        "audio_text": "le garçon",
+        "options": [
+          "le balcon",
+          "le garçon",
+          "le poisson",
+          "le flacon"
+        ],
+        "answer": "1",
+        "translation": "the boy"
+      },
+      {
+        "id": "fr-beg-050",
+        "type": "mcq",
+        "audio_text": "l'homme",
+        "options": [
+          "l'homme",
+          "la somme",
+          "la pomme",
+          "le gomme"
+        ],
+        "answer": "0",
+        "translation": "the man"
+      },
+      {
+        "id": "fr-beg-051",
+        "type": "mcq",
+        "audio_text": "la femme",
+        "options": [
+          "la flamme",
+          "l'âme",
+          "la lame",
+          "la femme"
+        ],
+        "answer": "3",
+        "translation": "the woman"
+      },
+      {
+        "id": "fr-beg-052",
+        "type": "mcq",
+        "audio_text": "le bébé",
+        "options": [
+          "le café",
+          "le nez",
+          "le bébé",
+          "le thé"
+        ],
+        "answer": "2",
+        "translation": "the baby"
+      },
+      {
+        "id": "fr-beg-053",
+        "type": "mcq",
+        "audio_text": "le rouge",
+        "options": [
+          "le rougeur",
+          "le rose",
+          "le rouge",
+          "le bouge"
+        ],
+        "answer": "2",
+        "translation": "the red"
+      },
+      {
+        "id": "fr-beg-054",
+        "type": "mcq",
+        "audio_text": "le bleu",
+        "options": [
+          "le blanc",
+          "le blond",
+          "le bleu",
+          "le boeuf"
+        ],
+        "answer": "2",
+        "translation": "the blue"
+      },
+      {
+        "id": "fr-beg-055",
+        "type": "mcq",
+        "audio_text": "le vert",
+        "options": [
+          "le verre",
+          "le ver",
+          "le vent",
+          "le vert"
+        ],
+        "answer": "3",
+        "translation": "the green"
+      },
+      {
+        "id": "fr-beg-056",
+        "type": "mcq",
+        "audio_text": "le jaune",
+        "options": [
+          "le jeûne",
+          "la joue",
+          "le jaune",
+          "le jeune"
+        ],
+        "answer": "2",
+        "translation": "the yellow"
+      },
+      {
+        "id": "fr-beg-057",
+        "type": "mcq",
+        "audio_text": "le noir",
+        "options": [
+          "le couloir",
+          "le noir",
+          "le tiroir",
+          "le soir"
+        ],
+        "answer": "1",
+        "translation": "the black"
+      },
+      {
+        "id": "fr-beg-058",
+        "type": "mcq",
+        "audio_text": "le blanc",
+        "options": [
+          "le sang",
+          "le flanc",
+          "le banc",
+          "le blanc"
+        ],
+        "answer": "3",
+        "translation": "the white"
+      },
+      {
+        "id": "fr-beg-059",
+        "type": "mcq",
+        "audio_text": "un",
+        "options": [
+          "un",
+          "huit",
+          "deux",
+          "onze"
+        ],
+        "answer": "0",
+        "translation": "one"
+      },
+      {
+        "id": "fr-beg-060",
+        "type": "mcq",
+        "audio_text": "deux",
+        "options": [
+          "dix",
+          "douze",
+          "deux",
+          "doux"
+        ],
+        "answer": "2",
+        "translation": "two"
+      },
+      {
+        "id": "fr-beg-061",
+        "type": "mcq",
+        "audio_text": "trois",
+        "options": [
+          "treize",
+          "croix",
+          "toit",
+          "trois"
+        ],
+        "answer": "3",
+        "translation": "three"
+      },
+      {
+        "id": "fr-beg-062",
+        "type": "mcq",
+        "audio_text": "quatre",
+        "options": [
+          "quarante",
+          "quatorze",
+          "cadre",
+          "quatre"
+        ],
+        "answer": "3",
+        "translation": "four"
+      },
+      {
+        "id": "fr-beg-063",
+        "type": "mcq",
+        "audio_text": "cinq",
+        "options": [
+          "saint",
+          "cent",
+          "cinq",
+          "sept"
+        ],
+        "answer": "2",
+        "translation": "five"
+      },
+      {
+        "id": "fr-beg-064",
+        "type": "mcq",
+        "audio_text": "dix",
+        "options": [
+          "six",
+          "douze",
+          "deux",
+          "dix"
+        ],
+        "answer": "3",
+        "translation": "ten"
+      },
+      {
+        "id": "fr-beg-065",
+        "type": "mcq",
+        "audio_text": "le chat",
+        "options": [
+          "le chien",
+          "le chat",
+          "le chapeau",
+          "le rat"
+        ],
+        "answer": "1",
+        "translation": "the cat"
+      },
+      {
+        "id": "fr-beg-066",
+        "type": "mcq",
+        "audio_text": "le chien",
+        "options": [
+          "le chat",
+          "le chien",
+          "le bien",
+          "le rien"
+        ],
+        "answer": "1",
+        "translation": "the dog"
+      },
+      {
+        "id": "fr-beg-067",
+        "type": "mcq",
+        "audio_text": "l'oiseau",
+        "options": [
+          "l'oiseau",
+          "le réseau",
+          "le ruisseau",
+          "le couteau"
+        ],
+        "answer": "0",
+        "translation": "the bird"
+      },
+      {
+        "id": "fr-beg-068",
+        "type": "mcq",
+        "audio_text": "le cheval",
+        "options": [
+          "le cheval",
+          "le métal",
+          "le journal",
+          "le canal"
+        ],
+        "answer": "0",
+        "translation": "the horse"
+      },
+      {
+        "id": "fr-beg-069",
+        "type": "mcq",
+        "audio_text": "la vache",
+        "options": [
+          "la poche",
+          "la tâche",
+          "la vache",
+          "la bouche"
+        ],
+        "answer": "2",
+        "translation": "the cow"
+      },
+      {
+        "id": "fr-beg-070",
+        "type": "mcq",
+        "audio_text": "le cochon",
+        "options": [
+          "le mouton",
+          "le bouchon",
+          "le pigeon",
+          "le cochon"
+        ],
+        "answer": "3",
+        "translation": "the pig"
+      },
+      {
+        "id": "fr-beg-071",
+        "type": "mcq",
+        "audio_text": "le canard",
+        "options": [
+          "le renard",
+          "le placard",
+          "le retard",
+          "le canard"
+        ],
+        "answer": "3",
+        "translation": "the duck"
+      },
+      {
+        "id": "fr-beg-072",
+        "type": "mcq",
+        "audio_text": "le lion",
+        "options": [
+          "le camion",
+          "le lion",
+          "le violon",
+          "l'avion"
+        ],
+        "answer": "1",
+        "translation": "the lion"
+      },
+      {
+        "id": "fr-beg-073",
+        "type": "mcq",
+        "audio_text": "bonjour",
+        "options": [
+          "au revoir",
+          "bonjour",
+          "bonsoir",
+          "bonne nuit"
+        ],
+        "answer": "1",
+        "translation": "hello / good day"
+      },
+      {
+        "id": "fr-beg-074",
+        "type": "mcq",
+        "audio_text": "bonsoir",
+        "options": [
+          "bonjour",
+          "bonsoir",
+          "à demain",
+          "bonne nuit"
+        ],
+        "answer": "1",
+        "translation": "good evening"
+      },
+      {
+        "id": "fr-beg-075",
+        "type": "mcq",
+        "audio_text": "merci",
+        "options": [
+          "mardi",
+          "merci",
+          "pardon",
+          "mercredi"
+        ],
+        "answer": "1",
+        "translation": "thank you"
+      },
+      {
+        "id": "fr-beg-076",
+        "type": "mcq",
+        "audio_text": "s'il vous plaît",
+        "options": [
+          "enchanté",
+          "s'il vous plaît",
+          "à bientôt",
+          "au revoir"
+        ],
+        "answer": "1",
+        "translation": "please"
+      },
+      {
+        "id": "fr-beg-077",
+        "type": "mcq",
+        "audio_text": "au revoir",
+        "options": [
+          "au revoir",
+          "bonsoir",
+          "à demain",
+          "bonjour"
+        ],
+        "answer": "0",
+        "translation": "goodbye"
+      },
+      {
+        "id": "fr-beg-078",
+        "type": "mcq",
+        "audio_text": "oui",
+        "options": [
+          "huit",
+          "non",
+          "oui",
+          "nuit"
+        ],
+        "answer": "2",
+        "translation": "yes"
+      },
+      {
+        "id": "fr-beg-079",
+        "type": "mcq",
+        "audio_text": "non",
+        "options": [
+          "nom",
+          "bon",
+          "non",
+          "mon"
+        ],
+        "answer": "2",
+        "translation": "no"
+      },
+      {
+        "id": "fr-beg-080",
+        "type": "mcq",
+        "audio_text": "pardon",
+        "options": [
+          "merci",
+          "carton",
+          "pardon",
+          "patron"
+        ],
+        "answer": "2",
+        "translation": "sorry / excuse me"
+      },
+      {
+        "id": "fr-beg-081",
+        "type": "mcq",
+        "audio_text": "d'accord",
+        "options": [
+          "d'accord",
+          "le nord",
+          "au bord",
+          "d'abord"
+        ],
+        "answer": "0",
+        "translation": "okay / agreed"
+      },
+      {
+        "id": "fr-beg-082",
+        "type": "mcq",
+        "audio_text": "à bientôt",
+        "options": [
+          "à bientôt",
+          "à demain",
+          "à tout à l'heure",
+          "au revoir"
+        ],
+        "answer": "0",
+        "translation": "see you soon"
+      },
+      {
+        "id": "fr-beg-083",
+        "type": "mcq",
+        "audio_text": "le matin",
+        "options": [
+          "le train",
+          "le bain",
+          "le lapin",
+          "le matin"
+        ],
+        "answer": "3",
+        "translation": "the morning"
+      },
+      {
+        "id": "fr-beg-084",
+        "type": "mcq",
+        "audio_text": "le soir",
+        "options": [
+          "le noir",
+          "le soir",
+          "le miroir",
+          "l'espoir"
+        ],
+        "answer": "1",
+        "translation": "the evening"
+      },
+      {
+        "id": "fr-beg-085",
+        "type": "mcq",
+        "audio_text": "la nuit",
+        "options": [
+          "la pluie",
+          "le fruit",
+          "le bruit",
+          "la nuit"
+        ],
+        "answer": "3",
+        "translation": "the night"
+      },
+      {
+        "id": "fr-beg-086",
+        "type": "mcq",
+        "audio_text": "le soleil",
+        "options": [
+          "le réveil",
+          "l'orteil",
+          "le sommeil",
+          "le soleil"
+        ],
+        "answer": "3",
+        "translation": "the sun"
+      },
+      {
+        "id": "fr-beg-087",
+        "type": "mcq",
+        "audio_text": "la lune",
+        "options": [
+          "la prune",
+          "la brune",
+          "la dune",
+          "la lune"
+        ],
+        "answer": "3",
+        "translation": "the moon"
+      },
+      {
+        "id": "fr-beg-088",
+        "type": "mcq",
+        "audio_text": "la pluie",
+        "options": [
+          "la bougie",
+          "le bruit",
+          "la pluie",
+          "la nuit"
+        ],
+        "answer": "2",
+        "translation": "the rain"
+      },
+      {
+        "id": "fr-beg-089",
+        "type": "mcq",
+        "audio_text": "le ciel",
+        "options": [
+          "le sel",
+          "le ciel",
+          "l'aile",
+          "le miel"
+        ],
+        "answer": "1",
+        "translation": "the sky"
+      },
+      {
+        "id": "fr-beg-090",
+        "type": "mcq",
+        "audio_text": "la mer",
+        "options": [
+          "l'air",
+          "la mer",
+          "la mère",
+          "le père"
+        ],
+        "answer": "1",
+        "translation": "the sea"
+      },
+      {
+        "id": "fr-beg-091",
+        "type": "mcq",
+        "audio_text": "la terre",
+        "options": [
+          "le verre",
+          "la guerre",
+          "la mère",
+          "la terre"
+        ],
+        "answer": "3",
+        "translation": "the earth / ground"
+      },
+      {
+        "id": "fr-beg-092",
+        "type": "mcq",
+        "audio_text": "la ville",
+        "options": [
+          "l'huile",
+          "la fille",
+          "la ville",
+          "l'île"
+        ],
+        "answer": "2",
+        "translation": "the city"
+      },
+      {
+        "id": "fr-beg-093",
+        "type": "mcq",
+        "audio_text": "le parc",
+        "options": [
+          "le marc",
+          "le lac",
+          "le parc",
+          "le sac"
+        ],
+        "answer": "2",
+        "translation": "the park"
+      },
+      {
+        "id": "fr-beg-094",
+        "type": "mcq",
+        "audio_text": "la rue",
+        "options": [
+          "la rue",
+          "la grue",
+          "la vue",
+          "la roue"
+        ],
+        "answer": "0",
+        "translation": "the street"
+      },
+      {
+        "id": "fr-beg-095",
+        "type": "mcq",
+        "audio_text": "l'école",
+        "options": [
+          "l'école",
+          "la parole",
+          "la colle",
+          "l'étoile"
+        ],
+        "answer": "0",
+        "translation": "the school"
+      },
+      {
+        "id": "fr-beg-096",
+        "type": "mcq",
+        "audio_text": "la classe",
+        "options": [
+          "la tasse",
+          "la glace",
+          "la classe",
+          "la masse"
+        ],
+        "answer": "2",
+        "translation": "the class"
+      },
+      {
+        "id": "fr-beg-097",
+        "type": "mcq",
+        "audio_text": "le jardin",
+        "options": [
+          "le sapin",
+          "le matin",
+          "le jardin",
+          "le destin"
+        ],
+        "answer": "2",
+        "translation": "the garden"
+      },
+      {
+        "id": "fr-beg-098",
+        "type": "mcq",
+        "audio_text": "la forêt",
+        "options": [
+          "la forêt",
+          "le projet",
+          "le secret",
+          "l'arrêt"
+        ],
+        "answer": "0",
+        "translation": "the forest"
+      },
+      {
+        "id": "fr-beg-099",
+        "type": "mcq",
+        "audio_text": "la fleur",
+        "options": [
+          "la soeur",
+          "la peur",
+          "le coeur",
+          "la fleur"
+        ],
+        "answer": "3",
+        "translation": "the flower"
+      },
+      {
+        "id": "fr-beg-100",
+        "type": "mcq",
+        "audio_text": "l'arbre",
+        "options": [
+          "le marbre",
+          "l'herbe",
+          "l'arbre",
+          "l'ordre"
+        ],
+        "answer": "2",
+        "translation": "the tree"
+      },
+      {
+        "id": "fr-beg-101",
+        "type": "mcq",
+        "audio_text": "le temps",
+        "options": [
+          "le champ",
+          "le vent",
+          "le chant",
+          "le temps"
+        ],
+        "answer": "3",
+        "translation": "the time / weather"
+      },
+      {
+        "id": "fr-beg-102",
+        "type": "mcq",
+        "audio_text": "le jour",
+        "options": [
+          "la cour",
+          "le tour",
+          "le four",
+          "le jour"
+        ],
+        "answer": "3",
+        "translation": "the day"
+      },
+      {
+        "id": "fr-beg-103",
+        "type": "mcq",
+        "audio_text": "la semaine",
+        "options": [
+          "la semaine",
+          "la reine",
+          "la fontaine",
+          "la laine"
+        ],
+        "answer": "0",
+        "translation": "the week"
+      },
+      {
+        "id": "fr-beg-104",
+        "type": "mcq",
+        "audio_text": "le mois",
+        "options": [
+          "le toit",
+          "la voix",
+          "le mois",
+          "le bois"
+        ],
+        "answer": "2",
+        "translation": "the month"
+      },
+      {
+        "id": "fr-beg-105",
+        "type": "mcq",
+        "audio_text": "l'année",
+        "options": [
+          "l'allée",
+          "l'année",
+          "la fumée",
+          "la journée"
+        ],
+        "answer": "1",
+        "translation": "the year"
+      }
+    ],
+    "intermediate": [
+      {
+        "id": "fr-int-001",
+        "type": "mcq",
+        "audio_text": "la gare",
+        "options": [
+          "la barre",
+          "la cave",
+          "la vague",
+          "la gare"
+        ],
+        "answer": "3",
+        "translation": "the train station"
+      },
+      {
+        "id": "fr-int-002",
+        "type": "mcq",
+        "audio_text": "le billet",
+        "options": [
+          "le carnet",
+          "le billet",
+          "le bonnet",
+          "le poulet"
+        ],
+        "answer": "1",
+        "translation": "the ticket"
+      },
+      {
+        "id": "fr-int-003",
+        "type": "mcq",
+        "audio_text": "le voyage",
+        "options": [
+          "le nuage",
+          "le visage",
+          "le bagage",
+          "le voyage"
+        ],
+        "answer": "3",
+        "translation": "the trip"
+      },
+      {
+        "id": "fr-int-004",
+        "type": "mcq",
+        "audio_text": "la valise",
+        "options": [
+          "la cerise",
+          "la surprise",
+          "la chemise",
+          "la valise"
+        ],
+        "answer": "3",
+        "translation": "the suitcase"
+      },
+      {
+        "id": "fr-int-005",
+        "type": "mcq",
+        "audio_text": "l'aéroport",
+        "options": [
+          "le passeport",
+          "l'effort",
+          "le transport",
+          "l'aéroport"
+        ],
+        "answer": "3",
+        "translation": "the airport"
+      },
+      {
+        "id": "fr-int-006",
+        "type": "mcq",
+        "audio_text": "l'hôtel",
+        "options": [
+          "l'autel",
+          "l'hôpital",
+          "l'hôtel",
+          "le tunnel"
+        ],
+        "answer": "2",
+        "translation": "the hotel"
+      },
+      {
+        "id": "fr-int-007",
+        "type": "mcq",
+        "audio_text": "le restaurant",
+        "options": [
+          "le président",
+          "le passant",
+          "le marchand",
+          "le restaurant"
+        ],
+        "answer": "3",
+        "translation": "the restaurant"
+      },
+      {
+        "id": "fr-int-008",
+        "type": "mcq",
+        "audio_text": "le menu",
+        "options": [
+          "le tissu",
+          "l'inconnu",
+          "le menu",
+          "le venu"
+        ],
+        "answer": "2",
+        "translation": "the menu"
+      },
+      {
+        "id": "fr-int-009",
+        "type": "mcq",
+        "audio_text": "l'addition",
+        "options": [
+          "l'audition",
+          "l'attention",
+          "l'addition",
+          "l'action"
+        ],
+        "answer": "2",
+        "translation": "the bill / check"
+      },
+      {
+        "id": "fr-int-010",
+        "type": "typed",
+        "audio_text": "le serveur",
+        "answer": "le serveur",
+        "translation": "the waiter"
+      },
+      {
+        "id": "fr-int-011",
+        "type": "mcq",
+        "audio_text": "la réservation",
+        "options": [
+          "l'invitation",
+          "la conversation",
+          "la réservation",
+          "l'opération"
+        ],
+        "answer": "2",
+        "translation": "the reservation"
+      },
+      {
+        "id": "fr-int-012",
+        "type": "typed",
+        "audio_text": "le musée",
+        "answer": "le musée",
+        "translation": "the museum"
+      },
+      {
+        "id": "fr-int-013",
+        "type": "mcq",
+        "audio_text": "l'exposition",
+        "options": [
+          "la composition",
+          "la position",
+          "la disposition",
+          "l'exposition"
+        ],
+        "answer": "3",
+        "translation": "the exhibition"
+      },
+      {
+        "id": "fr-int-014",
+        "type": "typed",
+        "audio_text": "le bureau",
+        "answer": "le bureau",
+        "translation": "the office / desk"
+      },
+      {
+        "id": "fr-int-015",
+        "type": "mcq",
+        "audio_text": "le travail",
+        "options": [
+          "le travail",
+          "le corail",
+          "le vitrail",
+          "le détail"
+        ],
+        "answer": "0",
+        "translation": "the work"
+      },
+      {
+        "id": "fr-int-016",
+        "type": "mcq",
+        "audio_text": "la réunion",
+        "options": [
+          "la région",
+          "l'opinion",
+          "la réunion",
+          "l'union"
+        ],
+        "answer": "2",
+        "translation": "the meeting"
+      },
+      {
+        "id": "fr-int-017",
+        "type": "mcq",
+        "audio_text": "le collègue",
+        "options": [
+          "le collège",
+          "le piège",
+          "le cortège",
+          "le collègue"
+        ],
+        "answer": "3",
+        "translation": "the colleague"
+      },
+      {
+        "id": "fr-int-018",
+        "type": "mcq",
+        "audio_text": "le patron",
+        "options": [
+          "le bâton",
+          "le carton",
+          "le patron",
+          "le pardon"
+        ],
+        "answer": "2",
+        "translation": "the boss"
+      },
+      {
+        "id": "fr-int-019",
+        "type": "mcq",
+        "audio_text": "le rendez-vous",
+        "options": [
+          "le rendez-vous",
+          "l'après-vous",
+          "le garde-vous",
+          "le point de vue"
+        ],
+        "answer": "0",
+        "translation": "the appointment"
+      },
+      {
+        "id": "fr-int-020",
+        "type": "typed",
+        "audio_text": "le médecin",
+        "answer": "le médecin",
+        "translation": "the doctor"
+      },
+      {
+        "id": "fr-int-021",
+        "type": "typed",
+        "audio_text": "la pharmacie",
+        "answer": "la pharmacie",
+        "translation": "the pharmacy"
+      },
+      {
+        "id": "fr-int-022",
+        "type": "mcq",
+        "audio_text": "le médicament",
+        "options": [
+          "le sentiment",
+          "le bâtiment",
+          "le médicament",
+          "le vêtement"
+        ],
+        "answer": "2",
+        "translation": "the medicine"
+      },
+      {
+        "id": "fr-int-023",
+        "type": "mcq",
+        "audio_text": "la fièvre",
+        "options": [
+          "le lièvre",
+          "la lèvre",
+          "la fièvre",
+          "la chèvre"
+        ],
+        "answer": "2",
+        "translation": "the fever"
+      },
+      {
+        "id": "fr-int-024",
+        "type": "mcq",
+        "audio_text": "la douleur",
+        "options": [
+          "la douleur",
+          "la couleur",
+          "la chaleur",
+          "la valeur"
+        ],
+        "answer": "0",
+        "translation": "the pain"
+      },
+      {
+        "id": "fr-int-025",
+        "type": "typed",
+        "audio_text": "le marché",
+        "answer": "le marché",
+        "translation": "the market"
+      },
+      {
+        "id": "fr-int-026",
+        "type": "typed",
+        "audio_text": "le magasin",
+        "answer": "le magasin",
+        "translation": "the shop / store"
+      },
+      {
+        "id": "fr-int-027",
+        "type": "mcq",
+        "audio_text": "le client",
+        "options": [
+          "le géant",
+          "le savant",
+          "l'agent",
+          "le client"
+        ],
+        "answer": "3",
+        "translation": "the customer"
+      },
+      {
+        "id": "fr-int-028",
+        "type": "mcq",
+        "audio_text": "le prix",
+        "options": [
+          "le cri",
+          "le prix",
+          "le riz",
+          "le gris"
+        ],
+        "answer": "1",
+        "translation": "the price"
+      },
+      {
+        "id": "fr-int-029",
+        "type": "mcq",
+        "audio_text": "la carte de crédit",
+        "options": [
+          "la carte de crédit",
+          "la carte postale",
+          "la carte d'identité",
+          "la carte du monde"
+        ],
+        "answer": "0",
+        "translation": "the credit card"
+      },
+      {
+        "id": "fr-int-030",
+        "type": "typed",
+        "audio_text": "les vêtements",
+        "answer": "les vêtements",
+        "translation": "the clothes"
+      },
+      {
+        "id": "fr-int-031",
+        "type": "mcq",
+        "audio_text": "le manteau",
+        "options": [
+          "le manteau",
+          "le couteau",
+          "le château",
+          "le bateau"
+        ],
+        "answer": "0",
+        "translation": "the coat"
+      },
+      {
+        "id": "fr-int-032",
+        "type": "mcq",
+        "audio_text": "la chemise",
+        "options": [
+          "la valise",
+          "la cerise",
+          "la chemise",
+          "la remise"
+        ],
+        "answer": "2",
+        "translation": "the shirt"
+      },
+      {
+        "id": "fr-int-033",
+        "type": "mcq",
+        "audio_text": "le pantalon",
+        "options": [
+          "le papillon",
+          "le pantalon",
+          "le pamplemousse",
+          "le paillasson"
+        ],
+        "answer": "1",
+        "translation": "the trousers"
+      },
+      {
+        "id": "fr-int-034",
+        "type": "mcq",
+        "audio_text": "les chaussures",
+        "options": [
+          "les déchirures",
+          "les ceintures",
+          "les voitures",
+          "les chaussures"
+        ],
+        "answer": "3",
+        "translation": "the shoes"
+      },
+      {
+        "id": "fr-int-035",
+        "type": "typed",
+        "audio_text": "le chapeau",
+        "answer": "le chapeau",
+        "translation": "the hat"
+      },
+      {
+        "id": "fr-int-036",
+        "type": "typed",
+        "audio_text": "la montre",
+        "answer": "la montre",
+        "translation": "the wristwatch"
+      },
+      {
+        "id": "fr-int-037",
+        "type": "mcq",
+        "audio_text": "le parapluie",
+        "options": [
+          "le paradis",
+          "la pluie",
+          "la prairie",
+          "le parapluie"
+        ],
+        "answer": "3",
+        "translation": "the umbrella"
+      },
+      {
+        "id": "fr-int-038",
+        "type": "mcq",
+        "audio_text": "le temps libre",
+        "options": [
+          "le vent libre",
+          "le temps libre",
+          "l'air libre",
+          "la terre libre"
+        ],
+        "answer": "1",
+        "translation": "free time"
+      },
+      {
+        "id": "fr-int-039",
+        "type": "mcq",
+        "audio_text": "les vacances",
+        "options": [
+          "les balances",
+          "les sciences",
+          "les vacances",
+          "les nuances"
+        ],
+        "answer": "2",
+        "translation": "the holidays / vacation"
+      },
+      {
+        "id": "fr-int-040",
+        "type": "mcq",
+        "audio_text": "la plage",
+        "options": [
+          "la page",
+          "la plage",
+          "la cage",
+          "la nage"
+        ],
+        "answer": "1",
+        "translation": "the beach"
+      },
+      {
+        "id": "fr-int-041",
+        "type": "mcq",
+        "audio_text": "la montagne",
+        "options": [
+          "la campagne",
+          "la châtaigne",
+          "la montagne",
+          "l'Espagne"
+        ],
+        "answer": "2",
+        "translation": "the mountain"
+      },
+      {
+        "id": "fr-int-042",
+        "type": "mcq",
+        "audio_text": "le paysage",
+        "options": [
+          "le paysage",
+          "le visage",
+          "le voyage",
+          "le passage"
+        ],
+        "answer": "0",
+        "translation": "the landscape"
+      },
+      {
+        "id": "fr-int-043",
+        "type": "mcq",
+        "audio_text": "l'environnement",
+        "options": [
+          "l'appartement",
+          "l'enterrement",
+          "l'environnement",
+          "le gouvernement"
+        ],
+        "answer": "2",
+        "translation": "the environment"
+      },
+      {
+        "id": "fr-int-044",
+        "type": "mcq",
+        "audio_text": "le nuage",
+        "options": [
+          "l'orage",
+          "le courage",
+          "le nuage",
+          "le voyage"
+        ],
+        "answer": "2",
+        "translation": "the cloud"
+      },
+      {
+        "id": "fr-int-045",
+        "type": "mcq",
+        "audio_text": "le vent",
+        "options": [
+          "la dent",
+          "le gant",
+          "le banc",
+          "le vent"
+        ],
+        "answer": "3",
+        "translation": "the wind"
+      },
+      {
+        "id": "fr-int-046",
+        "type": "mcq",
+        "audio_text": "l'orage",
+        "options": [
+          "le courage",
+          "le mirage",
+          "le nuage",
+          "l'orage"
+        ],
+        "answer": "3",
+        "translation": "the storm"
+      },
+      {
+        "id": "fr-int-047",
+        "type": "mcq",
+        "audio_text": "la neige",
+        "options": [
+          "la neige",
+          "le piège",
+          "le liège",
+          "le siège"
+        ],
+        "answer": "0",
+        "translation": "the snow"
+      },
+      {
+        "id": "fr-int-048",
+        "type": "mcq",
+        "audio_text": "la chaleur",
+        "options": [
+          "la chaleur",
+          "la douleur",
+          "la valeur",
+          "la couleur"
+        ],
+        "answer": "0",
+        "translation": "the heat"
+      },
+      {
+        "id": "fr-int-049",
+        "type": "mcq",
+        "audio_text": "le froid",
+        "options": [
+          "le droit",
+          "le froid",
+          "le toit",
+          "l'endroit"
+        ],
+        "answer": "1",
+        "translation": "the cold"
+      },
+      {
+        "id": "fr-int-050",
+        "type": "mcq",
+        "audio_text": "l'embouteillage",
+        "options": [
+          "l'embouteillage",
+          "le bricolage",
+          "le coquillage",
+          "l'emballage"
+        ],
+        "answer": "0",
+        "translation": "the traffic jam"
+      },
+      {
+        "id": "fr-int-051",
+        "type": "mcq",
+        "audio_text": "tout de suite",
+        "options": [
+          "tout le monde",
+          "tout à fait",
+          "tout à l'heure",
+          "tout de suite"
+        ],
+        "answer": "3",
+        "translation": "right away / immediately"
+      },
+      {
+        "id": "fr-int-052",
+        "type": "mcq",
+        "audio_text": "tout à fait",
+        "options": [
+          "tout de suite",
+          "rien du tout",
+          "tout à fait",
+          "tout à coup"
+        ],
+        "answer": "2",
+        "translation": "completely / exactly"
+      },
+      {
+        "id": "fr-int-053",
+        "type": "mcq",
+        "audio_text": "tout à coup",
+        "options": [
+          "coup sur coup",
+          "tout à fait",
+          "tout à coup",
+          "après tout"
+        ],
+        "answer": "2",
+        "translation": "all of a sudden"
+      },
+      {
+        "id": "fr-int-054",
+        "type": "mcq",
+        "audio_text": "en train de",
+        "options": [
+          "au bord de",
+          "à cause de",
+          "en train de",
+          "en face de"
+        ],
+        "answer": "2",
+        "translation": "in the middle of / currently"
+      },
+      {
+        "id": "fr-int-055",
+        "type": "mcq",
+        "audio_text": "avoir faim",
+        "options": [
+          "avoir soif",
+          "avoir peur",
+          "avoir froid",
+          "avoir faim"
+        ],
+        "answer": "3",
+        "translation": "to be hungry"
+      },
+      {
+        "id": "fr-int-056",
+        "type": "typed",
+        "audio_text": "avoir soif",
+        "answer": "avoir soif",
+        "translation": "to be thirsty"
+      },
+      {
+        "id": "fr-int-057",
+        "type": "mcq",
+        "audio_text": "avoir sommeil",
+        "options": [
+          "avoir soif",
+          "avoir sommeil",
+          "avoir besoin",
+          "avoir soleil"
+        ],
+        "answer": "1",
+        "translation": "to be sleepy"
+      },
+      {
+        "id": "fr-int-058",
+        "type": "mcq",
+        "audio_text": "avoir besoin de",
+        "options": [
+          "avoir hâte de",
+          "avoir peur de",
+          "avoir envie de",
+          "avoir besoin de"
+        ],
+        "answer": "3",
+        "translation": "to need"
+      },
+      {
+        "id": "fr-int-059",
+        "type": "typed",
+        "audio_text": "avoir envie de",
+        "answer": "avoir envie de",
+        "translation": "to want / feel like"
+      },
+      {
+        "id": "fr-int-060",
+        "type": "mcq",
+        "audio_text": "faire attention",
+        "options": [
+          "faire confiance",
+          "faire la fête",
+          "faire attention",
+          "faire semblant"
+        ],
+        "answer": "2",
+        "translation": "to pay attention / be careful"
+      },
+      {
+        "id": "fr-int-061",
+        "type": "mcq",
+        "audio_text": "faire la cuisine",
+        "options": [
+          "faire la vaisselle",
+          "faire les courses",
+          "faire le ménage",
+          "faire la cuisine"
+        ],
+        "answer": "3",
+        "translation": "to cook"
+      },
+      {
+        "id": "fr-int-062",
+        "type": "mcq",
+        "audio_text": "faire les courses",
+        "options": [
+          "faire du sport",
+          "faire la course",
+          "faire un tour",
+          "faire les courses"
+        ],
+        "answer": "3",
+        "translation": "to go grocery shopping"
+      },
+      {
+        "id": "fr-int-063",
+        "type": "mcq",
+        "audio_text": "être d'accord",
+        "options": [
+          "être en avance",
+          "être à l'heure",
+          "être d'accord",
+          "être en retard"
+        ],
+        "answer": "2",
+        "translation": "to agree"
+      },
+      {
+        "id": "fr-int-064",
+        "type": "typed",
+        "audio_text": "être en retard",
+        "answer": "être en retard",
+        "translation": "to be late"
+      },
+      {
+        "id": "fr-int-065",
+        "type": "mcq",
+        "audio_text": "être en avance",
+        "options": [
+          "être à l'aise",
+          "être en avance",
+          "être en route",
+          "être en retard"
+        ],
+        "answer": "1",
+        "translation": "to be early"
+      },
+      {
+        "id": "fr-int-066",
+        "type": "typed",
+        "audio_text": "prendre une douche",
+        "answer": "prendre une douche",
+        "translation": "to take a shower"
+      },
+      {
+        "id": "fr-int-067",
+        "type": "mcq",
+        "audio_text": "prendre le petit déjeuner",
+        "options": [
+          "prendre le petit déjeuner",
+          "prendre le dîner",
+          "prendre le goûter",
+          "prendre le repas"
+        ],
+        "answer": "0",
+        "translation": "to eat breakfast"
+      },
+      {
+        "id": "fr-int-068",
+        "type": "typed",
+        "audio_text": "se réveiller",
+        "answer": "se réveiller",
+        "translation": "to wake up"
+      },
+      {
+        "id": "fr-int-069",
+        "type": "mcq",
+        "audio_text": "se coucher",
+        "options": [
+          "se toucher",
+          "se cacher",
+          "se coucher",
+          "se doucher"
+        ],
+        "answer": "2",
+        "translation": "to go to bed"
+      },
+      {
+        "id": "fr-int-070",
+        "type": "mcq",
+        "audio_text": "s'habiller",
+        "options": [
+          "se coiffer",
+          "se déshabiller",
+          "se laver",
+          "s'habiller"
+        ],
+        "answer": "3",
+        "translation": "to get dressed"
+      },
+      {
+        "id": "fr-int-071",
+        "type": "mcq",
+        "audio_text": "le bonheur",
+        "options": [
+          "le malheur",
+          "l'honneur",
+          "la bonne humeur",
+          "le bonheur"
+        ],
+        "answer": "3",
+        "translation": "happiness"
+      },
+      {
+        "id": "fr-int-072",
+        "type": "mcq",
+        "audio_text": "la tristesse",
+        "options": [
+          "la vitesse",
+          "la tristesse",
+          "la politesse",
+          "la sagesse"
+        ],
+        "answer": "1",
+        "translation": "sadness"
+      },
+      {
+        "id": "fr-int-073",
+        "type": "typed",
+        "audio_text": "la surprise",
+        "answer": "la surprise",
+        "translation": "surprise"
+      },
+      {
+        "id": "fr-int-074",
+        "type": "mcq",
+        "audio_text": "la colère",
+        "options": [
+          "la misère",
+          "la colère",
+          "la prière",
+          "la lumière"
+        ],
+        "answer": "1",
+        "translation": "anger"
+      },
+      {
+        "id": "fr-int-075",
+        "type": "mcq",
+        "audio_text": "la peur",
+        "options": [
+          "le coeur",
+          "la peur",
+          "l'odeur",
+          "la soeur"
+        ],
+        "answer": "1",
+        "translation": "fear"
+      },
+      {
+        "id": "fr-int-076",
+        "type": "typed",
+        "audio_text": "l'espoir",
+        "answer": "l'espoir",
+        "translation": "hope"
+      },
+      {
+        "id": "fr-int-077",
+        "type": "typed",
+        "audio_text": "la confiance",
+        "answer": "la confiance",
+        "translation": "trust / confidence"
+      },
+      {
+        "id": "fr-int-078",
+        "type": "mcq",
+        "audio_text": "le doute",
+        "options": [
+          "la goutte",
+          "la route",
+          "le doute",
+          "la voûte"
+        ],
+        "answer": "2",
+        "translation": "doubt"
+      },
+      {
+        "id": "fr-int-079",
+        "type": "mcq",
+        "audio_text": "la vérité",
+        "options": [
+          "la liberté",
+          "la réalité",
+          "la vérité",
+          "la fierté"
+        ],
+        "answer": "2",
+        "translation": "the truth"
+      },
+      {
+        "id": "fr-int-080",
+        "type": "mcq",
+        "audio_text": "le mensonge",
+        "options": [
+          "le songe",
+          "le mélange",
+          "le mensonge",
+          "l'éponge"
+        ],
+        "answer": "2",
+        "translation": "the lie"
+      },
+      {
+        "id": "fr-int-081",
+        "type": "mcq",
+        "audio_text": "la promesse",
+        "options": [
+          "la promesse",
+          "la politesse",
+          "la richesse",
+          "la jeunesse"
+        ],
+        "answer": "0",
+        "translation": "the promise"
+      },
+      {
+        "id": "fr-int-082",
+        "type": "mcq",
+        "audio_text": "le choix",
+        "options": [
+          "le choix",
+          "la voix",
+          "la croix",
+          "le bois"
+        ],
+        "answer": "0",
+        "translation": "the choice"
+      },
+      {
+        "id": "fr-int-083",
+        "type": "mcq",
+        "audio_text": "la décision",
+        "options": [
+          "la précision",
+          "la division",
+          "la révision",
+          "la décision"
+        ],
+        "answer": "3",
+        "translation": "the decision"
+      },
+      {
+        "id": "fr-int-084",
+        "type": "mcq",
+        "audio_text": "le problème",
+        "options": [
+          "le poème",
+          "le problème",
+          "le thème",
+          "le système"
+        ],
+        "answer": "1",
+        "translation": "the problem"
+      },
+      {
+        "id": "fr-int-085",
+        "type": "mcq",
+        "audio_text": "la solution",
+        "options": [
+          "la révolution",
+          "l'évolution",
+          "la pollution",
+          "la solution"
+        ],
+        "answer": "3",
+        "translation": "the solution"
+      },
+      {
+        "id": "fr-int-086",
+        "type": "typed",
+        "audio_text": "le conseil",
+        "answer": "le conseil",
+        "translation": "the advice"
+      },
+      {
+        "id": "fr-int-087",
+        "type": "mcq",
+        "audio_text": "l'habitude",
+        "options": [
+          "l'inquiétude",
+          "la solitude",
+          "l'attitude",
+          "l'habitude"
+        ],
+        "answer": "3",
+        "translation": "the habit"
+      },
+      {
+        "id": "fr-int-088",
+        "type": "typed",
+        "audio_text": "l'expérience",
+        "answer": "l'expérience",
+        "translation": "the experience"
+      },
+      {
+        "id": "fr-int-089",
+        "type": "typed",
+        "audio_text": "la mémoire",
+        "answer": "la mémoire",
+        "translation": "the memory"
+      },
+      {
+        "id": "fr-int-090",
+        "type": "mcq",
+        "audio_text": "le rêve",
+        "options": [
+          "la sève",
+          "le rêve",
+          "la grève",
+          "la trêve"
+        ],
+        "answer": "1",
+        "translation": "the dream"
+      },
+      {
+        "id": "fr-int-091",
+        "type": "mcq",
+        "audio_text": "le secret",
+        "options": [
+          "le livret",
+          "l'aspect",
+          "le regret",
+          "le secret"
+        ],
+        "answer": "3",
+        "translation": "the secret"
+      },
+      {
+        "id": "fr-int-092",
+        "type": "typed",
+        "audio_text": "la règle",
+        "answer": "la règle",
+        "translation": "the rule"
+      },
+      {
+        "id": "fr-int-093",
+        "type": "mcq",
+        "audio_text": "l'exemple",
+        "options": [
+          "l'ensemble",
+          "le modèle",
+          "l'exemple",
+          "le temple"
+        ],
+        "answer": "2",
+        "translation": "the example"
+      },
+      {
+        "id": "fr-int-094",
+        "type": "mcq",
+        "audio_text": "la différence",
+        "options": [
+          "la différence",
+          "la référence",
+          "la préférence",
+          "l'indifférence"
+        ],
+        "answer": "0",
+        "translation": "the difference"
+      },
+      {
+        "id": "fr-int-095",
+        "type": "typed",
+        "audio_text": "la ressemblance",
+        "answer": "la ressemblance",
+        "translation": "the resemblance"
+      },
+      {
+        "id": "fr-int-096",
+        "type": "mcq",
+        "audio_text": "l'avantage",
+        "options": [
+          "le paysage",
+          "le bagage",
+          "l'avantage",
+          "le partage"
+        ],
+        "answer": "2",
+        "translation": "the advantage"
+      },
+      {
+        "id": "fr-int-097",
+        "type": "typed",
+        "audio_text": "l'inconvénient",
+        "answer": "l'inconvénient",
+        "translation": "the disadvantage"
+      },
+      {
+        "id": "fr-int-098",
+        "type": "mcq",
+        "audio_text": "l'avenir",
+        "options": [
+          "l'avenir",
+          "le plaisir",
+          "le souvenir",
+          "le désir"
+        ],
+        "answer": "0",
+        "translation": "the future"
+      },
+      {
+        "id": "fr-int-099",
+        "type": "mcq",
+        "audio_text": "le passé",
+        "options": [
+          "le tracé",
+          "le blessé",
+          "le fossé",
+          "le passé"
+        ],
+        "answer": "3",
+        "translation": "the past"
+      },
+      {
+        "id": "fr-int-100",
+        "type": "mcq",
+        "audio_text": "le présent",
+        "options": [
+          "l'argent",
+          "l'accent",
+          "le présent",
+          "l'agent"
+        ],
+        "answer": "2",
+        "translation": "the present"
+      },
+      {
+        "id": "fr-int-101",
+        "type": "mcq",
+        "audio_text": "la confiance en soi",
+        "options": [
+          "la prise de tête",
+          "la joie de vivre",
+          "le coup de foudre",
+          "la confiance en soi"
+        ],
+        "answer": "3",
+        "translation": "self-confidence"
+      },
+      {
+        "id": "fr-int-102",
+        "type": "mcq",
+        "audio_text": "le point de vue",
+        "options": [
+          "le chemin de fer",
+          "le rendez-vous",
+          "le jeu de mots",
+          "le point de vue"
+        ],
+        "answer": "3",
+        "translation": "point of view"
+      },
+      {
+        "id": "fr-int-103",
+        "type": "mcq",
+        "audio_text": "la vie quotidienne",
+        "options": [
+          "la vie quotidienne",
+          "la vie publique",
+          "la vie privée",
+          "la vie active"
+        ],
+        "answer": "0",
+        "translation": "daily life"
+      },
+      {
+        "id": "fr-int-104",
+        "type": "mcq",
+        "audio_text": "le sens de l'humour",
+        "options": [
+          "le sens propre",
+          "le sens figuré",
+          "le sens de l'humour",
+          "le sens interdit"
+        ],
+        "answer": "2",
+        "translation": "sense of humor"
+      },
+      {
+        "id": "fr-int-105",
+        "type": "mcq",
+        "audio_text": "la liberté d'expression",
+        "options": [
+          "la liberté de pensée",
+          "la liberté d'expression",
+          "la prise de parole",
+          "la liberté de culte"
+        ],
+        "answer": "1",
+        "translation": "freedom of expression"
+      },
+      {
+        "id": "fr-int-106",
+        "type": "mcq",
+        "audio_text": "la protection civile",
+        "options": [
+          "la sécurité sociale",
+          "la protection civile",
+          "la police nationale",
+          "la garde républicaine"
+        ],
+        "answer": "1",
+        "translation": "civil protection"
+      },
+      {
+        "id": "fr-int-107",
+        "type": "mcq",
+        "audio_text": "le pouvoir d'achat",
+        "options": [
+          "le pouvoir d'achat",
+          "le taux d'intérêt",
+          "la hausse des prix",
+          "le coût de la vie"
+        ],
+        "answer": "0",
+        "translation": "purchasing power"
+      },
+      {
+        "id": "fr-int-108",
+        "type": "mcq",
+        "audio_text": "la qualité de vie",
+        "options": [
+          "le niveau de vie",
+          "la qualité de vie",
+          "le mode de vie",
+          "l'espérance de vie"
+        ],
+        "answer": "1",
+        "translation": "quality of life"
+      }
+    ],
+    "advanced": [
+      {
+        "id": "fr-adv-001",
+        "type": "typed",
+        "audio_text": "le poisson",
+        "answer": "le poisson",
+        "translation": "the fish (vs le poison)"
+      },
+      {
+        "id": "fr-adv-002",
+        "type": "mcq",
+        "audio_text": "le poison",
+        "options": [
+          "la prison",
+          "le poison",
+          "le blason",
+          "le poisson"
+        ],
+        "answer": "1",
+        "translation": "the poison (vs le poisson)"
+      },
+      {
+        "id": "fr-adv-003",
+        "type": "typed",
+        "audio_text": "au-dessus",
+        "answer": "au-dessus",
+        "translation": "above / over"
+      },
+      {
+        "id": "fr-adv-004",
+        "type": "mcq",
+        "audio_text": "au-dessous",
+        "options": [
+          "au-dessus",
+          "par dessus",
+          "au fond",
+          "au-dessous"
+        ],
+        "answer": "3",
+        "translation": "below / underneath"
+      },
+      {
+        "id": "fr-adv-005",
+        "type": "typed",
+        "audio_text": "le verre",
+        "answer": "le verre",
+        "translation": "the glass"
+      },
+      {
+        "id": "fr-adv-006",
+        "type": "typed",
+        "audio_text": "le vers",
+        "answer": "le vers",
+        "translation": "the verse / towards"
+      },
+      {
+        "id": "fr-adv-007",
+        "type": "typed",
+        "audio_text": "le vert",
+        "answer": "le vert",
+        "translation": "the green (color)"
+      },
+      {
+        "id": "fr-adv-008",
+        "type": "mcq",
+        "audio_text": "le ver",
+        "options": [
+          "le vert",
+          "le vers",
+          "le ver",
+          "le verre"
+        ],
+        "answer": "2",
+        "translation": "the worm"
+      },
+      {
+        "id": "fr-adv-009",
+        "type": "mcq",
+        "audio_text": "la voix",
+        "options": [
+          "le bois",
+          "la voie",
+          "la voix",
+          "le choix"
+        ],
+        "answer": "2",
+        "translation": "the voice"
+      },
+      {
+        "id": "fr-adv-010",
+        "type": "typed",
+        "audio_text": "la voie",
+        "answer": "la voie",
+        "translation": "the lane / track"
+      },
+      {
+        "id": "fr-adv-011",
+        "type": "typed",
+        "audio_text": "le compte",
+        "answer": "le compte",
+        "translation": "the account"
+      },
+      {
+        "id": "fr-adv-012",
+        "type": "typed",
+        "audio_text": "le conte",
+        "answer": "le conte",
+        "translation": "the tale / story"
+      },
+      {
+        "id": "fr-adv-013",
+        "type": "typed",
+        "audio_text": "le comte",
+        "answer": "le comte",
+        "translation": "the count (nobility)"
+      },
+      {
+        "id": "fr-adv-014",
+        "type": "typed",
+        "audio_text": "le pain",
+        "answer": "le pain",
+        "translation": "the bread (nasal in)"
+      },
+      {
+        "id": "fr-adv-015",
+        "type": "mcq",
+        "audio_text": "le pin",
+        "options": [
+          "le pin",
+          "le pain",
+          "le vin",
+          "le lin"
+        ],
+        "answer": "0",
+        "translation": "the pine tree"
+      },
+      {
+        "id": "fr-adv-016",
+        "type": "mcq",
+        "audio_text": "le vin",
+        "options": [
+          "le vain",
+          "le vingt",
+          "le vin",
+          "le vent"
+        ],
+        "answer": "2",
+        "translation": "the wine"
+      },
+      {
+        "id": "fr-adv-017",
+        "type": "typed",
+        "audio_text": "vingt",
+        "answer": "vingt",
+        "translation": "twenty (number)"
+      },
+      {
+        "id": "fr-adv-018",
+        "type": "typed",
+        "audio_text": "le champ",
+        "answer": "le champ",
+        "translation": "the field"
+      },
+      {
+        "id": "fr-adv-019",
+        "type": "mcq",
+        "audio_text": "le chant",
+        "options": [
+          "le chant",
+          "le flanc",
+          "le gant",
+          "le champ"
+        ],
+        "answer": "0",
+        "translation": "the singing / song"
+      },
+      {
+        "id": "fr-adv-020",
+        "type": "typed",
+        "audio_text": "le sang",
+        "answer": "le sang",
+        "translation": "the blood"
+      },
+      {
+        "id": "fr-adv-021",
+        "type": "typed",
+        "audio_text": "cent",
+        "answer": "cent",
+        "translation": "one hundred"
+      },
+      {
+        "id": "fr-adv-022",
+        "type": "mcq",
+        "audio_text": "sans",
+        "options": [
+          "le sens",
+          "cent",
+          "sans",
+          "le sang"
+        ],
+        "answer": "2",
+        "translation": "without"
+      },
+      {
+        "id": "fr-adv-023",
+        "type": "mcq",
+        "audio_text": "le sens",
+        "options": [
+          "cent",
+          "le sang",
+          "le sens",
+          "sans"
+        ],
+        "answer": "2",
+        "translation": "the meaning / direction"
+      },
+      {
+        "id": "fr-adv-024",
+        "type": "mcq",
+        "audio_text": "l'amande",
+        "options": [
+          "l'amande",
+          "l'amende",
+          "la demande",
+          "la commande"
+        ],
+        "answer": "0",
+        "translation": "the almond"
+      },
+      {
+        "id": "fr-adv-025",
+        "type": "typed",
+        "audio_text": "l'amende",
+        "answer": "l'amende",
+        "translation": "the fine / ticket"
+      },
+      {
+        "id": "fr-adv-026",
+        "type": "typed",
+        "audio_text": "le cœur",
+        "answer": "le cœur",
+        "translation": "the heart"
+      },
+      {
+        "id": "fr-adv-027",
+        "type": "mcq",
+        "audio_text": "le chœur",
+        "options": [
+          "le cœur",
+          "la lueur",
+          "la sueur",
+          "le chœur"
+        ],
+        "answer": "3",
+        "translation": "the choir"
+      },
+      {
+        "id": "fr-adv-028",
+        "type": "typed",
+        "audio_text": "tôt",
+        "answer": "tôt",
+        "translation": "early"
+      },
+      {
+        "id": "fr-adv-029",
+        "type": "mcq",
+        "audio_text": "le taux",
+        "options": [
+          "le taux",
+          "tôt",
+          "le saut",
+          "la peau"
+        ],
+        "answer": "0",
+        "translation": "the rate"
+      },
+      {
+        "id": "fr-adv-030",
+        "type": "typed",
+        "audio_text": "le maire",
+        "answer": "le maire",
+        "translation": "the mayor"
+      },
+      {
+        "id": "fr-adv-031",
+        "type": "typed",
+        "audio_text": "l'éphémère",
+        "answer": "l'éphémère",
+        "translation": "ephemeral / short-lived"
+      },
+      {
+        "id": "fr-adv-032",
+        "type": "mcq",
+        "audio_text": "la bienveillance",
+        "options": [
+          "la vigilance",
+          "la malveillance",
+          "la bienveillance",
+          "la clairvoyance"
+        ],
+        "answer": "2",
+        "translation": "benevolence / kindness"
+      },
+      {
+        "id": "fr-adv-033",
+        "type": "mcq",
+        "audio_text": "l'équivoque",
+        "options": [
+          "la réplique",
+          "l'équivoque",
+          "la logique",
+          "la panique"
+        ],
+        "answer": "1",
+        "translation": "ambiguity / double meaning"
+      },
+      {
+        "id": "fr-adv-034",
+        "type": "typed",
+        "audio_text": "le malentendu",
+        "answer": "le malentendu",
+        "translation": "the misunderstanding"
+      },
+      {
+        "id": "fr-adv-035",
+        "type": "typed",
+        "audio_text": "la déception",
+        "answer": "la déception",
+        "translation": "disappointment (false friend)"
+      },
+      {
+        "id": "fr-adv-036",
+        "type": "typed",
+        "audio_text": "actuellement",
+        "answer": "actuellement",
+        "translation": "currently (false friend)"
+      },
+      {
+        "id": "fr-adv-037",
+        "type": "mcq",
+        "audio_text": "éventuellement",
+        "options": [
+          "finalement",
+          "certainement",
+          "actuellement",
+          "éventuellement"
+        ],
+        "answer": "3",
+        "translation": "possibly / if needed"
+      },
+      {
+        "id": "fr-adv-038",
+        "type": "mcq",
+        "audio_text": "l'angoisse",
+        "options": [
+          "la paresse",
+          "l'angoisse",
+          "la finesse",
+          "la paroisse"
+        ],
+        "answer": "1",
+        "translation": "acute anxiety / dread"
+      },
+      {
+        "id": "fr-adv-039",
+        "type": "mcq",
+        "audio_text": "la nostalgie",
+        "options": [
+          "la mélancolie",
+          "l'utopie",
+          "la nostalgie",
+          "la léthargie"
+        ],
+        "answer": "2",
+        "translation": "nostalgia"
+      },
+      {
+        "id": "fr-adv-040",
+        "type": "mcq",
+        "audio_text": "le bouleversement",
+        "options": [
+          "l'aboutissement",
+          "le bouleversement",
+          "le soulagement",
+          "le dénouement"
+        ],
+        "answer": "1",
+        "translation": "upheaval / turmoil"
+      },
+      {
+        "id": "fr-adv-041",
+        "type": "mcq",
+        "audio_text": "le soulagement",
+        "options": [
+          "le changement",
+          "le prolongement",
+          "le soulagement",
+          "le ménagement"
+        ],
+        "answer": "2",
+        "translation": "relief"
+      },
+      {
+        "id": "fr-adv-042",
+        "type": "typed",
+        "audio_text": "l'aboutissement",
+        "answer": "l'aboutissement",
+        "translation": "culmination / outcome"
+      },
+      {
+        "id": "fr-adv-043",
+        "type": "mcq",
+        "audio_text": "l'épanouissement",
+        "options": [
+          "l'éblouissement",
+          "l'engloutissement",
+          "l'épanouissement",
+          "l'éclaircissement"
+        ],
+        "answer": "2",
+        "translation": "fulfillment / blossoming"
+      },
+      {
+        "id": "fr-adv-044",
+        "type": "mcq",
+        "audio_text": "l'effondrement",
+        "options": [
+          "le commencement",
+          "l'encombrement",
+          "l'effondrement",
+          "l'écroulement"
+        ],
+        "answer": "2",
+        "translation": "collapse / breakdown"
+      },
+      {
+        "id": "fr-adv-045",
+        "type": "typed",
+        "audio_text": "le dépaysement",
+        "answer": "le dépaysement",
+        "translation": "change of scenery / disorientation"
+      },
+      {
+        "id": "fr-adv-046",
+        "type": "mcq",
+        "audio_text": "la culpabilité",
+        "options": [
+          "la susceptibilité",
+          "la crédibilité",
+          "la vulnérabilité",
+          "la culpabilité"
+        ],
+        "answer": "3",
+        "translation": "guilt"
+      },
+      {
+        "id": "fr-adv-047",
+        "type": "typed",
+        "audio_text": "la réticence",
+        "answer": "la réticence",
+        "translation": "reluctance / hesitation"
+      },
+      {
+        "id": "fr-adv-048",
+        "type": "mcq",
+        "audio_text": "l'éloquence",
+        "options": [
+          "l'éloquence",
+          "la fréquence",
+          "la conséquence",
+          "la séquence"
+        ],
+        "answer": "0",
+        "translation": "eloquence"
+      },
+      {
+        "id": "fr-adv-049",
+        "type": "mcq",
+        "audio_text": "la lucidité",
+        "options": [
+          "la rigidité",
+          "la lucidité",
+          "la fluidité",
+          "l'acidité"
+        ],
+        "answer": "1",
+        "translation": "lucidity / clear-headedness"
+      },
+      {
+        "id": "fr-adv-050",
+        "type": "mcq",
+        "audio_text": "la ténacité",
+        "options": [
+          "la ténacité",
+          "l'efficacité",
+          "la véracité",
+          "la sagacité"
+        ],
+        "answer": "0",
+        "translation": "tenacity / perseverance"
+      },
+      {
+        "id": "fr-adv-051",
+        "type": "mcq",
+        "audio_text": "le compromis",
+        "options": [
+          "le permis",
+          "l'imprévu",
+          "le paradis",
+          "le compromis"
+        ],
+        "answer": "3",
+        "translation": "the compromise"
+      },
+      {
+        "id": "fr-adv-052",
+        "type": "mcq",
+        "audio_text": "l'ambiguïté",
+        "options": [
+          "l'antiquité",
+          "la gratuité",
+          "l'ambiguïté",
+          "l'iniquité"
+        ],
+        "answer": "2",
+        "translation": "ambiguity"
+      },
+      {
+        "id": "fr-adv-053",
+        "type": "mcq",
+        "audio_text": "le paradoxe",
+        "options": [
+          "l'hétérodoxe",
+          "l'orthodoxe",
+          "le paradoxe",
+          "l'équinoxe"
+        ],
+        "answer": "2",
+        "translation": "the paradox"
+      },
+      {
+        "id": "fr-adv-054",
+        "type": "mcq",
+        "audio_text": "la nuance",
+        "options": [
+          "la créance",
+          "l'aisance",
+          "la nuance",
+          "la balance"
+        ],
+        "answer": "2",
+        "translation": "the nuance / shade"
+      },
+      {
+        "id": "fr-adv-055",
+        "type": "mcq",
+        "audio_text": "l'ampleur",
+        "options": [
+          "la rigueur",
+          "la grandeur",
+          "la pâleur",
+          "l'ampleur"
+        ],
+        "answer": "3",
+        "translation": "magnitude / scope"
+      },
+      {
+        "id": "fr-adv-056",
+        "type": "typed",
+        "audio_text": "le chef-d'œuvre",
+        "answer": "le chef-d'œuvre",
+        "translation": "the masterpiece"
+      },
+      {
+        "id": "fr-adv-057",
+        "type": "mcq",
+        "audio_text": "le dénouement",
+        "options": [
+          "le couronnement",
+          "le dénouement",
+          "le reniement",
+          "l'événement"
+        ],
+        "answer": "1",
+        "translation": "the resolution / ending"
+      },
+      {
+        "id": "fr-adv-058",
+        "type": "mcq",
+        "audio_text": "la franchise",
+        "options": [
+          "la surprise",
+          "la maîtrise",
+          "la friandise",
+          "la franchise"
+        ],
+        "answer": "3",
+        "translation": "frankness / honesty"
+      },
+      {
+        "id": "fr-adv-059",
+        "type": "typed",
+        "audio_text": "le fardeau",
+        "answer": "le fardeau",
+        "translation": "the burden"
+      },
+      {
+        "id": "fr-adv-060",
+        "type": "typed",
+        "audio_text": "l'engouement",
+        "answer": "l'engouement",
+        "translation": "craze / infatuation"
+      },
+      {
+        "id": "fr-adv-061",
+        "type": "mcq",
+        "audio_text": "la démesure",
+        "options": [
+          "la blessure",
+          "la parure",
+          "la morsure",
+          "la démesure"
+        ],
+        "answer": "3",
+        "translation": "excess / disproportion"
+      },
+      {
+        "id": "fr-adv-062",
+        "type": "typed",
+        "audio_text": "le recueil",
+        "answer": "le recueil",
+        "translation": "collection / anthology"
+      },
+      {
+        "id": "fr-adv-063",
+        "type": "typed",
+        "audio_text": "l'écueil",
+        "answer": "l'écueil",
+        "translation": "pitfall / obstacle"
+      },
+      {
+        "id": "fr-adv-064",
+        "type": "typed",
+        "audio_text": "l'orgueil",
+        "answer": "l'orgueil",
+        "translation": "pride / hubris"
+      },
+      {
+        "id": "fr-adv-065",
+        "type": "typed",
+        "audio_text": "le deuil",
+        "answer": "le deuil",
+        "translation": "mourning / grief"
+      },
+      {
+        "id": "fr-adv-066",
+        "type": "typed",
+        "audio_text": "le seuil",
+        "answer": "le seuil",
+        "translation": "threshold"
+      },
+      {
+        "id": "fr-adv-067",
+        "type": "typed",
+        "audio_text": "l'aperçu",
+        "answer": "l'aperçu",
+        "translation": "overview / glimpse"
+      },
+      {
+        "id": "fr-adv-068",
+        "type": "typed",
+        "audio_text": "l'égarement",
+        "answer": "l'égarement",
+        "translation": "straying / confusion"
+      },
+      {
+        "id": "fr-adv-069",
+        "type": "mcq",
+        "audio_text": "la défaillance",
+        "options": [
+          "la méfiance",
+          "la ressemblance",
+          "la défaillance",
+          "la bienveillance"
+        ],
+        "answer": "2",
+        "translation": "breakdown / failure"
+      },
+      {
+        "id": "fr-adv-070",
+        "type": "mcq",
+        "audio_text": "la hardiesse",
+        "options": [
+          "la faiblesse",
+          "la politesse",
+          "la vieillesse",
+          "la hardiesse"
+        ],
+        "answer": "3",
+        "translation": "boldness / daring"
+      },
+      {
+        "id": "fr-adv-071",
+        "type": "typed",
+        "audio_text": "la subtilité",
+        "answer": "la subtilité",
+        "translation": "subtlety"
+      },
+      {
+        "id": "fr-adv-072",
+        "type": "typed",
+        "audio_text": "l'acharnement",
+        "answer": "l'acharnement",
+        "translation": "fierce tenacity / relentlessness"
+      },
+      {
+        "id": "fr-adv-073",
+        "type": "typed",
+        "audio_text": "l'apaisement",
+        "answer": "l'apaisement",
+        "translation": "calming / pacification"
+      },
+      {
+        "id": "fr-adv-074",
+        "type": "mcq",
+        "audio_text": "le mépris",
+        "options": [
+          "le compromis",
+          "le mépris",
+          "l'esprit",
+          "le permis"
+        ],
+        "answer": "1",
+        "translation": "contempt / scorn"
+      },
+      {
+        "id": "fr-adv-075",
+        "type": "typed",
+        "audio_text": "la clairvoyance",
+        "answer": "la clairvoyance",
+        "translation": "farsightedness / insight"
+      },
+      {
+        "id": "fr-adv-076",
+        "type": "typed",
+        "audio_text": "la nonchalance",
+        "answer": "la nonchalance",
+        "translation": "indifference / nonchalance"
+      },
+      {
+        "id": "fr-adv-077",
+        "type": "typed",
+        "audio_text": "l'insouciance",
+        "answer": "l'insouciance",
+        "translation": "carefreeness"
+      },
+      {
+        "id": "fr-adv-078",
+        "type": "typed",
+        "audio_text": "l'affinité",
+        "answer": "l'affinité",
+        "translation": "affinity / bond"
+      },
+      {
+        "id": "fr-adv-079",
+        "type": "typed",
+        "audio_text": "l'avertissement",
+        "answer": "l'avertissement",
+        "translation": "warning / notice"
+      },
+      {
+        "id": "fr-adv-080",
+        "type": "typed",
+        "audio_text": "le vertige",
+        "answer": "le vertige",
+        "translation": "dizziness / vertigo"
+      },
+      {
+        "id": "fr-adv-081",
+        "type": "mcq",
+        "audio_text": "le vestige",
+        "options": [
+          "le vestige",
+          "le vertige",
+          "le litige",
+          "le prestige"
+        ],
+        "answer": "0",
+        "translation": "remnant / vestige"
+      },
+      {
+        "id": "fr-adv-082",
+        "type": "mcq",
+        "audio_text": "l'intrigue",
+        "options": [
+          "l'intrigue",
+          "la fatigue",
+          "la ligue",
+          "la brigue"
+        ],
+        "answer": "0",
+        "translation": "plot / scheme"
+      },
+      {
+        "id": "fr-adv-083",
+        "type": "typed",
+        "audio_text": "le vacarme",
+        "answer": "le vacarme",
+        "translation": "uproar / din"
+      },
+      {
+        "id": "fr-adv-084",
+        "type": "typed",
+        "audio_text": "le préjugé",
+        "answer": "le préjugé",
+        "translation": "prejudice / bias"
+      },
+      {
+        "id": "fr-adv-085",
+        "type": "mcq",
+        "audio_text": "l'enthousiasme",
+        "options": [
+          "le réalisme",
+          "l'optimisme",
+          "le sarcasme",
+          "l'enthousiasme"
+        ],
+        "answer": "3",
+        "translation": "enthusiasm"
+      },
+      {
+        "id": "fr-adv-086",
+        "type": "typed",
+        "audio_text": "l'anecdote",
+        "answer": "l'anecdote",
+        "translation": "anecdote / story"
+      },
+      {
+        "id": "fr-adv-087",
+        "type": "typed",
+        "audio_text": "la polémique",
+        "answer": "la polémique",
+        "translation": "controversy / debate"
+      },
+      {
+        "id": "fr-adv-088",
+        "type": "typed",
+        "audio_text": "le dilemme",
+        "answer": "le dilemme",
+        "translation": "dilemma"
+      },
+      {
+        "id": "fr-adv-089",
+        "type": "typed",
+        "audio_text": "l'utopie",
+        "answer": "l'utopie",
+        "translation": "utopia / impossible ideal"
+      },
+      {
+        "id": "fr-adv-090",
+        "type": "mcq",
+        "audio_text": "le fléau",
+        "options": [
+          "le museau",
+          "le fléau",
+          "le créneau",
+          "le fuseau"
+        ],
+        "answer": "1",
+        "translation": "plague / scourge"
+      },
+      {
+        "id": "fr-adv-091",
+        "type": "mcq",
+        "audio_text": "l'impasse",
+        "options": [
+          "l'audace",
+          "la surface",
+          "la menace",
+          "l'impasse"
+        ],
+        "answer": "3",
+        "translation": "deadlock / cul-de-sac"
+      },
+      {
+        "id": "fr-adv-092",
+        "type": "typed",
+        "audio_text": "la méfiance",
+        "answer": "la méfiance",
+        "translation": "mistrust / suspicion"
+      },
+      {
+        "id": "fr-adv-093",
+        "type": "mcq",
+        "audio_text": "la déchéance",
+        "options": [
+          "la séance",
+          "la clémence",
+          "la déchéance",
+          "l'échéance"
+        ],
+        "answer": "2",
+        "translation": "downfall / forfeit"
+      },
+      {
+        "id": "fr-adv-094",
+        "type": "typed",
+        "audio_text": "l'engrenage",
+        "answer": "l'engrenage",
+        "translation": "spiral / chain of events"
+      },
+      {
+        "id": "fr-adv-095",
+        "type": "typed",
+        "audio_text": "l'envergure",
+        "answer": "l'envergure",
+        "translation": "wingspan / stature"
+      },
+      {
+        "id": "fr-adv-096",
+        "type": "typed",
+        "audio_text": "la quintessence",
+        "answer": "la quintessence",
+        "translation": "quintessence / core"
+      },
+      {
+        "id": "fr-adv-097",
+        "type": "typed",
+        "audio_text": "la réminiscence",
+        "answer": "la réminiscence",
+        "translation": "reminiscence"
+      },
+      {
+        "id": "fr-adv-098",
+        "type": "mcq",
+        "audio_text": "l'abnégation",
+        "options": [
+          "l'abnégation",
+          "l'allégation",
+          "l'obligation",
+          "la délégation"
+        ],
+        "answer": "0",
+        "translation": "self-sacrifice / abnegation"
+      },
+      {
+        "id": "fr-adv-099",
+        "type": "mcq",
+        "audio_text": "le pressentiment",
+        "options": [
+          "le ressentiment",
+          "le démenti",
+          "le consentement",
+          "le pressentiment"
+        ],
+        "answer": "3",
+        "translation": "foreboding / hunch"
+      },
+      {
+        "id": "fr-adv-100",
+        "type": "mcq",
+        "audio_text": "le ressentiment",
+        "options": [
+          "le pressentiment",
+          "le sentiment",
+          "le ressentiment",
+          "le consentement"
+        ],
+        "answer": "2",
+        "translation": "resentment / bitterness"
+      },
+      {
+        "id": "fr-adv-101",
+        "type": "mcq",
+        "audio_text": "l'ivresse",
+        "options": [
+          "la sagesse",
+          "la jeunesse",
+          "la tendresse",
+          "l'ivresse"
+        ],
+        "answer": "3",
+        "translation": "intoxication / euphoria"
+      },
+      {
+        "id": "fr-adv-102",
+        "type": "typed",
+        "audio_text": "l'arrogance",
+        "answer": "l'arrogance",
+        "translation": "arrogance"
+      }
+    ]
+  },
+  "Spanish": {
+    "beginner": [
+      {
+        "id": "sp-beg-001",
+        "type": "mcq",
+        "audio_text": "la manzana",
+        "options": [
+          "la banana",
+          "la naranja",
+          "la pera",
+          "la manzana"
+        ],
+        "answer": "3",
+        "translation": "the apple"
+      },
+      {
+        "id": "sp-beg-002",
+        "type": "mcq",
+        "audio_text": "el pan",
+        "options": [
+          "el flan",
+          "el pan",
+          "el plan",
+          "el pez"
+        ],
+        "answer": "1",
+        "translation": "the bread"
+      },
+      {
+        "id": "sp-beg-003",
+        "type": "mcq",
+        "audio_text": "el queso",
+        "options": [
+          "el hueso",
+          "el beso",
+          "el peso",
+          "el queso"
+        ],
+        "answer": "3",
+        "translation": "the cheese"
+      },
+      {
+        "id": "sp-beg-004",
+        "type": "mcq",
+        "audio_text": "el agua",
+        "options": [
+          "la leche",
+          "el jugo",
+          "el vino",
+          "el agua"
+        ],
+        "answer": "3",
+        "translation": "the water"
+      },
+      {
+        "id": "sp-beg-005",
+        "type": "mcq",
+        "audio_text": "el café",
+        "options": [
+          "el té",
+          "el pie",
+          "la fe",
+          "el café"
+        ],
+        "answer": "3",
+        "translation": "the coffee"
+      },
+      {
+        "id": "sp-beg-006",
+        "type": "mcq",
+        "audio_text": "la leche",
+        "options": [
+          "el coche",
+          "la noche",
+          "la leche",
+          "la flecha"
+        ],
+        "answer": "2",
+        "translation": "the milk"
+      },
+      {
+        "id": "sp-beg-007",
+        "type": "mcq",
+        "audio_text": "el té",
+        "options": [
+          "el pie",
+          "el café",
+          "la fe",
+          "el té"
+        ],
+        "answer": "3",
+        "translation": "the tea"
+      },
+      {
+        "id": "sp-beg-008",
+        "type": "mcq",
+        "audio_text": "el pollo",
+        "options": [
+          "el caballo",
+          "el rollo",
+          "el pollo",
+          "el cuello"
+        ],
+        "answer": "2",
+        "translation": "the chicken"
+      },
+      {
+        "id": "sp-beg-009",
+        "type": "mcq",
+        "audio_text": "el arroz",
+        "options": [
+          "la nuez",
+          "la voz",
+          "el arroz",
+          "el pez"
+        ],
+        "answer": "2",
+        "translation": "the rice"
+      },
+      {
+        "id": "sp-beg-010",
+        "type": "mcq",
+        "audio_text": "la carne",
+        "options": [
+          "el parque",
+          "la calle",
+          "la carne",
+          "la tarde"
+        ],
+        "answer": "2",
+        "translation": "the meat"
+      },
+      {
+        "id": "sp-beg-011",
+        "type": "mcq",
+        "audio_text": "el pescado",
+        "options": [
+          "el mercado",
+          "el pecado",
+          "el pescado",
+          "el pasado"
+        ],
+        "answer": "2",
+        "translation": "the fish (food)"
+      },
+      {
+        "id": "sp-beg-012",
+        "type": "mcq",
+        "audio_text": "la sopa",
+        "options": [
+          "la copa",
+          "la sopa",
+          "la bota",
+          "la ropa"
+        ],
+        "answer": "1",
+        "translation": "the soup"
+      },
+      {
+        "id": "sp-beg-013",
+        "type": "mcq",
+        "audio_text": "la ensalada",
+        "options": [
+          "la entrada",
+          "la mirada",
+          "la llamada",
+          "la ensalada"
+        ],
+        "answer": "3",
+        "translation": "the salad"
+      },
+      {
+        "id": "sp-beg-014",
+        "type": "mcq",
+        "audio_text": "el huevo",
+        "options": [
+          "el nuevo",
+          "el juego",
+          "el fuego",
+          "el huevo"
+        ],
+        "answer": "3",
+        "translation": "the egg"
+      },
+      {
+        "id": "sp-beg-015",
+        "type": "mcq",
+        "audio_text": "la fruta",
+        "options": [
+          "la fruta",
+          "la ruta",
+          "la trucha",
+          "la flauta"
+        ],
+        "answer": "0",
+        "translation": "the fruit"
+      },
+      {
+        "id": "sp-beg-016",
+        "type": "mcq",
+        "audio_text": "el azúcar",
+        "options": [
+          "el vinagre",
+          "la sal",
+          "el azúcar",
+          "el aceite"
+        ],
+        "answer": "2",
+        "translation": "the sugar"
+      },
+      {
+        "id": "sp-beg-017",
+        "type": "mcq",
+        "audio_text": "la sal",
+        "options": [
+          "el sol",
+          "la cal",
+          "el mal",
+          "la sal"
+        ],
+        "answer": "3",
+        "translation": "the salt"
+      },
+      {
+        "id": "sp-beg-018",
+        "type": "mcq",
+        "audio_text": "el tomate",
+        "options": [
+          "el aguacate",
+          "el paquete",
+          "el tomate",
+          "el chocolate"
+        ],
+        "answer": "2",
+        "translation": "the tomato"
+      },
+      {
+        "id": "sp-beg-019",
+        "type": "mcq",
+        "audio_text": "la patata",
+        "options": [
+          "la patata",
+          "la pasta",
+          "la plata",
+          "la pata"
+        ],
+        "answer": "0",
+        "translation": "the potato"
+      },
+      {
+        "id": "sp-beg-020",
+        "type": "mcq",
+        "audio_text": "la naranja",
+        "options": [
+          "la manzana",
+          "la toronja",
+          "la granja",
+          "la naranja"
+        ],
+        "answer": "3",
+        "translation": "the orange"
+      },
+      {
+        "id": "sp-beg-021",
+        "type": "mcq",
+        "audio_text": "la casa",
+        "options": [
+          "la taza",
+          "la casa",
+          "la caza",
+          "la masa"
+        ],
+        "answer": "1",
+        "translation": "the house"
+      },
+      {
+        "id": "sp-beg-022",
+        "type": "mcq",
+        "audio_text": "la puerta",
+        "options": [
+          "la cuenta",
+          "la huerta",
+          "la puerta",
+          "la carta"
+        ],
+        "answer": "2",
+        "translation": "the door"
+      },
+      {
+        "id": "sp-beg-023",
+        "type": "mcq",
+        "audio_text": "la ventana",
+        "options": [
+          "la campana",
+          "la semana",
+          "la ventana",
+          "la manzana"
+        ],
+        "answer": "2",
+        "translation": "the window"
+      },
+      {
+        "id": "sp-beg-024",
+        "type": "mcq",
+        "audio_text": "la mesa",
+        "options": [
+          "la mesa",
+          "la misa",
+          "la fresa",
+          "la pesa"
+        ],
+        "answer": "0",
+        "translation": "the table"
+      },
+      {
+        "id": "sp-beg-025",
+        "type": "mcq",
+        "audio_text": "la silla",
+        "options": [
+          "la mejilla",
+          "la silla",
+          "la villa",
+          "la bombilla"
+        ],
+        "answer": "1",
+        "translation": "the chair"
+      },
+      {
+        "id": "sp-beg-026",
+        "type": "mcq",
+        "audio_text": "la cama",
+        "options": [
+          "la cama",
+          "la llama",
+          "la dama",
+          "la rama"
+        ],
+        "answer": "0",
+        "translation": "the bed"
+      },
+      {
+        "id": "sp-beg-027",
+        "type": "mcq",
+        "audio_text": "el libro",
+        "options": [
+          "el libre",
+          "el litro",
+          "el hilo",
+          "el libro"
+        ],
+        "answer": "3",
+        "translation": "the book"
+      },
+      {
+        "id": "sp-beg-028",
+        "type": "mcq",
+        "audio_text": "el bolígrafo",
+        "options": [
+          "el teléfono",
+          "el bolígrafo",
+          "el periódico",
+          "el lápiz"
+        ],
+        "answer": "1",
+        "translation": "the pen"
+      },
+      {
+        "id": "sp-beg-029",
+        "type": "mcq",
+        "audio_text": "la mochila",
+        "options": [
+          "la mochila",
+          "la comida",
+          "la cocina",
+          "la cortina"
+        ],
+        "answer": "0",
+        "translation": "the backpack"
+      },
+      {
+        "id": "sp-beg-030",
+        "type": "mcq",
+        "audio_text": "la llave",
+        "options": [
+          "la nave",
+          "el valle",
+          "la calle",
+          "la llave"
+        ],
+        "answer": "3",
+        "translation": "the key"
+      },
+      {
+        "id": "sp-beg-031",
+        "type": "mcq",
+        "audio_text": "el reloj",
+        "options": [
+          "el reloj",
+          "el ojo",
+          "el espejo",
+          "el rojo"
+        ],
+        "answer": "0",
+        "translation": "the clock / watch"
+      },
+      {
+        "id": "sp-beg-032",
+        "type": "mcq",
+        "audio_text": "el espejo",
+        "options": [
+          "el conejo",
+          "el consejo",
+          "el espejo",
+          "el pellejo"
+        ],
+        "answer": "2",
+        "translation": "the mirror"
+      },
+      {
+        "id": "sp-beg-033",
+        "type": "mcq",
+        "audio_text": "el teléfono",
+        "options": [
+          "el micrófono",
+          "el teléfono",
+          "el megáfono",
+          "el televisor"
+        ],
+        "answer": "1",
+        "translation": "the telephone"
+      },
+      {
+        "id": "sp-beg-034",
+        "type": "mcq",
+        "audio_text": "el coche",
+        "options": [
+          "el techo",
+          "la noche",
+          "la leche",
+          "el coche"
+        ],
+        "answer": "3",
+        "translation": "the car"
+      },
+      {
+        "id": "sp-beg-035",
+        "type": "mcq",
+        "audio_text": "la bicicleta",
+        "options": [
+          "la chaqueta",
+          "la tarjeta",
+          "la bicicleta",
+          "la camioneta"
+        ],
+        "answer": "2",
+        "translation": "the bicycle"
+      },
+      {
+        "id": "sp-beg-036",
+        "type": "mcq",
+        "audio_text": "el tren",
+        "options": [
+          "el bien",
+          "el pan",
+          "el cien",
+          "el tren"
+        ],
+        "answer": "3",
+        "translation": "the train"
+      },
+      {
+        "id": "sp-beg-037",
+        "type": "mcq",
+        "audio_text": "el avión",
+        "options": [
+          "el botón",
+          "el melón",
+          "el camión",
+          "el avión"
+        ],
+        "answer": "3",
+        "translation": "the airplane"
+      },
+      {
+        "id": "sp-beg-038",
+        "type": "mcq",
+        "audio_text": "el barco",
+        "options": [
+          "el marco",
+          "el barco",
+          "el parque",
+          "el banco"
+        ],
+        "answer": "1",
+        "translation": "the boat"
+      },
+      {
+        "id": "sp-beg-039",
+        "type": "mcq",
+        "audio_text": "la lámpara",
+        "options": [
+          "la cáscara",
+          "la cámara",
+          "la lámpara",
+          "la máscara"
+        ],
+        "answer": "2",
+        "translation": "the lamp"
+      },
+      {
+        "id": "sp-beg-040",
+        "type": "mcq",
+        "audio_text": "la caja",
+        "options": [
+          "la paja",
+          "la caja",
+          "la faja",
+          "la raja"
+        ],
+        "answer": "1",
+        "translation": "the box"
+      },
+      {
+        "id": "sp-beg-041",
+        "type": "mcq",
+        "audio_text": "la madre",
+        "options": [
+          "el padre",
+          "la tarde",
+          "la madre",
+          "la comadre"
+        ],
+        "answer": "2",
+        "translation": "the mother"
+      },
+      {
+        "id": "sp-beg-042",
+        "type": "mcq",
+        "audio_text": "el padre",
+        "options": [
+          "el padre",
+          "la madre",
+          "el compadre",
+          "el parque"
+        ],
+        "answer": "0",
+        "translation": "the father"
+      },
+      {
+        "id": "sp-beg-043",
+        "type": "mcq",
+        "audio_text": "el hermano",
+        "options": [
+          "la mano",
+          "el verano",
+          "el hermano",
+          "el humano"
+        ],
+        "answer": "2",
+        "translation": "the brother"
+      },
+      {
+        "id": "sp-beg-044",
+        "type": "mcq",
+        "audio_text": "la hermana",
+        "options": [
+          "la semana",
+          "la campana",
+          "la hermana",
+          "la manzana"
+        ],
+        "answer": "2",
+        "translation": "the sister"
+      },
+      {
+        "id": "sp-beg-045",
+        "type": "mcq",
+        "audio_text": "el hijo",
+        "options": [
+          "el ojo",
+          "el fijo",
+          "el hilo",
+          "el hijo"
+        ],
+        "answer": "3",
+        "translation": "the son"
+      },
+      {
+        "id": "sp-beg-046",
+        "type": "mcq",
+        "audio_text": "la hija",
+        "options": [
+          "la paja",
+          "la hoja",
+          "la fija",
+          "la hija"
+        ],
+        "answer": "3",
+        "translation": "the daughter"
+      },
+      {
+        "id": "sp-beg-047",
+        "type": "mcq",
+        "audio_text": "el amigo",
+        "options": [
+          "el amigo",
+          "el abrigo",
+          "el trigo",
+          "el testigo"
+        ],
+        "answer": "0",
+        "translation": "the friend"
+      },
+      {
+        "id": "sp-beg-048",
+        "type": "mcq",
+        "audio_text": "el niño",
+        "options": [
+          "el niño",
+          "el pino",
+          "el camino",
+          "el vino"
+        ],
+        "answer": "0",
+        "translation": "the boy / child"
+      },
+      {
+        "id": "sp-beg-049",
+        "type": "mcq",
+        "audio_text": "el hombre",
+        "options": [
+          "el hambre",
+          "el hombre",
+          "el nombre",
+          "el hombro"
+        ],
+        "answer": "1",
+        "translation": "the man"
+      },
+      {
+        "id": "sp-beg-050",
+        "type": "mcq",
+        "audio_text": "la mujer",
+        "options": [
+          "la mujer",
+          "el placer",
+          "el taller",
+          "el ayer"
+        ],
+        "answer": "0",
+        "translation": "the woman"
+      },
+      {
+        "id": "sp-beg-051",
+        "type": "mcq",
+        "audio_text": "el abuelo",
+        "options": [
+          "el suelo",
+          "el vuelo",
+          "el cielo",
+          "el abuelo"
+        ],
+        "answer": "3",
+        "translation": "the grandfather"
+      },
+      {
+        "id": "sp-beg-052",
+        "type": "mcq",
+        "audio_text": "la abuela",
+        "options": [
+          "la escuela",
+          "la cazuela",
+          "la abuela",
+          "la muela"
+        ],
+        "answer": "2",
+        "translation": "the grandmother"
+      },
+      {
+        "id": "sp-beg-053",
+        "type": "mcq",
+        "audio_text": "el rojo",
+        "options": [
+          "el reloj",
+          "el ojo",
+          "el rojo",
+          "el cojo"
+        ],
+        "answer": "2",
+        "translation": "the red"
+      },
+      {
+        "id": "sp-beg-054",
+        "type": "mcq",
+        "audio_text": "el azul",
+        "options": [
+          "el baúl",
+          "la luz",
+          "el azul",
+          "el ataúd"
+        ],
+        "answer": "2",
+        "translation": "the blue"
+      },
+      {
+        "id": "sp-beg-055",
+        "type": "mcq",
+        "audio_text": "el verde",
+        "options": [
+          "el fuerte",
+          "la suerte",
+          "la muerte",
+          "el verde"
+        ],
+        "answer": "3",
+        "translation": "the green"
+      },
+      {
+        "id": "sp-beg-056",
+        "type": "mcq",
+        "audio_text": "el amarillo",
+        "options": [
+          "el anillo",
+          "el cuchillo",
+          "el amarillo",
+          "el martillo"
+        ],
+        "answer": "2",
+        "translation": "the yellow"
+      },
+      {
+        "id": "sp-beg-057",
+        "type": "mcq",
+        "audio_text": "el negro",
+        "options": [
+          "el suegro",
+          "el negro",
+          "el fuego",
+          "el ciego"
+        ],
+        "answer": "1",
+        "translation": "the black"
+      },
+      {
+        "id": "sp-beg-058",
+        "type": "mcq",
+        "audio_text": "el blanco",
+        "options": [
+          "el flanco",
+          "el barco",
+          "el banco",
+          "el blanco"
+        ],
+        "answer": "3",
+        "translation": "the white"
+      },
+      {
+        "id": "sp-beg-059",
+        "type": "mcq",
+        "audio_text": "uno",
+        "options": [
+          "uno",
+          "once",
+          "ocho",
+          "otro"
+        ],
+        "answer": "0",
+        "translation": "one"
+      },
+      {
+        "id": "sp-beg-060",
+        "type": "mcq",
+        "audio_text": "dos",
+        "options": [
+          "diez",
+          "doce",
+          "dos",
+          "tos"
+        ],
+        "answer": "2",
+        "translation": "two"
+      },
+      {
+        "id": "sp-beg-061",
+        "type": "mcq",
+        "audio_text": "tres",
+        "options": [
+          "trece",
+          "tras",
+          "tren",
+          "tres"
+        ],
+        "answer": "3",
+        "translation": "three"
+      },
+      {
+        "id": "sp-beg-062",
+        "type": "mcq",
+        "audio_text": "cuatro",
+        "options": [
+          "cuarenta",
+          "catorce",
+          "cuadro",
+          "cuatro"
+        ],
+        "answer": "3",
+        "translation": "four"
+      },
+      {
+        "id": "sp-beg-063",
+        "type": "mcq",
+        "audio_text": "cinco",
+        "options": [
+          "circo",
+          "cien",
+          "cinco",
+          "siete"
+        ],
+        "answer": "2",
+        "translation": "five"
+      },
+      {
+        "id": "sp-beg-064",
+        "type": "mcq",
+        "audio_text": "diez",
+        "options": [
+          "dos",
+          "días",
+          "doce",
+          "diez"
+        ],
+        "answer": "3",
+        "translation": "ten"
+      },
+      {
+        "id": "sp-beg-065",
+        "type": "mcq",
+        "audio_text": "el perro",
+        "options": [
+          "el cerro",
+          "el perro",
+          "el hierro",
+          "el pero"
+        ],
+        "answer": "1",
+        "translation": "the dog"
+      },
+      {
+        "id": "sp-beg-066",
+        "type": "mcq",
+        "audio_text": "el gato",
+        "options": [
+          "el plato",
+          "el gato",
+          "el rato",
+          "el pato"
+        ],
+        "answer": "1",
+        "translation": "the cat"
+      },
+      {
+        "id": "sp-beg-067",
+        "type": "mcq",
+        "audio_text": "el pájaro",
+        "options": [
+          "el pájaro",
+          "el caballo",
+          "el pato",
+          "el payaso"
+        ],
+        "answer": "0",
+        "translation": "the bird"
+      },
+      {
+        "id": "sp-beg-068",
+        "type": "mcq",
+        "audio_text": "el caballo",
+        "options": [
+          "el caballo",
+          "el castillo",
+          "el camello",
+          "el cabello"
+        ],
+        "answer": "0",
+        "translation": "the horse"
+      },
+      {
+        "id": "sp-beg-069",
+        "type": "mcq",
+        "audio_text": "la vaca",
+        "options": [
+          "la boca",
+          "la copa",
+          "la vaca",
+          "la capa"
+        ],
+        "answer": "2",
+        "translation": "the cow"
+      },
+      {
+        "id": "sp-beg-070",
+        "type": "mcq",
+        "audio_text": "el cerdo",
+        "options": [
+          "el ciego",
+          "el cuello",
+          "el cuerno",
+          "el cerdo"
+        ],
+        "answer": "3",
+        "translation": "the pig"
+      },
+      {
+        "id": "sp-beg-071",
+        "type": "mcq",
+        "audio_text": "el pato",
+        "options": [
+          "el gato",
+          "el plato",
+          "el rato",
+          "el pato"
+        ],
+        "answer": "3",
+        "translation": "the duck"
+      },
+      {
+        "id": "sp-beg-072",
+        "type": "mcq",
+        "audio_text": "el león",
+        "options": [
+          "el camión",
+          "el león",
+          "el peón",
+          "el ratón"
+        ],
+        "answer": "1",
+        "translation": "the lion"
+      },
+      {
+        "id": "sp-beg-073",
+        "type": "mcq",
+        "audio_text": "hola",
+        "options": [
+          "hoja",
+          "hola",
+          "ola",
+          "hora"
+        ],
+        "answer": "1",
+        "translation": "hello"
+      },
+      {
+        "id": "sp-beg-074",
+        "type": "mcq",
+        "audio_text": "buenos días",
+        "options": [
+          "buenas tardes",
+          "buenos días",
+          "hasta luego",
+          "buenas noches"
+        ],
+        "answer": "1",
+        "translation": "good morning"
+      },
+      {
+        "id": "sp-beg-075",
+        "type": "mcq",
+        "audio_text": "buenas tardes",
+        "options": [
+          "buenos días",
+          "buenas tardes",
+          "hasta pronto",
+          "buenas noches"
+        ],
+        "answer": "1",
+        "translation": "good afternoon"
+      },
+      {
+        "id": "sp-beg-076",
+        "type": "mcq",
+        "audio_text": "buenas noches",
+        "options": [
+          "buenas tardes",
+          "buenas noches",
+          "adiós",
+          "buenos días"
+        ],
+        "answer": "1",
+        "translation": "good evening / night"
+      },
+      {
+        "id": "sp-beg-077",
+        "type": "mcq",
+        "audio_text": "gracias",
+        "options": [
+          "gracias",
+          "de nada",
+          "por favor",
+          "gracia"
+        ],
+        "answer": "0",
+        "translation": "thank you"
+      },
+      {
+        "id": "sp-beg-078",
+        "type": "mcq",
+        "audio_text": "por favor",
+        "options": [
+          "buen provecho",
+          "de nada",
+          "por favor",
+          "con permiso"
+        ],
+        "answer": "2",
+        "translation": "please"
+      },
+      {
+        "id": "sp-beg-079",
+        "type": "mcq",
+        "audio_text": "adiós",
+        "options": [
+          "hasta luego",
+          "hola",
+          "adiós",
+          "hasta pronto"
+        ],
+        "answer": "2",
+        "translation": "goodbye"
+      },
+      {
+        "id": "sp-beg-080",
+        "type": "mcq",
+        "audio_text": "sí",
+        "options": [
+          "no",
+          "sin",
+          "sí",
+          "si"
+        ],
+        "answer": "2",
+        "translation": "yes"
+      },
+      {
+        "id": "sp-beg-081",
+        "type": "mcq",
+        "audio_text": "no",
+        "options": [
+          "no",
+          "lo",
+          "ni",
+          "nos"
+        ],
+        "answer": "0",
+        "translation": "no"
+      },
+      {
+        "id": "sp-beg-082",
+        "type": "mcq",
+        "audio_text": "lo siento",
+        "options": [
+          "lo siento",
+          "con permiso",
+          "de nada",
+          "por favor"
+        ],
+        "answer": "0",
+        "translation": "I am sorry"
+      },
+      {
+        "id": "sp-beg-083",
+        "type": "mcq",
+        "audio_text": "de nada",
+        "options": [
+          "por favor",
+          "con permiso",
+          "muchas gracias",
+          "de nada"
+        ],
+        "answer": "3",
+        "translation": "you are welcome"
+      },
+      {
+        "id": "sp-beg-084",
+        "type": "mcq",
+        "audio_text": "hasta luego",
+        "options": [
+          "hasta pronto",
+          "hasta luego",
+          "adiós",
+          "hasta mañana"
+        ],
+        "answer": "1",
+        "translation": "see you later"
+      },
+      {
+        "id": "sp-beg-085",
+        "type": "mcq",
+        "audio_text": "la mañana",
+        "options": [
+          "la ventana",
+          "la manzana",
+          "la semana",
+          "la mañana"
+        ],
+        "answer": "3",
+        "translation": "the morning"
+      },
+      {
+        "id": "sp-beg-086",
+        "type": "mcq",
+        "audio_text": "la tarde",
+        "options": [
+          "la parte",
+          "el parque",
+          "la madre",
+          "la tarde"
+        ],
+        "answer": "3",
+        "translation": "the afternoon"
+      },
+      {
+        "id": "sp-beg-087",
+        "type": "mcq",
+        "audio_text": "la noche",
+        "options": [
+          "el broche",
+          "la leche",
+          "el coche",
+          "la noche"
+        ],
+        "answer": "3",
+        "translation": "the night"
+      },
+      {
+        "id": "sp-beg-088",
+        "type": "mcq",
+        "audio_text": "el sol",
+        "options": [
+          "el gol",
+          "el sur",
+          "el sol",
+          "la sal"
+        ],
+        "answer": "2",
+        "translation": "the sun"
+      },
+      {
+        "id": "sp-beg-089",
+        "type": "mcq",
+        "audio_text": "la luna",
+        "options": [
+          "la duna",
+          "la luna",
+          "la lana",
+          "la cuna"
+        ],
+        "answer": "1",
+        "translation": "the moon"
+      },
+      {
+        "id": "sp-beg-090",
+        "type": "mcq",
+        "audio_text": "la lluvia",
+        "options": [
+          "la guía",
+          "la lluvia",
+          "la furia",
+          "la rubia"
+        ],
+        "answer": "1",
+        "translation": "the rain"
+      },
+      {
+        "id": "sp-beg-091",
+        "type": "mcq",
+        "audio_text": "el cielo",
+        "options": [
+          "el hielo",
+          "el abuelo",
+          "el suelo",
+          "el cielo"
+        ],
+        "answer": "3",
+        "translation": "the sky"
+      },
+      {
+        "id": "sp-beg-092",
+        "type": "mcq",
+        "audio_text": "el mar",
+        "options": [
+          "el par",
+          "el dar",
+          "el mar",
+          "el bar"
+        ],
+        "answer": "2",
+        "translation": "the sea"
+      },
+      {
+        "id": "sp-beg-093",
+        "type": "mcq",
+        "audio_text": "la tierra",
+        "options": [
+          "la piedra",
+          "la guerra",
+          "la tierra",
+          "la sierra"
+        ],
+        "answer": "2",
+        "translation": "the earth / ground"
+      },
+      {
+        "id": "sp-beg-094",
+        "type": "mcq",
+        "audio_text": "la ciudad",
+        "options": [
+          "la ciudad",
+          "la bondad",
+          "la edad",
+          "la verdad"
+        ],
+        "answer": "0",
+        "translation": "the city"
+      },
+      {
+        "id": "sp-beg-095",
+        "type": "mcq",
+        "audio_text": "el parque",
+        "options": [
+          "el parque",
+          "el charco",
+          "el barco",
+          "el banco"
+        ],
+        "answer": "0",
+        "translation": "the park"
+      },
+      {
+        "id": "sp-beg-096",
+        "type": "mcq",
+        "audio_text": "la calle",
+        "options": [
+          "el valle",
+          "la carne",
+          "la calle",
+          "el detalle"
+        ],
+        "answer": "2",
+        "translation": "the street"
+      },
+      {
+        "id": "sp-beg-097",
+        "type": "mcq",
+        "audio_text": "la escuela",
+        "options": [
+          "la suela",
+          "la abuela",
+          "la escuela",
+          "la muela"
+        ],
+        "answer": "2",
+        "translation": "the school"
+      },
+      {
+        "id": "sp-beg-098",
+        "type": "mcq",
+        "audio_text": "la clase",
+        "options": [
+          "la clase",
+          "la base",
+          "la frase",
+          "el pase"
+        ],
+        "answer": "0",
+        "translation": "the class"
+      },
+      {
+        "id": "sp-beg-099",
+        "type": "mcq",
+        "audio_text": "el jardín",
+        "options": [
+          "el patín",
+          "el fin",
+          "el botín",
+          "el jardín"
+        ],
+        "answer": "3",
+        "translation": "the garden"
+      },
+      {
+        "id": "sp-beg-100",
+        "type": "mcq",
+        "audio_text": "el bosque",
+        "options": [
+          "el parque",
+          "el bloque",
+          "el bosque",
+          "el choque"
+        ],
+        "answer": "2",
+        "translation": "the forest"
+      },
+      {
+        "id": "sp-beg-101",
+        "type": "mcq",
+        "audio_text": "la flor",
+        "options": [
+          "el dolor",
+          "el color",
+          "el olor",
+          "la flor"
+        ],
+        "answer": "3",
+        "translation": "the flower"
+      },
+      {
+        "id": "sp-beg-102",
+        "type": "mcq",
+        "audio_text": "el árbol",
+        "options": [
+          "el alcohol",
+          "el fútbol",
+          "el mármol",
+          "el árbol"
+        ],
+        "answer": "3",
+        "translation": "the tree"
+      },
+      {
+        "id": "sp-beg-103",
+        "type": "mcq",
+        "audio_text": "el tiempo",
+        "options": [
+          "el tiempo",
+          "el templo",
+          "el viento",
+          "el campo"
+        ],
+        "answer": "0",
+        "translation": "the time / weather"
+      },
+      {
+        "id": "sp-beg-104",
+        "type": "mcq",
+        "audio_text": "el día",
+        "options": [
+          "la tía",
+          "la guía",
+          "el día",
+          "la vía"
+        ],
+        "answer": "2",
+        "translation": "the day"
+      },
+      {
+        "id": "sp-beg-105",
+        "type": "mcq",
+        "audio_text": "la semana",
+        "options": [
+          "la manzana",
+          "la semana",
+          "la campana",
+          "la ventana"
+        ],
+        "answer": "1",
+        "translation": "the week"
+      },
+      {
+        "id": "sp-beg-106",
+        "type": "mcq",
+        "audio_text": "el mes",
+        "options": [
+          "después",
+          "el mes",
+          "el pez",
+          "los tres"
+        ],
+        "answer": "1",
+        "translation": "the month"
+      },
+      {
+        "id": "sp-beg-107",
+        "type": "mcq",
+        "audio_text": "el año",
+        "options": [
+          "el año",
+          "el daño",
+          "el paño",
+          "el baño"
+        ],
+        "answer": "0",
+        "translation": "the year"
+      }
+    ],
+    "intermediate": [
+      {
+        "id": "sp-int-001",
+        "type": "mcq",
+        "audio_text": "la estación de tren",
+        "options": [
+          "la parada de metro",
+          "la estación de autobús",
+          "el aeropuerto",
+          "la estación de tren"
+        ],
+        "answer": "3",
+        "translation": "the train station"
+      },
+      {
+        "id": "sp-int-002",
+        "type": "mcq",
+        "audio_text": "el billete",
+        "options": [
+          "el cohete",
+          "el billete",
+          "el bonete",
+          "el paquete"
+        ],
+        "answer": "1",
+        "translation": "the ticket"
+      },
+      {
+        "id": "sp-int-003",
+        "type": "mcq",
+        "audio_text": "el viaje",
+        "options": [
+          "el paisaje",
+          "el traje",
+          "el mensaje",
+          "el viaje"
+        ],
+        "answer": "3",
+        "translation": "the journey / trip"
+      },
+      {
+        "id": "sp-int-004",
+        "type": "mcq",
+        "audio_text": "la maleta",
+        "options": [
+          "la paleta",
+          "la tableta",
+          "la maceta",
+          "la maleta"
+        ],
+        "answer": "3",
+        "translation": "the suitcase"
+      },
+      {
+        "id": "sp-int-005",
+        "type": "mcq",
+        "audio_text": "el aeropuerto",
+        "options": [
+          "el pasaporte",
+          "el helipuerto",
+          "el transporte",
+          "el aeropuerto"
+        ],
+        "answer": "3",
+        "translation": "the airport"
+      },
+      {
+        "id": "sp-int-006",
+        "type": "mcq",
+        "audio_text": "el hotel",
+        "options": [
+          "el túnel",
+          "el motel",
+          "el hotel",
+          "el papel"
+        ],
+        "answer": "2",
+        "translation": "the hotel"
+      },
+      {
+        "id": "sp-int-007",
+        "type": "mcq",
+        "audio_text": "el restaurante",
+        "options": [
+          "el estante",
+          "el habitante",
+          "el cantante",
+          "el restaurante"
+        ],
+        "answer": "3",
+        "translation": "the restaurant"
+      },
+      {
+        "id": "sp-int-008",
+        "type": "mcq",
+        "audio_text": "la cuenta",
+        "options": [
+          "la huerta",
+          "la carta",
+          "la cuenta",
+          "la puerta"
+        ],
+        "answer": "2",
+        "translation": "the bill / check"
+      },
+      {
+        "id": "sp-int-009",
+        "type": "mcq",
+        "audio_text": "el camarero",
+        "options": [
+          "el marinero",
+          "el cocinero",
+          "el camarero",
+          "el cartero"
+        ],
+        "answer": "2",
+        "translation": "the waiter"
+      },
+      {
+        "id": "sp-int-010",
+        "type": "typed",
+        "audio_text": "la reserva",
+        "answer": "la reserva",
+        "translation": "the reservation"
+      },
+      {
+        "id": "sp-int-011",
+        "type": "mcq",
+        "audio_text": "el museo",
+        "options": [
+          "el deseo",
+          "el paseo",
+          "el museo",
+          "el rodeo"
+        ],
+        "answer": "2",
+        "translation": "the museum"
+      },
+      {
+        "id": "sp-int-012",
+        "type": "typed",
+        "audio_text": "la oficina",
+        "answer": "la oficina",
+        "translation": "the office"
+      },
+      {
+        "id": "sp-int-013",
+        "type": "mcq",
+        "audio_text": "el trabajo",
+        "options": [
+          "el atajo",
+          "el cascajo",
+          "el debajo",
+          "el trabajo"
+        ],
+        "answer": "3",
+        "translation": "the work / job"
+      },
+      {
+        "id": "sp-int-014",
+        "type": "typed",
+        "audio_text": "la reunión",
+        "answer": "la reunión",
+        "translation": "the meeting"
+      },
+      {
+        "id": "sp-int-015",
+        "type": "mcq",
+        "audio_text": "el compañero",
+        "options": [
+          "el compañero",
+          "el cocinero",
+          "el marinero",
+          "el pasajero"
+        ],
+        "answer": "0",
+        "translation": "the classmate / colleague"
+      },
+      {
+        "id": "sp-int-016",
+        "type": "mcq",
+        "audio_text": "el jefe",
+        "options": [
+          "el eje",
+          "el viaje",
+          "el jefe",
+          "el traje"
+        ],
+        "answer": "2",
+        "translation": "the boss"
+      },
+      {
+        "id": "sp-int-017",
+        "type": "mcq",
+        "audio_text": "la cita",
+        "options": [
+          "la cinta",
+          "la vista",
+          "la pista",
+          "la cita"
+        ],
+        "answer": "3",
+        "translation": "the appointment / date"
+      },
+      {
+        "id": "sp-int-018",
+        "type": "mcq",
+        "audio_text": "el médico",
+        "options": [
+          "el crítico",
+          "el público",
+          "el médico",
+          "el músico"
+        ],
+        "answer": "2",
+        "translation": "the doctor"
+      },
+      {
+        "id": "sp-int-019",
+        "type": "mcq",
+        "audio_text": "la farmacia",
+        "options": [
+          "la farmacia",
+          "la carnicería",
+          "la librería",
+          "la panadería"
+        ],
+        "answer": "0",
+        "translation": "the pharmacy"
+      },
+      {
+        "id": "sp-int-020",
+        "type": "typed",
+        "audio_text": "el medicamento",
+        "answer": "el medicamento",
+        "translation": "the medication"
+      },
+      {
+        "id": "sp-int-021",
+        "type": "typed",
+        "audio_text": "la fiebre",
+        "answer": "la fiebre",
+        "translation": "the fever"
+      },
+      {
+        "id": "sp-int-022",
+        "type": "mcq",
+        "audio_text": "el dolor de cabeza",
+        "options": [
+          "el dolor de espalda",
+          "el dolor de muelas",
+          "el dolor de cabeza",
+          "el dolor de garganta"
+        ],
+        "answer": "2",
+        "translation": "headache"
+      },
+      {
+        "id": "sp-int-023",
+        "type": "mcq",
+        "audio_text": "el mercado",
+        "options": [
+          "el pecado",
+          "el pescado",
+          "el mercado",
+          "el recado"
+        ],
+        "answer": "2",
+        "translation": "the market"
+      },
+      {
+        "id": "sp-int-024",
+        "type": "mcq",
+        "audio_text": "la tienda",
+        "options": [
+          "la tienda",
+          "la cuerda",
+          "la merienda",
+          "la hacienda"
+        ],
+        "answer": "0",
+        "translation": "the shop / store"
+      },
+      {
+        "id": "sp-int-025",
+        "type": "typed",
+        "audio_text": "el cliente",
+        "answer": "el cliente",
+        "translation": "the customer"
+      },
+      {
+        "id": "sp-int-026",
+        "type": "typed",
+        "audio_text": "el precio",
+        "answer": "el precio",
+        "translation": "the price"
+      },
+      {
+        "id": "sp-int-027",
+        "type": "mcq",
+        "audio_text": "la tarjeta de crédito",
+        "options": [
+          "la tarjeta de visita",
+          "la carta de amor",
+          "el carnet de identidad",
+          "la tarjeta de crédito"
+        ],
+        "answer": "3",
+        "translation": "credit card"
+      },
+      {
+        "id": "sp-int-028",
+        "type": "mcq",
+        "audio_text": "la ropa",
+        "options": [
+          "la sopa",
+          "la ropa",
+          "la copa",
+          "la bota"
+        ],
+        "answer": "1",
+        "translation": "the clothes"
+      },
+      {
+        "id": "sp-int-029",
+        "type": "mcq",
+        "audio_text": "el abrigo",
+        "options": [
+          "el abrigo",
+          "el amigo",
+          "el trigo",
+          "el postigo"
+        ],
+        "answer": "0",
+        "translation": "the coat"
+      },
+      {
+        "id": "sp-int-030",
+        "type": "typed",
+        "audio_text": "la camisa",
+        "answer": "la camisa",
+        "translation": "the shirt"
+      },
+      {
+        "id": "sp-int-031",
+        "type": "mcq",
+        "audio_text": "los pantalones",
+        "options": [
+          "los pantalones",
+          "los cinturones",
+          "los salmones",
+          "los botones"
+        ],
+        "answer": "0",
+        "translation": "the trousers"
+      },
+      {
+        "id": "sp-int-032",
+        "type": "mcq",
+        "audio_text": "los zapatos",
+        "options": [
+          "los gatos",
+          "los platos",
+          "los zapatos",
+          "los contratos"
+        ],
+        "answer": "2",
+        "translation": "the shoes"
+      },
+      {
+        "id": "sp-int-033",
+        "type": "mcq",
+        "audio_text": "el paraguas",
+        "options": [
+          "el agua",
+          "el paraguas",
+          "la piragua",
+          "las aguas"
+        ],
+        "answer": "1",
+        "translation": "the umbrella"
+      },
+      {
+        "id": "sp-int-034",
+        "type": "mcq",
+        "audio_text": "el tiempo libre",
+        "options": [
+          "el cielo despejado",
+          "el aire libre",
+          "el libro abierto",
+          "el tiempo libre"
+        ],
+        "answer": "3",
+        "translation": "free time"
+      },
+      {
+        "id": "sp-int-035",
+        "type": "typed",
+        "audio_text": "las vacaciones",
+        "answer": "las vacaciones",
+        "translation": "the vacation"
+      },
+      {
+        "id": "sp-int-036",
+        "type": "typed",
+        "audio_text": "la playa",
+        "answer": "la playa",
+        "translation": "the beach"
+      },
+      {
+        "id": "sp-int-037",
+        "type": "mcq",
+        "audio_text": "la montaña",
+        "options": [
+          "España",
+          "la pestaña",
+          "la cabaña",
+          "la montaña"
+        ],
+        "answer": "3",
+        "translation": "the mountain"
+      },
+      {
+        "id": "sp-int-038",
+        "type": "mcq",
+        "audio_text": "el paisaje",
+        "options": [
+          "el pasaje",
+          "el paisaje",
+          "el mensaje",
+          "el viaje"
+        ],
+        "answer": "1",
+        "translation": "the landscape"
+      },
+      {
+        "id": "sp-int-039",
+        "type": "mcq",
+        "audio_text": "el medio ambiente",
+        "options": [
+          "el medio día",
+          "la media noche",
+          "el medio ambiente",
+          "el presidente"
+        ],
+        "answer": "2",
+        "translation": "the environment"
+      },
+      {
+        "id": "sp-int-040",
+        "type": "mcq",
+        "audio_text": "la nube",
+        "options": [
+          "la nave",
+          "la nube",
+          "la nieve",
+          "la llave"
+        ],
+        "answer": "1",
+        "translation": "the cloud"
+      },
+      {
+        "id": "sp-int-041",
+        "type": "mcq",
+        "audio_text": "el viento",
+        "options": [
+          "el asiento",
+          "el cuento",
+          "el viento",
+          "el tiempo"
+        ],
+        "answer": "2",
+        "translation": "the wind"
+      },
+      {
+        "id": "sp-int-042",
+        "type": "mcq",
+        "audio_text": "la tormenta",
+        "options": [
+          "la tormenta",
+          "la pimienta",
+          "la cuenta",
+          "la venta"
+        ],
+        "answer": "0",
+        "translation": "the storm"
+      },
+      {
+        "id": "sp-int-043",
+        "type": "mcq",
+        "audio_text": "la nieve",
+        "options": [
+          "la nueve",
+          "la nave",
+          "la nieve",
+          "la llave"
+        ],
+        "answer": "2",
+        "translation": "the snow"
+      },
+      {
+        "id": "sp-int-044",
+        "type": "mcq",
+        "audio_text": "el calor",
+        "options": [
+          "el dolor",
+          "el olor",
+          "el calor",
+          "el color"
+        ],
+        "answer": "2",
+        "translation": "the heat"
+      },
+      {
+        "id": "sp-int-045",
+        "type": "mcq",
+        "audio_text": "el frío",
+        "options": [
+          "el río",
+          "el tío",
+          "el mío",
+          "el frío"
+        ],
+        "answer": "3",
+        "translation": "the cold"
+      },
+      {
+        "id": "sp-int-046",
+        "type": "mcq",
+        "audio_text": "el atasco",
+        "options": [
+          "el frasco",
+          "el asco",
+          "el casco",
+          "el atasco"
+        ],
+        "answer": "3",
+        "translation": "the traffic jam"
+      },
+      {
+        "id": "sp-int-047",
+        "type": "mcq",
+        "audio_text": "de repente",
+        "options": [
+          "de repente",
+          "por supuesto",
+          "a menudo",
+          "sin duda"
+        ],
+        "answer": "0",
+        "translation": "suddenly"
+      },
+      {
+        "id": "sp-int-048",
+        "type": "mcq",
+        "audio_text": "a menudo",
+        "options": [
+          "a menudo",
+          "por fin",
+          "de repente",
+          "a veces"
+        ],
+        "answer": "0",
+        "translation": "often"
+      },
+      {
+        "id": "sp-int-049",
+        "type": "mcq",
+        "audio_text": "por supuesto",
+        "options": [
+          "por cierto",
+          "por supuesto",
+          "por favor",
+          "por fin"
+        ],
+        "answer": "1",
+        "translation": "of course"
+      },
+      {
+        "id": "sp-int-050",
+        "type": "mcq",
+        "audio_text": "sin duda",
+        "options": [
+          "sin duda",
+          "sin fin",
+          "sin embargo",
+          "con gusto"
+        ],
+        "answer": "0",
+        "translation": "without a doubt"
+      },
+      {
+        "id": "sp-int-051",
+        "type": "mcq",
+        "audio_text": "sin embargo",
+        "options": [
+          "sin duda",
+          "en cambio",
+          "por lo tanto",
+          "sin embargo"
+        ],
+        "answer": "3",
+        "translation": "however / nevertheless"
+      },
+      {
+        "id": "sp-int-052",
+        "type": "mcq",
+        "audio_text": "por fin",
+        "options": [
+          "por favor",
+          "al principio",
+          "por fin",
+          "por cierto"
+        ],
+        "answer": "2",
+        "translation": "at last / finally"
+      },
+      {
+        "id": "sp-int-053",
+        "type": "mcq",
+        "audio_text": "tener hambre",
+        "options": [
+          "tener miedo",
+          "tener sed",
+          "tener hambre",
+          "tener sueño"
+        ],
+        "answer": "2",
+        "translation": "to be hungry"
+      },
+      {
+        "id": "sp-int-054",
+        "type": "mcq",
+        "audio_text": "tener sed",
+        "options": [
+          "tener hambre",
+          "tener frío",
+          "tener sed",
+          "tener calor"
+        ],
+        "answer": "2",
+        "translation": "to be thirsty"
+      },
+      {
+        "id": "sp-int-055",
+        "type": "mcq",
+        "audio_text": "tener sueño",
+        "options": [
+          "tener miedo",
+          "tener prisa",
+          "tener suerte",
+          "tener sueño"
+        ],
+        "answer": "3",
+        "translation": "to be sleepy"
+      },
+      {
+        "id": "sp-int-056",
+        "type": "typed",
+        "audio_text": "tener prisa",
+        "answer": "tener prisa",
+        "translation": "to be in a hurry"
+      },
+      {
+        "id": "sp-int-057",
+        "type": "mcq",
+        "audio_text": "tener que",
+        "options": [
+          "hay que",
+          "tener que",
+          "ir a",
+          "tener de"
+        ],
+        "answer": "1",
+        "translation": "to have to / must"
+      },
+      {
+        "id": "sp-int-058",
+        "type": "mcq",
+        "audio_text": "darse cuenta de",
+        "options": [
+          "tomar en cuenta",
+          "dar las gracias",
+          "hacer cuenta de",
+          "darse cuenta de"
+        ],
+        "answer": "3",
+        "translation": "to realize / notice"
+      },
+      {
+        "id": "sp-int-059",
+        "type": "typed",
+        "audio_text": "tener ganas de",
+        "answer": "tener ganas de",
+        "translation": "to feel like / fancy doing"
+      },
+      {
+        "id": "sp-int-060",
+        "type": "mcq",
+        "audio_text": "tener cuidado",
+        "options": [
+          "tener miedo",
+          "tener suerte",
+          "tener cuidado",
+          "tener celos"
+        ],
+        "answer": "2",
+        "translation": "to be careful"
+      },
+      {
+        "id": "sp-int-061",
+        "type": "mcq",
+        "audio_text": "hacer la comida",
+        "options": [
+          "hacer la cama",
+          "hacer deporte",
+          "hacer la compra",
+          "hacer la comida"
+        ],
+        "answer": "3",
+        "translation": "to make food / cook"
+      },
+      {
+        "id": "sp-int-062",
+        "type": "mcq",
+        "audio_text": "hacer la compra",
+        "options": [
+          "hacer caso",
+          "hacer la cuenta",
+          "hacer falta",
+          "hacer la compra"
+        ],
+        "answer": "3",
+        "translation": "to do the grocery shopping"
+      },
+      {
+        "id": "sp-int-063",
+        "type": "mcq",
+        "audio_text": "hacer falta",
+        "options": [
+          "hacer daño",
+          "hacer tiempo",
+          "hacer falta",
+          "hacer trampa"
+        ],
+        "answer": "2",
+        "translation": "to be missing / needed"
+      },
+      {
+        "id": "sp-int-064",
+        "type": "typed",
+        "audio_text": "estar de acuerdo",
+        "answer": "estar de acuerdo",
+        "translation": "to agree"
+      },
+      {
+        "id": "sp-int-065",
+        "type": "mcq",
+        "audio_text": "llegar a tiempo",
+        "options": [
+          "llegar pronto",
+          "llegar a tiempo",
+          "perder tiempo",
+          "llegar tarde"
+        ],
+        "answer": "1",
+        "translation": "to arrive on time"
+      },
+      {
+        "id": "sp-int-066",
+        "type": "typed",
+        "audio_text": "llegar tarde",
+        "answer": "llegar tarde",
+        "translation": "to arrive late"
+      },
+      {
+        "id": "sp-int-067",
+        "type": "mcq",
+        "audio_text": "despertarse",
+        "options": [
+          "despertarse",
+          "levantarse",
+          "acostarse",
+          "dormirse"
+        ],
+        "answer": "0",
+        "translation": "to wake up"
+      },
+      {
+        "id": "sp-int-068",
+        "type": "typed",
+        "audio_text": "acostarse",
+        "answer": "acostarse",
+        "translation": "to go to bed"
+      },
+      {
+        "id": "sp-int-069",
+        "type": "mcq",
+        "audio_text": "vestirse",
+        "options": [
+          "peinarse",
+          "desnudarse",
+          "vestirse",
+          "lavarse"
+        ],
+        "answer": "2",
+        "translation": "to get dressed"
+      },
+      {
+        "id": "sp-int-070",
+        "type": "mcq",
+        "audio_text": "la felicidad",
+        "options": [
+          "la facilidad",
+          "la fidelidad",
+          "la realidad",
+          "la felicidad"
+        ],
+        "answer": "3",
+        "translation": "happiness"
+      },
+      {
+        "id": "sp-int-071",
+        "type": "mcq",
+        "audio_text": "la tristeza",
+        "options": [
+          "la belleza",
+          "la pobreza",
+          "la pereza",
+          "la tristeza"
+        ],
+        "answer": "3",
+        "translation": "sadness"
+      },
+      {
+        "id": "sp-int-072",
+        "type": "mcq",
+        "audio_text": "la sorpresa",
+        "options": [
+          "la empresa",
+          "la sorpresa",
+          "la represa",
+          "la promesa"
+        ],
+        "answer": "1",
+        "translation": "surprise"
+      },
+      {
+        "id": "sp-int-073",
+        "type": "typed",
+        "audio_text": "el enfado",
+        "answer": "el enfado",
+        "translation": "anger"
+      },
+      {
+        "id": "sp-int-074",
+        "type": "mcq",
+        "audio_text": "el miedo",
+        "options": [
+          "el medio",
+          "el miedo",
+          "el duelo",
+          "el cuello"
+        ],
+        "answer": "1",
+        "translation": "fear"
+      },
+      {
+        "id": "sp-int-075",
+        "type": "mcq",
+        "audio_text": "la esperanza",
+        "options": [
+          "la confianza",
+          "la esperanza",
+          "la tardanza",
+          "la alabanza"
+        ],
+        "answer": "1",
+        "translation": "hope"
+      },
+      {
+        "id": "sp-int-076",
+        "type": "typed",
+        "audio_text": "la confianza",
+        "answer": "la confianza",
+        "translation": "trust / confidence"
+      },
+      {
+        "id": "sp-int-077",
+        "type": "typed",
+        "audio_text": "la duda",
+        "answer": "la duda",
+        "translation": "doubt"
+      },
+      {
+        "id": "sp-int-078",
+        "type": "mcq",
+        "audio_text": "la verdad",
+        "options": [
+          "la soledad",
+          "la ciudad",
+          "la verdad",
+          "la bondad"
+        ],
+        "answer": "2",
+        "translation": "the truth"
+      },
+      {
+        "id": "sp-int-079",
+        "type": "mcq",
+        "audio_text": "la mentira",
+        "options": [
+          "la mirada",
+          "la salida",
+          "la mentira",
+          "la medida"
+        ],
+        "answer": "2",
+        "translation": "the lie"
+      },
+      {
+        "id": "sp-int-080",
+        "type": "mcq",
+        "audio_text": "la promesa",
+        "options": [
+          "la sorpresa",
+          "la presa",
+          "la promesa",
+          "la princesa"
+        ],
+        "answer": "2",
+        "translation": "the promise"
+      },
+      {
+        "id": "sp-int-081",
+        "type": "mcq",
+        "audio_text": "la elección",
+        "options": [
+          "la elección",
+          "la atención",
+          "la dirección",
+          "la lección"
+        ],
+        "answer": "0",
+        "translation": "the choice / election"
+      },
+      {
+        "id": "sp-int-082",
+        "type": "mcq",
+        "audio_text": "la decisión",
+        "options": [
+          "la decisión",
+          "la división",
+          "la precisión",
+          "la visión"
+        ],
+        "answer": "0",
+        "translation": "the decision"
+      },
+      {
+        "id": "sp-int-083",
+        "type": "mcq",
+        "audio_text": "el problema",
+        "options": [
+          "el poema",
+          "el sistema",
+          "el lema",
+          "el problema"
+        ],
+        "answer": "3",
+        "translation": "the problem"
+      },
+      {
+        "id": "sp-int-084",
+        "type": "mcq",
+        "audio_text": "la solución",
+        "options": [
+          "la canción",
+          "la solución",
+          "la lección",
+          "la porción"
+        ],
+        "answer": "1",
+        "translation": "the solution"
+      },
+      {
+        "id": "sp-int-085",
+        "type": "mcq",
+        "audio_text": "el consejo",
+        "options": [
+          "el pellejo",
+          "el espejo",
+          "el conejo",
+          "el consejo"
+        ],
+        "answer": "3",
+        "translation": "the advice"
+      },
+      {
+        "id": "sp-int-086",
+        "type": "typed",
+        "audio_text": "la costumbre",
+        "answer": "la costumbre",
+        "translation": "the custom / habit"
+      },
+      {
+        "id": "sp-int-087",
+        "type": "mcq",
+        "audio_text": "la experiencia",
+        "options": [
+          "la sentencia",
+          "la ciencia",
+          "la paciencia",
+          "la experiencia"
+        ],
+        "answer": "3",
+        "translation": "the experience"
+      },
+      {
+        "id": "sp-int-088",
+        "type": "typed",
+        "audio_text": "el recuerdo",
+        "answer": "el recuerdo",
+        "translation": "the memory / souvenir"
+      },
+      {
+        "id": "sp-int-089",
+        "type": "typed",
+        "audio_text": "el sueño",
+        "answer": "el sueño",
+        "translation": "the dream / sleep"
+      },
+      {
+        "id": "sp-int-090",
+        "type": "mcq",
+        "audio_text": "el secreto",
+        "options": [
+          "el concepto",
+          "el secreto",
+          "el decreto",
+          "el respeto"
+        ],
+        "answer": "1",
+        "translation": "the secret"
+      },
+      {
+        "id": "sp-int-091",
+        "type": "mcq",
+        "audio_text": "la regla",
+        "options": [
+          "la cuerda",
+          "la rueda",
+          "la reina",
+          "la regla"
+        ],
+        "answer": "3",
+        "translation": "the rule"
+      },
+      {
+        "id": "sp-int-092",
+        "type": "typed",
+        "audio_text": "el ejemplo",
+        "answer": "el ejemplo",
+        "translation": "the example"
+      },
+      {
+        "id": "sp-int-093",
+        "type": "mcq",
+        "audio_text": "la diferencia",
+        "options": [
+          "la conferencia",
+          "la referencia",
+          "la diferencia",
+          "la preferencia"
+        ],
+        "answer": "2",
+        "translation": "the difference"
+      },
+      {
+        "id": "sp-int-094",
+        "type": "mcq",
+        "audio_text": "la ventaja",
+        "options": [
+          "la ventaja",
+          "la queja",
+          "la ventana",
+          "la bandeja"
+        ],
+        "answer": "0",
+        "translation": "the advantage"
+      },
+      {
+        "id": "sp-int-095",
+        "type": "typed",
+        "audio_text": "la desventaja",
+        "answer": "la desventaja",
+        "translation": "the disadvantage"
+      },
+      {
+        "id": "sp-int-096",
+        "type": "mcq",
+        "audio_text": "el futuro",
+        "options": [
+          "el muro",
+          "el apuro",
+          "el futuro",
+          "el seguro"
+        ],
+        "answer": "2",
+        "translation": "the future"
+      },
+      {
+        "id": "sp-int-097",
+        "type": "typed",
+        "audio_text": "el pasado",
+        "answer": "el pasado",
+        "translation": "the past"
+      },
+      {
+        "id": "sp-int-098",
+        "type": "mcq",
+        "audio_text": "el presente",
+        "options": [
+          "el presente",
+          "el puente",
+          "el cliente",
+          "el diente"
+        ],
+        "answer": "0",
+        "translation": "the present"
+      },
+      {
+        "id": "sp-int-099",
+        "type": "mcq",
+        "audio_text": "la calidad de vida",
+        "options": [
+          "la esperanza de vida",
+          "el nivel de vida",
+          "el estilo de vida",
+          "la calidad de vida"
+        ],
+        "answer": "3",
+        "translation": "quality of life"
+      },
+      {
+        "id": "sp-int-100",
+        "type": "mcq",
+        "audio_text": "el punto de vista",
+        "options": [
+          "la vista previa",
+          "el paso a paso",
+          "el punto de vista",
+          "la toma de notas"
+        ],
+        "answer": "2",
+        "translation": "point of view"
+      },
+      {
+        "id": "sp-int-101",
+        "type": "mcq",
+        "audio_text": "la vida cotidiana",
+        "options": [
+          "la vida laboral",
+          "la vida nocturna",
+          "la vida privada",
+          "la vida cotidiana"
+        ],
+        "answer": "3",
+        "translation": "daily life"
+      },
+      {
+        "id": "sp-int-102",
+        "type": "mcq",
+        "audio_text": "el sentido del humor",
+        "options": [
+          "el sentido figurado",
+          "el sentido común",
+          "el sentido contrario",
+          "el sentido del humor"
+        ],
+        "answer": "3",
+        "translation": "sense of humor"
+      },
+      {
+        "id": "sp-int-103",
+        "type": "mcq",
+        "audio_text": "la libertad de expresión",
+        "options": [
+          "la libertad de expresión",
+          "la toma de palabra",
+          "la libertad de culto",
+          "el derecho civil"
+        ],
+        "answer": "0",
+        "translation": "freedom of speech"
+      },
+      {
+        "id": "sp-int-104",
+        "type": "mcq",
+        "audio_text": "el poder adquisitivo",
+        "options": [
+          "la tasa de interés",
+          "el tipo de cambio",
+          "el poder adquisitivo",
+          "el costo de vida"
+        ],
+        "answer": "2",
+        "translation": "purchasing power"
+      },
+      {
+        "id": "sp-int-105",
+        "type": "mcq",
+        "audio_text": "el estado de ánimo",
+        "options": [
+          "el estado de salud",
+          "el estado de ánimo",
+          "la fuerza de voluntad",
+          "el golpe de suerte"
+        ],
+        "answer": "1",
+        "translation": "mood / state of mind"
+      },
+      {
+        "id": "sp-int-106",
+        "type": "mcq",
+        "audio_text": "la fuerza de voluntad",
+        "options": [
+          "la mala intención",
+          "la fuerza de voluntad",
+          "el estado de ánimo",
+          "el juego limpio"
+        ],
+        "answer": "1",
+        "translation": "willpower"
+      }
+    ],
+    "advanced": [
+      {
+        "id": "sp-adv-001",
+        "type": "typed",
+        "audio_text": "el pero",
+        "answer": "el pero",
+        "translation": "the 'but' / drawback (vs perro)"
+      },
+      {
+        "id": "sp-adv-002",
+        "type": "mcq",
+        "audio_text": "el perro",
+        "options": [
+          "el hierro",
+          "el perro",
+          "el cerro",
+          "el pero"
+        ],
+        "answer": "1",
+        "translation": "the dog (rolled rr vs pero)"
+      },
+      {
+        "id": "sp-adv-003",
+        "type": "typed",
+        "audio_text": "la casa",
+        "answer": "la casa",
+        "translation": "the house"
+      },
+      {
+        "id": "sp-adv-004",
+        "type": "mcq",
+        "audio_text": "la caza",
+        "options": [
+          "la casa",
+          "la raza",
+          "la plaza",
+          "la caza"
+        ],
+        "answer": "3",
+        "translation": "the hunt / hunting"
+      },
+      {
+        "id": "sp-adv-005",
+        "type": "typed",
+        "audio_text": "tuvo",
+        "answer": "tuvo",
+        "translation": "he/she had (pret tener)"
+      },
+      {
+        "id": "sp-adv-006",
+        "type": "typed",
+        "audio_text": "el tubo",
+        "answer": "el tubo",
+        "translation": "the pipe / tube"
+      },
+      {
+        "id": "sp-adv-007",
+        "type": "typed",
+        "audio_text": "habría",
+        "answer": "habría",
+        "translation": "there would be (haber)"
+      },
+      {
+        "id": "sp-adv-008",
+        "type": "mcq",
+        "audio_text": "abría",
+        "options": [
+          "ardía",
+          "amplía",
+          "abría",
+          "habría"
+        ],
+        "answer": "2",
+        "translation": "he/she opened (abrir)"
+      },
+      {
+        "id": "sp-adv-009",
+        "type": "mcq",
+        "audio_text": "el hecho",
+        "options": [
+          "el trecho",
+          "echo",
+          "el hecho",
+          "el pecho"
+        ],
+        "answer": "2",
+        "translation": "the fact / event"
+      },
+      {
+        "id": "sp-adv-010",
+        "type": "typed",
+        "audio_text": "echo",
+        "answer": "echo",
+        "translation": "I throw / pour (echar)"
+      },
+      {
+        "id": "sp-adv-011",
+        "type": "typed",
+        "audio_text": "si",
+        "answer": "si",
+        "translation": "if (conditional)"
+      },
+      {
+        "id": "sp-adv-012",
+        "type": "typed",
+        "audio_text": "sí",
+        "answer": "sí",
+        "translation": "yes / himself (accented)"
+      },
+      {
+        "id": "sp-adv-013",
+        "type": "typed",
+        "audio_text": "el cesto",
+        "answer": "el cesto",
+        "translation": "the basket"
+      },
+      {
+        "id": "sp-adv-014",
+        "type": "typed",
+        "audio_text": "el sexto",
+        "answer": "el sexto",
+        "translation": "the sixth"
+      },
+      {
+        "id": "sp-adv-015",
+        "type": "mcq",
+        "audio_text": "bello",
+        "options": [
+          "bello",
+          "vello",
+          "sello",
+          "cuello"
+        ],
+        "answer": "0",
+        "translation": "beautiful / lovely"
+      },
+      {
+        "id": "sp-adv-016",
+        "type": "mcq",
+        "audio_text": "el vello",
+        "options": [
+          "el sello",
+          "bello",
+          "el vello",
+          "el cuello"
+        ],
+        "answer": "2",
+        "translation": "body hair / fuzz"
+      },
+      {
+        "id": "sp-adv-017",
+        "type": "typed",
+        "audio_text": "el cabo",
+        "answer": "el cabo",
+        "translation": "the cape / corporal"
+      },
+      {
+        "id": "sp-adv-018",
+        "type": "typed",
+        "audio_text": "la ola",
+        "answer": "la ola",
+        "translation": "the ocean wave"
+      },
+      {
+        "id": "sp-adv-019",
+        "type": "mcq",
+        "audio_text": "hola",
+        "options": [
+          "hola",
+          "la hoja",
+          "la hora",
+          "la ola"
+        ],
+        "answer": "0",
+        "translation": "hello (silent h)"
+      },
+      {
+        "id": "sp-adv-020",
+        "type": "typed",
+        "audio_text": "la hora",
+        "answer": "la hora",
+        "translation": "the hour / time"
+      },
+      {
+        "id": "sp-adv-021",
+        "type": "typed",
+        "audio_text": "abrazar",
+        "answer": "abrazar",
+        "translation": "to hug / embrace"
+      },
+      {
+        "id": "sp-adv-022",
+        "type": "mcq",
+        "audio_text": "abrasar",
+        "options": [
+          "acusar",
+          "abrazar",
+          "abrasar",
+          "arrasar"
+        ],
+        "answer": "2",
+        "translation": "to burn / scorch"
+      },
+      {
+        "id": "sp-adv-023",
+        "type": "mcq",
+        "audio_text": "el éxito",
+        "options": [
+          "el exceso",
+          "la salida",
+          "el éxito",
+          "el efecto"
+        ],
+        "answer": "2",
+        "translation": "success (false friend vs exit)"
+      },
+      {
+        "id": "sp-adv-024",
+        "type": "mcq",
+        "audio_text": "la salida",
+        "options": [
+          "la salida",
+          "el éxito",
+          "la caída",
+          "la subida"
+        ],
+        "answer": "0",
+        "translation": "the exit (physical doorway)"
+      },
+      {
+        "id": "sp-adv-025",
+        "type": "typed",
+        "audio_text": "embarazada",
+        "answer": "embarazada",
+        "translation": "pregnant (false friend)"
+      },
+      {
+        "id": "sp-adv-026",
+        "type": "typed",
+        "audio_text": "avergonzada",
+        "answer": "avergonzada",
+        "translation": "embarrassed / ashamed"
+      },
+      {
+        "id": "sp-adv-027",
+        "type": "mcq",
+        "audio_text": "actualmente",
+        "options": [
+          "realmente",
+          "claramente",
+          "ciertamente",
+          "actualmente"
+        ],
+        "answer": "3",
+        "translation": "currently / presently"
+      },
+      {
+        "id": "sp-adv-028",
+        "type": "typed",
+        "audio_text": "en realidad",
+        "answer": "en realidad",
+        "translation": "actually / in reality"
+      },
+      {
+        "id": "sp-adv-029",
+        "type": "mcq",
+        "audio_text": "constipado",
+        "options": [
+          "constipado",
+          "estreñido",
+          "cansado",
+          "enfermo"
+        ],
+        "answer": "0",
+        "translation": "having a cold (false friend)"
+      },
+      {
+        "id": "sp-adv-030",
+        "type": "typed",
+        "audio_text": "estreñido",
+        "answer": "estreñido",
+        "translation": "constipated"
+      },
+      {
+        "id": "sp-adv-031",
+        "type": "typed",
+        "audio_text": "pretender",
+        "answer": "pretender",
+        "translation": "to intend / attempt"
+      },
+      {
+        "id": "sp-adv-032",
+        "type": "mcq",
+        "audio_text": "fingir",
+        "options": [
+          "rugir",
+          "pretender",
+          "fingir",
+          "dirigir"
+        ],
+        "answer": "2",
+        "translation": "to pretend / fake"
+      },
+      {
+        "id": "sp-adv-033",
+        "type": "mcq",
+        "audio_text": "atender",
+        "options": [
+          "asistir",
+          "atender",
+          "pretender",
+          "entender"
+        ],
+        "answer": "1",
+        "translation": "to assist / attend to"
+      },
+      {
+        "id": "sp-adv-034",
+        "type": "typed",
+        "audio_text": "asistir",
+        "answer": "asistir",
+        "translation": "to attend an event"
+      },
+      {
+        "id": "sp-adv-035",
+        "type": "typed",
+        "audio_text": "sensible",
+        "answer": "sensible",
+        "translation": "sensitive (false friend)"
+      },
+      {
+        "id": "sp-adv-036",
+        "type": "typed",
+        "audio_text": "sensato",
+        "answer": "sensato",
+        "translation": "sensible / reasonable"
+      },
+      {
+        "id": "sp-adv-037",
+        "type": "mcq",
+        "audio_text": "el desenlace",
+        "options": [
+          "el percance",
+          "el alcance",
+          "el enlace",
+          "el desenlace"
+        ],
+        "answer": "3",
+        "translation": "the outcome / ending"
+      },
+      {
+        "id": "sp-adv-038",
+        "type": "mcq",
+        "audio_text": "la incertidumbre",
+        "options": [
+          "la muchedumbre",
+          "la incertidumbre",
+          "la costumbre",
+          "la pesadumbre"
+        ],
+        "answer": "1",
+        "translation": "uncertainty"
+      },
+      {
+        "id": "sp-adv-039",
+        "type": "mcq",
+        "audio_text": "la pesadumbre",
+        "options": [
+          "la incertidumbre",
+          "la costumbre",
+          "la pesadumbre",
+          "la penumbra"
+        ],
+        "answer": "2",
+        "translation": "grief / sorrow"
+      },
+      {
+        "id": "sp-adv-040",
+        "type": "mcq",
+        "audio_text": "el desasosiego",
+        "options": [
+          "el sosiego",
+          "el desasosiego",
+          "el desahogo",
+          "el despecho"
+        ],
+        "answer": "1",
+        "translation": "unease / restlessness"
+      },
+      {
+        "id": "sp-adv-041",
+        "type": "mcq",
+        "audio_text": "el sosiego",
+        "options": [
+          "el desasosiego",
+          "el abrigo",
+          "el sosiego",
+          "el testigo"
+        ],
+        "answer": "2",
+        "translation": "calm / tranquility"
+      },
+      {
+        "id": "sp-adv-042",
+        "type": "typed",
+        "audio_text": "la añoranza",
+        "answer": "la añoranza",
+        "translation": "yearning / homesickness"
+      },
+      {
+        "id": "sp-adv-043",
+        "type": "mcq",
+        "audio_text": "el rencor",
+        "options": [
+          "el rigor",
+          "el fervor",
+          "el rencor",
+          "el pudor"
+        ],
+        "answer": "2",
+        "translation": "resentment / grudge"
+      },
+      {
+        "id": "sp-adv-044",
+        "type": "mcq",
+        "audio_text": "la soberbia",
+        "options": [
+          "la miseria",
+          "la modestia",
+          "la soberbia",
+          "la valentía"
+        ],
+        "answer": "2",
+        "translation": "arrogance / pride"
+      },
+      {
+        "id": "sp-adv-045",
+        "type": "typed",
+        "audio_text": "la templanza",
+        "answer": "la templanza",
+        "translation": "moderation / temperance"
+      },
+      {
+        "id": "sp-adv-046",
+        "type": "mcq",
+        "audio_text": "la sensatez",
+        "options": [
+          "la escasez",
+          "la timidez",
+          "la sensatez",
+          "la sensatez"
+        ],
+        "answer": "2",
+        "translation": "good sense / prudence"
+      },
+      {
+        "id": "sp-adv-047",
+        "type": "typed",
+        "audio_text": "la elocuencia",
+        "answer": "la elocuencia",
+        "translation": "eloquence"
+      },
+      {
+        "id": "sp-adv-048",
+        "type": "mcq",
+        "audio_text": "el malentendido",
+        "options": [
+          "el malentendido",
+          "el fingido",
+          "el parecido",
+          "el sentido"
+        ],
+        "answer": "0",
+        "translation": "the misunderstanding"
+      },
+      {
+        "id": "sp-adv-049",
+        "type": "mcq",
+        "audio_text": "el compromiso",
+        "options": [
+          "el paraíso",
+          "el compromiso",
+          "el permiso",
+          "el aviso"
+        ],
+        "answer": "1",
+        "translation": "the commitment / compromise"
+      },
+      {
+        "id": "sp-adv-050",
+        "type": "mcq",
+        "audio_text": "la ambigüedad",
+        "options": [
+          "la ambigüedad",
+          "la crueldad",
+          "la antigüedad",
+          "la novedad"
+        ],
+        "answer": "0",
+        "translation": "ambiguity"
+      },
+      {
+        "id": "sp-adv-051",
+        "type": "mcq",
+        "audio_text": "la paradoja",
+        "options": [
+          "la almeja",
+          "la lisonja",
+          "la ventaja",
+          "la paradoja"
+        ],
+        "answer": "3",
+        "translation": "the paradox"
+      },
+      {
+        "id": "sp-adv-052",
+        "type": "mcq",
+        "audio_text": "el matiz",
+        "options": [
+          "la raíz",
+          "el cariz",
+          "el matiz",
+          "el tapiz"
+        ],
+        "answer": "2",
+        "translation": "the nuance / shade"
+      },
+      {
+        "id": "sp-adv-053",
+        "type": "mcq",
+        "audio_text": "la magnitud",
+        "options": [
+          "la quietud",
+          "la gratitud",
+          "la magnitud",
+          "la solicitud"
+        ],
+        "answer": "2",
+        "translation": "magnitude / scale"
+      },
+      {
+        "id": "sp-adv-054",
+        "type": "mcq",
+        "audio_text": "la obra maestra",
+        "options": [
+          "la obra pública",
+          "la mano de obra",
+          "la obra maestra",
+          "la palabra clave"
+        ],
+        "answer": "2",
+        "translation": "masterpiece"
+      },
+      {
+        "id": "sp-adv-055",
+        "type": "mcq",
+        "audio_text": "el espejismo",
+        "options": [
+          "el abismo",
+          "el cinismo",
+          "el egoísmo",
+          "el espejismo"
+        ],
+        "answer": "3",
+        "translation": "mirage / illusion"
+      },
+      {
+        "id": "sp-adv-056",
+        "type": "typed",
+        "audio_text": "el abismo",
+        "answer": "el abismo",
+        "translation": "abyss / chasm"
+      },
+      {
+        "id": "sp-adv-057",
+        "type": "mcq",
+        "audio_text": "el vestigio",
+        "options": [
+          "el prodigio",
+          "el vestigio",
+          "el litigio",
+          "el prestigio"
+        ],
+        "answer": "1",
+        "translation": "remnant / trace"
+      },
+      {
+        "id": "sp-adv-058",
+        "type": "mcq",
+        "audio_text": "el letargo",
+        "options": [
+          "el encargo",
+          "el desahogo",
+          "el embargo",
+          "el letargo"
+        ],
+        "answer": "3",
+        "translation": "lethargy / slumber"
+      },
+      {
+        "id": "sp-adv-059",
+        "type": "typed",
+        "audio_text": "el regocijo",
+        "answer": "el regocijo",
+        "translation": "rejoicing / jubilation"
+      },
+      {
+        "id": "sp-adv-060",
+        "type": "typed",
+        "audio_text": "la perplejidad",
+        "answer": "la perplejidad",
+        "translation": "perplexity / bewilderment"
+      },
+      {
+        "id": "sp-adv-061",
+        "type": "mcq",
+        "audio_text": "la destreza",
+        "options": [
+          "la pereza",
+          "la torpeza",
+          "la tristeza",
+          "la destreza"
+        ],
+        "answer": "3",
+        "translation": "skill / dexterity"
+      },
+      {
+        "id": "sp-adv-062",
+        "type": "typed",
+        "audio_text": "la torpeza",
+        "answer": "la torpeza",
+        "translation": "clumsiness / awkwardness"
+      },
+      {
+        "id": "sp-adv-063",
+        "type": "typed",
+        "audio_text": "la certeza",
+        "answer": "la certeza",
+        "translation": "certainty"
+      },
+      {
+        "id": "sp-adv-064",
+        "type": "typed",
+        "audio_text": "el reproche",
+        "answer": "el reproche",
+        "translation": "the reproach / blame"
+      },
+      {
+        "id": "sp-adv-065",
+        "type": "typed",
+        "audio_text": "el derroche",
+        "answer": "el derroche",
+        "translation": "wastefulness / squander"
+      },
+      {
+        "id": "sp-adv-066",
+        "type": "typed",
+        "audio_text": "la astucia",
+        "answer": "la astucia",
+        "translation": "cunning / shrewdness"
+      },
+      {
+        "id": "sp-adv-067",
+        "type": "typed",
+        "audio_text": "la codicia",
+        "answer": "la codicia",
+        "translation": "greed / avarice"
+      },
+      {
+        "id": "sp-adv-068",
+        "type": "typed",
+        "audio_text": "el anhelo",
+        "answer": "el anhelo",
+        "translation": "yearning / fervent desire"
+      },
+      {
+        "id": "sp-adv-069",
+        "type": "mcq",
+        "audio_text": "el recelo",
+        "options": [
+          "el pelo",
+          "el anhelo",
+          "el recelo",
+          "el velo"
+        ],
+        "answer": "2",
+        "translation": "suspicion / mistrust"
+      },
+      {
+        "id": "sp-adv-070",
+        "type": "mcq",
+        "audio_text": "el consuelo",
+        "options": [
+          "el suelo",
+          "el duelo",
+          "el abuelo",
+          "el consuelo"
+        ],
+        "answer": "3",
+        "translation": "comfort / consolation"
+      },
+      {
+        "id": "sp-adv-071",
+        "type": "typed",
+        "audio_text": "la osadía",
+        "answer": "la osadía",
+        "translation": "daring / audacity"
+      },
+      {
+        "id": "sp-adv-072",
+        "type": "typed",
+        "audio_text": "la cobardía",
+        "answer": "la cobardía",
+        "translation": "cowardice"
+      },
+      {
+        "id": "sp-adv-073",
+        "type": "typed",
+        "audio_text": "el desdén",
+        "answer": "el desdén",
+        "translation": "disdain / scorn"
+      },
+      {
+        "id": "sp-adv-074",
+        "type": "mcq",
+        "audio_text": "el vaivén",
+        "options": [
+          "el desdén",
+          "el vaivén",
+          "el recién",
+          "el andén"
+        ],
+        "answer": "1",
+        "translation": "swaying / fluctuation"
+      },
+      {
+        "id": "sp-adv-075",
+        "type": "typed",
+        "audio_text": "la zozobra",
+        "answer": "la zozobra",
+        "translation": "anxiety / sinking feeling"
+      },
+      {
+        "id": "sp-adv-076",
+        "type": "typed",
+        "audio_text": "la penumbra",
+        "answer": "la penumbra",
+        "translation": "gloom / half-light"
+      },
+      {
+        "id": "sp-adv-077",
+        "type": "typed",
+        "audio_text": "la soberanía",
+        "answer": "la soberanía",
+        "translation": "sovereignty"
+      },
+      {
+        "id": "sp-adv-078",
+        "type": "typed",
+        "audio_text": "la monotonía",
+        "answer": "la monotonía",
+        "translation": "monotony / dullness"
+      },
+      {
+        "id": "sp-adv-079",
+        "type": "typed",
+        "audio_text": "la ironía",
+        "answer": "la ironía",
+        "translation": "irony"
+      },
+      {
+        "id": "sp-adv-080",
+        "type": "typed",
+        "audio_text": "el desenfreno",
+        "answer": "el desenfreno",
+        "translation": "wild abandon / excess"
+      },
+      {
+        "id": "sp-adv-081",
+        "type": "mcq",
+        "audio_text": "la cordura",
+        "options": [
+          "la cordura",
+          "la verdura",
+          "la ternura",
+          "la locura"
+        ],
+        "answer": "0",
+        "translation": "sanity / good sense"
+      },
+      {
+        "id": "sp-adv-082",
+        "type": "mcq",
+        "audio_text": "la locura",
+        "options": [
+          "la locura",
+          "la cordura",
+          "la pintura",
+          "la postura"
+        ],
+        "answer": "0",
+        "translation": "madness / folly"
+      },
+      {
+        "id": "sp-adv-083",
+        "type": "typed",
+        "audio_text": "el escepticismo",
+        "answer": "el escepticismo",
+        "translation": "skepticism"
+      },
+      {
+        "id": "sp-adv-084",
+        "type": "typed",
+        "audio_text": "la hipocresía",
+        "answer": "la hipocresía",
+        "translation": "hypocrisy"
+      },
+      {
+        "id": "sp-adv-085",
+        "type": "mcq",
+        "audio_text": "la benevolencia",
+        "options": [
+          "la elocuencia",
+          "la clemencia",
+          "la violencia",
+          "la benevolencia"
+        ],
+        "answer": "3",
+        "translation": "benevolence / goodwill"
+      },
+      {
+        "id": "sp-adv-086",
+        "type": "typed",
+        "audio_text": "la clemencia",
+        "answer": "la clemencia",
+        "translation": "mercy / clemency"
+      },
+      {
+        "id": "sp-adv-087",
+        "type": "typed",
+        "audio_text": "la demencia",
+        "answer": "la demencia",
+        "translation": "dementia / madness"
+      },
+      {
+        "id": "sp-adv-088",
+        "type": "typed",
+        "audio_text": "la hazaña",
+        "answer": "la hazaña",
+        "translation": "heroic feat / exploit"
+      },
+      {
+        "id": "sp-adv-089",
+        "type": "typed",
+        "audio_text": "la vigilia",
+        "answer": "la vigilia",
+        "translation": "sleeplessness / vigil"
+      },
+      {
+        "id": "sp-adv-090",
+        "type": "mcq",
+        "audio_text": "el declive",
+        "options": [
+          "el enclave",
+          "el declive",
+          "el relieve",
+          "el desnivel"
+        ],
+        "answer": "1",
+        "translation": "decline / downturn"
+      },
+      {
+        "id": "sp-adv-091",
+        "type": "mcq",
+        "audio_text": "la vicisitud",
+        "options": [
+          "la inquietud",
+          "la multitud",
+          "la solicitud",
+          "la vicisitud"
+        ],
+        "answer": "3",
+        "translation": "vicissitude / hardship"
+      },
+      {
+        "id": "sp-adv-092",
+        "type": "typed",
+        "audio_text": "la suspicacia",
+        "answer": "la suspicacia",
+        "translation": "suspicion / distrust"
+      },
+      {
+        "id": "sp-adv-093",
+        "type": "mcq",
+        "audio_text": "la desazón",
+        "options": [
+          "la ocasión",
+          "la estación",
+          "la desazón",
+          "la razón"
+        ],
+        "answer": "2",
+        "translation": "uneasiness / distress"
+      },
+      {
+        "id": "sp-adv-094",
+        "type": "typed",
+        "audio_text": "el quebranto",
+        "answer": "el quebranto",
+        "translation": "grief / heavy loss"
+      },
+      {
+        "id": "sp-adv-095",
+        "type": "typed",
+        "audio_text": "el desengaño",
+        "answer": "el desengaño",
+        "translation": "disillusionment"
+      },
+      {
+        "id": "sp-adv-096",
+        "type": "typed",
+        "audio_text": "la altivez",
+        "answer": "la altivez",
+        "translation": "haughtiness / haughty pride"
+      },
+      {
+        "id": "sp-adv-097",
+        "type": "typed",
+        "audio_text": "el cautiverio",
+        "answer": "el cautiverio",
+        "translation": "captivity"
+      },
+      {
+        "id": "sp-adv-098",
+        "type": "mcq",
+        "audio_text": "el desenlace",
+        "options": [
+          "el desenlace",
+          "el percance",
+          "el alcance",
+          "el enlace"
+        ],
+        "answer": "0",
+        "translation": "the resolution / finale"
+      },
+      {
+        "id": "sp-adv-099",
+        "type": "mcq",
+        "audio_text": "la perspicacia",
+        "options": [
+          "la audacia",
+          "la suspicacia",
+          "la eficacia",
+          "la perspicacia"
+        ],
+        "answer": "3",
+        "translation": "shrewdness / insight"
+      },
+      {
+        "id": "sp-adv-100",
+        "type": "mcq",
+        "audio_text": "el agasajo",
+        "options": [
+          "el trabajo",
+          "el atajo",
+          "el agasajo",
+          "el andrajo"
+        ],
+        "answer": "2",
+        "translation": "treat / generous reception"
+      },
+      {
+        "id": "sp-adv-101",
+        "type": "mcq",
+        "audio_text": "la penuria",
+        "options": [
+          "la lujuria",
+          "la injuria",
+          "la furia",
+          "la penuria"
+        ],
+        "answer": "3",
+        "translation": "scarcity / extreme hardship"
+      },
+      {
+        "id": "sp-adv-102",
+        "type": "typed",
+        "audio_text": "el menoscabo",
+        "answer": "el menoscabo",
+        "translation": "impairment / detriment"
+      },
+      {
+        "id": "sp-adv-103",
+        "type": "typed",
+        "audio_text": "el simulacro",
+        "answer": "el simulacro",
+        "translation": "mock / drill / sham"
+      },
+      {
+        "id": "sp-adv-104",
+        "type": "typed",
+        "audio_text": "la desmesura",
+        "answer": "la desmesura",
+        "translation": "excess / boundless scale"
+      }
+    ]
+  }
+}

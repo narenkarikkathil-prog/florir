@@ -100,7 +100,7 @@ export class GeminiService {
     try {
       if (config.onRawMessage) config.onRawMessage({ type: 'AI_LIVE_CONNECT_CALL' });
       this.session = await this.liveAi.live.connect({
-        model: "gemini-2.0-flash-exp",
+        model: "gemini-3.1-flash-live-preview",
         config: {
           responseModalities: [Modality.AUDIO],
           speechConfig: {
@@ -422,7 +422,7 @@ export class GeminiService {
     }
 
     const response = await this.ttsAi.models.generateContent({
-      model: "gemini-2.5-flash",
+      model: "gemini-3.5-flash",
       contents: [{ parts: [{ text: finalText }] }],
       config: {
         responseModalities: [Modality.AUDIO],
@@ -438,7 +438,7 @@ export class GeminiService {
 
   // Content Generation Methods
   async generateContent(params: any) {
-    if (!params.model) params.model = "gemini-2.5-flash";
+    if (!params.model) params.model = "gemini-3.5-flash-lite";
     return this.liveAi.models.generateContent(params);
   }
 }

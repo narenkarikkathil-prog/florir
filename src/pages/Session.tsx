@@ -8,6 +8,7 @@ import { GeminiService } from '@/src/services/gemini';
 import { Language, UserLevel } from '@/src/types';
 import { supabase } from '@/src/lib/supabase';
 import SettingsModal from '@/src/components/SettingsModal';
+import vocabularyData from '@/src/data/vocabulary.json';
 
 import { FlowerLogo, BloomingFlower } from '@/src/components/FlowerLogo';
 
@@ -463,11 +464,7 @@ export default function Session() {
   };
 
   const playQuizAudio = async (text: string, retryCount = 0) => {
-    const ttsKey = import.meta.env.VITE_GEMINI_API_KEY || import.meta.env.VITE_GEMINI_TTS_API_KEY || import.meta.env.VITE_VERTEX_API_KEY || import.meta.env.GEMINI_API_KEY;
-
-    if (!ttsKey) return;
-
-    // Check prefetch first
+    // 1. Check in-memory prefetch
     if (prefetchedAudioRef.current[text]) {
       const base64Audio = prefetchedAudioRef.current[text];
       playFromBase64(base64Audio);
@@ -475,7 +472,7 @@ export default function Session() {
       return;
     }
 
-    // Check cache next
+    // 2. Check in-memory cache
     if (audioCacheRef.current[text]) {
       const base64Audio = audioCacheRef.current[text];
       playFromBase64(base64Audio);
@@ -483,9 +480,27 @@ export default function Session() {
       return;
     }
 
-    // If we know quota is exhausted, just log it
+    // 3. Check persistent localStorage cache
+    const cacheKey = `orati_audio_${lang}_${text.trim().toLowerCase()}`;
+    try {
+      const persisted = localStorage.getItem(cacheKey);
+      if (persisted) {
+        audioCacheRef.current[text] = persisted;
+        playFromBase64(persisted);
+        setVoiceStatus('high-fidelity');
+        return;
+      }
+    } catch {}
+
+    // 4. If quota known to be exhausted, fallback directly to browser speech
     if (isQuotaExhaustedRef.current) {
-      console.warn("Gemini TTS quota exhausted, skipping audio.");
+      playBrowserTTS(text);
+      return;
+    }
+
+    const ttsKey = import.meta.env.VITE_GEMINI_API_KEY || import.meta.env.VITE_GEMINI_TTS_API_KEY || import.meta.env.VITE_VERTEX_API_KEY || import.meta.env.GEMINI_API_KEY;
+    if (!ttsKey) {
+      playBrowserTTS(text);
       return;
     }
 
@@ -496,15 +511,17 @@ export default function Session() {
 
       const base64Audio = await geminiRef.current.generateSpeech(text);
       if (base64Audio) {
-        audioCacheRef.current[text] = base64Audio; // Cache it
+        audioCacheRef.current[text] = base64Audio;
+        try { localStorage.setItem(cacheKey, base64Audio); } catch {}
         playFromBase64(base64Audio);
         setVoiceStatus('high-fidelity');
-        isQuotaExhaustedRef.current = false; // Reset if successful
+        isQuotaExhaustedRef.current = false;
+      } else {
+        playBrowserTTS(text);
       }
     } catch (error: any) {
-      console.error("TTS Error:", error);
+      console.warn("Gemini TTS Error, using browser speech synthesis:", error);
 
-      // Handle Quota Error (429) with retry and fallback
       let errorStr = "";
       try {
         errorStr = typeof error === 'string' ? error : JSON.stringify(error);
@@ -518,17 +535,7 @@ export default function Session() {
 
       if (isQuotaError) {
         isQuotaExhaustedRef.current = true;
-        // Reset quota flag after 1 minute
         setTimeout(() => { isQuotaExhaustedRef.current = false; }, 60000);
-
-        if (retryCount < 1) {
-          console.log(`Quota hit, retrying in 2s... (Attempt ${retryCount + 1})`);
-          setTimeout(() => playQuizAudio(text, retryCount + 1), 2000);
-          return;
-        }
-        setVoiceStatus('standard');
-      } else {
-        setVoiceStatus('error');
       }
 
       playBrowserTTS(text);
@@ -536,14 +543,43 @@ export default function Session() {
   };
 
   const playBrowserTTS = (text: string) => {
-    // Removed browser TTS fallback
+    if (typeof window === 'undefined' || !window.speechSynthesis) return;
+    try {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = lang === 'Spanish' ? 'es-ES' : 'fr-FR';
+      const localSettings = localStorage.getItem('user_settings');
+      const rate = localSettings ? (JSON.parse(localSettings).playback_speed || 1.0) : 1.0;
+      utterance.rate = rate;
+
+      const voices = window.speechSynthesis.getVoices();
+      const targetPrefix = lang === 'Spanish' ? 'es' : 'fr';
+      const naturalVoice = voices.find(v => v.lang.startsWith(targetPrefix) && (v.name.includes('Natural') || v.name.includes('Enhanced') || v.name.includes('Google') || v.name.includes('Thomas') || v.name.includes('Jorge')))
+        || voices.find(v => v.lang.startsWith(targetPrefix));
+
+      if (naturalVoice) {
+        utterance.voice = naturalVoice;
+      }
+      utterance.onstart = () => setVoiceStatus('standard');
+      window.speechSynthesis.speak(utterance);
+    } catch (e) {
+      console.error('Browser TTS failed:', e);
+    }
   };
 
   const prefetchAudio = async (text: string) => {
     if (!text || audioCacheRef.current[text] || prefetchedAudioRef.current[text] || isQuotaExhaustedRef.current) return;
 
-    const ttsKey = import.meta.env.VITE_GEMINI_API_KEY || import.meta.env.VITE_GEMINI_TTS_API_KEY || import.meta.env.VITE_VERTEX_API_KEY || import.meta.env.GEMINI_API_KEY;
+    const cacheKey = `orati_audio_${lang}_${text.trim().toLowerCase()}`;
+    try {
+      const persisted = localStorage.getItem(cacheKey);
+      if (persisted) {
+        prefetchedAudioRef.current[text] = persisted;
+        return;
+      }
+    } catch {}
 
+    const ttsKey = import.meta.env.VITE_GEMINI_API_KEY || import.meta.env.VITE_GEMINI_TTS_API_KEY || import.meta.env.VITE_VERTEX_API_KEY || import.meta.env.GEMINI_API_KEY;
     if (!ttsKey) return;
 
     try {
@@ -553,6 +589,7 @@ export default function Session() {
       const base64Audio = await geminiRef.current.generateSpeech(text);
       if (base64Audio) {
         prefetchedAudioRef.current[text] = base64Audio;
+        try { localStorage.setItem(cacheKey, base64Audio); } catch {}
         isQuotaExhaustedRef.current = false;
       }
     } catch (error: any) {
@@ -567,7 +604,6 @@ export default function Session() {
         isQuotaExhaustedRef.current = true;
         setTimeout(() => { isQuotaExhaustedRef.current = false; }, 60000);
       }
-      console.warn("Prefetch failed:", error);
     }
   };
 
@@ -643,14 +679,6 @@ export default function Session() {
   };
 
   const startMcqSession = async () => {
-    const liveKey = import.meta.env.VITE_GEMINI_API_KEY || import.meta.env.VITE_GEMINI_LIVE_API_KEY || import.meta.env.VITE_VERTEX_API_KEY || import.meta.env.GEMINI_API_KEY;
-    const ttsKey = import.meta.env.VITE_GEMINI_API_KEY || import.meta.env.VITE_GEMINI_TTS_API_KEY || import.meta.env.VITE_VERTEX_API_KEY || import.meta.env.GEMINI_API_KEY;
-
-    if (!liveKey) {
-      alert("Gemini API Key is missing. Please configure VITE_GEMINI_API_KEY in your environment variables.");
-      return;
-    }
-
     setIsGeneratingQuiz(true);
     setIsActive(true);
     setCorrectCount(0);
@@ -659,117 +687,27 @@ export default function Session() {
     totalSessionTimeRef.current = 0;
     lastAudioActivityRef.current = Date.now();
     startTimeRef.current = Date.now();
-    setTranscript([{ role: 'ai', text: 'Generating your vocabulary session...', timestamp: Date.now() }]);
+    setTranscript([{ role: 'ai', text: 'Starting your vocabulary session...', timestamp: Date.now() }]);
 
     try {
-      if (!geminiRef.current) {
-        geminiRef.current = await GeminiService.create();
-      }
-      const response = await geminiRef.current.generateContent({
-        model: "gemini-2.5-flash",
-        contents: `You are generating a ${lang} listening comprehension quiz focused on vocabulary recognition.
+      const langBank = (vocabularyData as any)[lang] || (vocabularyData as any)['French'];
+      const difficultyKey = level === 'hard'
+        ? 'advanced'
+        : (level === 'intermediate' ? 'intermediate' : 'beginner');
+      const pool = langBank[difficultyKey] || langBank['beginner'];
 
-TASK:
-Create exactly 7 questions for a listening-based exercise.
+      // Randomly sample 7 questions from the 100+ question bank
+      const shuffled = [...pool].sort(() => Math.random() - 0.5);
+      const selectedQuestions = shuffled.slice(0, 7).map((q: any, idx: number) => ({
+        ...q,
+        progress: `Question ${idx + 1}/7`
+      }));
 
-CORE MECHANIC:
-- Each question presents a ${lang} word, phrase, or short sentence that is meant to be HEARD (audio will be generated separately).
-- The user must identify what was said.
-
-MODES:
-You must support three difficulty modes: beginner, intermediate, advanced.
-The mode will be provided as input: ${level}
-
-DIFFICULTY RULES:
-
-BEGINNER:
-- 100% multiple choice (all 7 questions)
-- Use simple, common vocabulary (A1 level)
-- Answer choices should be clearly distinct (easy to differentiate)
-
-INTERMEDIATE:
-- 75% multiple choice (5 questions), 25% written response (2 questions)
-- Use A2–B1 vocabulary
-- Include somewhat similar-sounding words/phrases in multiple choice
-
-ADVANCED:
-- 50% multiple choice (3-4 questions), 50% written response (3-4 questions)
-- Use B1–B2 vocabulary
-- Use very similar-sounding words/phrases to increase difficulty
-
-QUESTION FORMAT:
-
-For MULTIPLE CHOICE:
-- "type": "mcq"
-- "audio_text": (the correct ${lang} word/phrase/sentence)
-- "options": array of 4 choices (ONLY ONE correct)
-- "answer": MUST be the index of the correct option (0, 1, 2, or 3) as a string.
-
-For WRITTEN RESPONSE:
-- "type": "typed"
-- "audio_text": (the correct ${lang} word/phrase/sentence)
-- "answer": correct spelling (accept only exact or near-exact matches)
-
-GLOBAL RULES:
-- Do NOT include translations, explanations, transcripts, or corrections.
-- Focus purely on listening recognition accuracy.
-- Keep all content in ${lang} except structural labels.
-- Ensure realistic pronunciation distinctions (important for audio playback).
-- Avoid ambiguous answers unless intentional (especially in higher levels).
-
-TRACKER:
-- Include a field for each question: "progress": "Question X/7"
-
-OUTPUT FORMAT:
-Return ONLY valid JSON in this structure:
-
-{
-  "mode": "${level}",
-  "questions": [
-    {
-      "progress": "Question 1/7",
-      "type": "mcq",
-      "audio_text": "...",
-      "options": ["...", "...", "...", "..."],
-      "answer": "..."
-    }
-  ]
-}`,
-        config: {
-          responseMimeType: "application/json",
-          responseSchema: {
-            type: Type.OBJECT,
-            properties: {
-              mode: { type: Type.STRING },
-              questions: {
-                type: Type.ARRAY,
-                items: {
-                  type: Type.OBJECT,
-                  properties: {
-                    progress: { type: Type.STRING },
-                    type: { type: Type.STRING, enum: ["mcq", "typed"] },
-                    audio_text: { type: Type.STRING },
-                    options: {
-                      type: Type.ARRAY,
-                      items: { type: Type.STRING }
-                    },
-                    answer: { type: Type.STRING }
-                  },
-                  required: ["progress", "type", "audio_text", "answer"]
-                }
-              }
-            },
-            required: ["mode", "questions"]
-          }
-        }
-      });
-
-      const quizData = JSON.parse(response.text);
-      setQuizQuestions(quizData.questions);
+      setQuizQuestions(selectedQuestions);
       setCurrentQuestionIndex(0);
       setQuestionCount(1);
 
-      const firstQuestion = quizData.questions[0];
+      const firstQuestion = selectedQuestions[0];
       setMcqQuestion({
         type: firstQuestion.type === 'mcq' ? 'mcq' : 'written',
         question: "What did you hear?",
@@ -778,16 +716,15 @@ Return ONLY valid JSON in this structure:
         answer: firstQuestion.answer
       });
 
-      // Prefetch the next question's audio if available
-      if (quizData.questions.length > 1) {
-        prefetchAudio(quizData.questions[1].audio_text);
+      // Prefetch the next question's audio
+      if (selectedQuestions.length > 1) {
+        prefetchAudio(selectedQuestions[1].audio_text);
       }
 
       // Play audio for the first question
       playQuizAudio(firstQuestion.audio_text);
-
     } catch (error) {
-      console.error("Failed to generate quiz:", error);
+      console.error("Failed to start vocabulary session:", error);
       setIsActive(false);
     } finally {
       setIsGeneratingQuiz(false);

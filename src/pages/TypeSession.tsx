@@ -278,7 +278,7 @@ export default function TypeSession() {
 
     try {
       const response = await aiRef.current.models.generateContent({
-        model: "gemini-2.5-flash",
+        model: "gemini-3.5-flash-lite",
         contents: systemInstruction,
       });
       const aiResponseText = response.text || `Bonjour! Let's practice ${lang}.`;
@@ -319,7 +319,7 @@ export default function TypeSession() {
       // Replace the last user message with the system instruction included as context for this turn, or just pass system instruction in config.
       
       const response = await aiRef.current?.models.generateContent({
-        model: "gemini-2.5-flash",
+        model: "gemini-3.5-flash-lite",
         contents: chatHistory,
         config: {
           systemInstruction: systemInstruction,

@@ -663,7 +663,7 @@ export default function APSession({ mode }: { mode: 'ap-simulated' | 'ap-speakin
       ).join('\n\n');
 
       const response = await geminiRef.current.generateContent({
-        model: 'gemini-2.5-flash',
+        model: 'gemini-3.5-flash-lite',
         contents: `You are an AP French exam grader. Grade this simulated conversation out of 5 using AP standards.
 
 Conversation topic: ${conv.title}
@@ -702,7 +702,7 @@ Return ONLY valid JSON (no markdown, no code fences):
     try {
       if (!geminiRef.current) return;
       const genResponse = await geminiRef.current.generateContent({
-        model: 'gemini-2.5-flash',
+        model: 'gemini-3.5-flash-lite',
         contents: `You are an AP French exam grader. Grade this cultural comparison speaking task out of 5 using AP standards.
 
 Prompt: ${prompt.prompt}
