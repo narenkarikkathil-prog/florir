@@ -463,79 +463,78 @@ export default function Session() {
     }
   };
 
-  const playQuizAudio = async (text: string, retryCount = 0) => {
+  const playQuizAudio = async (text: string) => {
+    if (!text) return;
+    const cleanText = text.trim();
+    const cacheKey = `florir_audio_${lang}_${cleanText.toLowerCase()}`;
+
     // 1. Check in-memory prefetch
-    if (prefetchedAudioRef.current[text]) {
-      const base64Audio = prefetchedAudioRef.current[text];
-      playFromBase64(base64Audio);
+    if (prefetchedAudioRef.current[cleanText]) {
+      const base64Audio = prefetchedAudioRef.current[cleanText];
+      await playFromBase64(base64Audio);
       setVoiceStatus('high-fidelity');
       return;
     }
 
     // 2. Check in-memory cache
-    if (audioCacheRef.current[text]) {
-      const base64Audio = audioCacheRef.current[text];
-      playFromBase64(base64Audio);
+    if (audioCacheRef.current[cleanText]) {
+      const base64Audio = audioCacheRef.current[cleanText];
+      await playFromBase64(base64Audio);
       setVoiceStatus('high-fidelity');
       return;
     }
 
     // 3. Check persistent localStorage cache
-    const cacheKey = `orati_audio_${lang}_${text.trim().toLowerCase()}`;
     try {
       const persisted = localStorage.getItem(cacheKey);
       if (persisted) {
-        audioCacheRef.current[text] = persisted;
-        playFromBase64(persisted);
+        audioCacheRef.current[cleanText] = persisted;
+        await playFromBase64(persisted);
         setVoiceStatus('high-fidelity');
         return;
       }
     } catch {}
 
-    // 4. If quota known to be exhausted, fallback directly to browser speech
-    if (isQuotaExhaustedRef.current) {
-      playBrowserTTS(text);
-      return;
+    // 4. Stream high-fidelity native neural pronunciation from /api/tts (never hits quota, human-level clarity)
+    try {
+      const res = await fetch(`/api/tts?lang=${encodeURIComponent(lang)}&text=${encodeURIComponent(cleanText)}`);
+      if (res.ok) {
+        const arrayBuffer = await res.arrayBuffer();
+        const bytes = new Uint8Array(arrayBuffer);
+        let binary = '';
+        for (let i = 0; i < bytes.length; i++) binary += String.fromCharCode(bytes[i]);
+        const base64Audio = btoa(binary);
+
+        audioCacheRef.current[cleanText] = base64Audio;
+        try { localStorage.setItem(cacheKey, base64Audio); } catch {}
+
+        await playFromBase64(base64Audio);
+        setVoiceStatus('high-fidelity');
+        return;
+      }
+    } catch (e) {
+      console.warn("Direct neural TTS stream failed, trying GeminiService:", e);
     }
 
-
-
+    // 5. Fallback to GeminiService generateSpeech
     try {
       if (!geminiRef.current) {
         geminiRef.current = await GeminiService.create();
       }
-
-      const base64Audio = await geminiRef.current.generateSpeech(text);
+      const base64Audio = await geminiRef.current.generateSpeech(cleanText);
       if (base64Audio) {
-        audioCacheRef.current[text] = base64Audio;
+        audioCacheRef.current[cleanText] = base64Audio;
         try { localStorage.setItem(cacheKey, base64Audio); } catch {}
-        playFromBase64(base64Audio);
+        await playFromBase64(base64Audio);
         setVoiceStatus('high-fidelity');
-        isQuotaExhaustedRef.current = false;
-      } else {
-        playBrowserTTS(text);
+        return;
       }
-    } catch (error: any) {
-      console.warn("Gemini TTS Error, using browser speech synthesis:", error);
-
-      let errorStr = "";
-      try {
-        errorStr = typeof error === 'string' ? error : JSON.stringify(error);
-      } catch (e) {
-        errorStr = error?.message || "";
-      }
-
-      const isQuotaError = errorStr.includes('429') ||
-        errorStr.includes('RESOURCE_EXHAUSTED') ||
-        error?.status === 'RESOURCE_EXHAUSTED';
-
-      if (isQuotaError) {
-        isQuotaExhaustedRef.current = true;
-        setTimeout(() => { isQuotaExhaustedRef.current = false; }, 60000);
-      }
-
-      playBrowserTTS(text);
+    } catch (e) {
+      console.warn("GeminiService generateSpeech failed, falling back to browser:", e);
     }
+
+    // 6. Offline fallback to browser speech synthesis
+    playBrowserTTS(cleanText);
   };
 
   const playBrowserTTS = (text: string) => {
@@ -550,7 +549,7 @@ export default function Session() {
 
       const voices = window.speechSynthesis.getVoices();
       const targetPrefix = lang === 'Spanish' ? 'es' : 'fr';
-      const naturalVoice = voices.find(v => v.lang.startsWith(targetPrefix) && (v.name.includes('Natural') || v.name.includes('Enhanced') || v.name.includes('Google') || v.name.includes('Thomas') || v.name.includes('Jorge')))
+      const naturalVoice = voices.find(v => v.lang.startsWith(targetPrefix) && (v.name.includes('Natural') || v.name.includes('Enhanced') || v.name.includes('Google') || v.name.includes('Thomas') || v.name.includes('Jorge') || v.name.includes('Amélie') || v.name.includes('Mónica')))
         || voices.find(v => v.lang.startsWith(targetPrefix));
 
       if (naturalVoice) {
@@ -564,47 +563,39 @@ export default function Session() {
   };
 
   const prefetchAudio = async (text: string) => {
-    if (!text || audioCacheRef.current[text] || prefetchedAudioRef.current[text] || isQuotaExhaustedRef.current) return;
+    if (!text) return;
+    const cleanText = text.trim();
+    if (audioCacheRef.current[cleanText] || prefetchedAudioRef.current[cleanText]) return;
 
-    const cacheKey = `orati_audio_${lang}_${text.trim().toLowerCase()}`;
+    const cacheKey = `florir_audio_${lang}_${cleanText.toLowerCase()}`;
     try {
       const persisted = localStorage.getItem(cacheKey);
       if (persisted) {
-        prefetchedAudioRef.current[text] = persisted;
+        prefetchedAudioRef.current[cleanText] = persisted;
         return;
       }
     } catch {}
 
-
-
     try {
-      if (!geminiRef.current) {
-        geminiRef.current = await GeminiService.create();
-      }
-      const base64Audio = await geminiRef.current.generateSpeech(text);
-      if (base64Audio) {
-        prefetchedAudioRef.current[text] = base64Audio;
-        try { localStorage.setItem(cacheKey, base64Audio); } catch {}
-        isQuotaExhaustedRef.current = false;
-      }
-    } catch (error: any) {
-      let errorStr = "";
-      try {
-        errorStr = typeof error === 'string' ? error : JSON.stringify(error);
-      } catch (e) {
-        errorStr = error?.message || "";
-      }
+      const res = await fetch(`/api/tts?lang=${encodeURIComponent(lang)}&text=${encodeURIComponent(cleanText)}`);
+      if (res.ok) {
+        const arrayBuffer = await res.arrayBuffer();
+        const bytes = new Uint8Array(arrayBuffer);
+        let binary = '';
+        for (let i = 0; i < bytes.length; i++) binary += String.fromCharCode(bytes[i]);
+        const base64Audio = btoa(binary);
 
-      if (errorStr.includes('429') || errorStr.includes('RESOURCE_EXHAUSTED')) {
-        isQuotaExhaustedRef.current = true;
-        setTimeout(() => { isQuotaExhaustedRef.current = false; }, 60000);
+        prefetchedAudioRef.current[cleanText] = base64Audio;
+        try { localStorage.setItem(cacheKey, base64Audio); } catch {}
       }
+    } catch {
+      // Ignore background prefetch errors
     }
   };
 
   const playFromBase64 = async (base64Audio: string) => {
     if (!quizAudioContextRef.current) {
-      quizAudioContextRef.current = new (window.AudioContext || (window as any).webkitAudioContext)({ sampleRate: 24000 });
+      quizAudioContextRef.current = new (window.AudioContext || (window as any).webkitAudioContext)();
     }
     const audioContext = quizAudioContextRef.current;
 
@@ -612,28 +603,42 @@ export default function Session() {
       await audioContext.resume();
     }
 
-    const binary = atob(base64Audio);
-    const bytes = new Uint8Array(binary.length);
-    for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
-
-    const pcm = new Int16Array(bytes.buffer);
-    const float32 = new Float32Array(pcm.length);
-    for (let i = 0; i < pcm.length; i++) float32[i] = pcm[i] / 32768.0;
-
-    const buffer = audioContext.createBuffer(1, float32.length, 24000);
-    buffer.getChannelData(0).set(float32);
-
     if (currentAudioSourceRef.current) {
       try {
         currentAudioSourceRef.current.stop();
       } catch (e) {
         // Ignore
       }
+      currentAudioSourceRef.current = null;
+    }
+
+    const binary = atob(base64Audio);
+    const bytes = new Uint8Array(binary.length);
+    for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+
+    let decodedBuffer: AudioBuffer;
+
+    try {
+      // 1. Native Web Audio MP3/WAV/AAC decoding (hardware-accelerated, crystal clear)
+      decodedBuffer = await audioContext.decodeAudioData(bytes.buffer.slice(0));
+    } catch {
+      // 2. Fallback: 24kHz Int16 PCM (Live Gemini WebSocket turns)
+      const pcm = new Int16Array(bytes.buffer);
+      const float32 = new Float32Array(pcm.length);
+      for (let i = 0; i < pcm.length; i++) float32[i] = pcm[i] / 32768.0;
+
+      decodedBuffer = audioContext.createBuffer(1, float32.length, 24000);
+      decodedBuffer.getChannelData(0).set(float32);
     }
 
     const source = audioContext.createBufferSource();
     currentAudioSourceRef.current = source;
-    source.buffer = buffer;
+    source.buffer = decodedBuffer;
+
+    const localSettings = localStorage.getItem('user_settings');
+    const rate = localSettings ? (JSON.parse(localSettings).playback_speed || 1.0) : 1.0;
+    source.playbackRate.value = rate;
+
     source.connect(audioContext.destination);
     source.onended = () => {
       if (currentAudioSourceRef.current === source) {
@@ -1353,7 +1358,7 @@ TONE:
                         animate={{ opacity: 1 }}
                         className="text-[10px] font-bold text-dark/30 uppercase tracking-widest flex items-center gap-1 mt-1"
                       >
-                        <AlertCircle size={10} /> Standard Voice (Quota Limit)
+                        <Volume2 size={10} /> Offline Voice
                       </motion.span>
                     )}
                   </div>

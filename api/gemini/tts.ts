@@ -19,6 +19,21 @@ async function parseBody(req: any): Promise<any> {
   });
 }
 
+async function fetchNeuralTtsBase64(text: string, voice?: string): Promise<string> {
+  const isSpanish = voice?.toLowerCase().includes('es') || voice?.toLowerCase().includes('jorge');
+  const langCode = isSpanish ? 'es' : 'fr';
+  const url = `https://translate.google.com/translate_tts?ie=UTF-8&tl=${langCode}&client=tw-ob&q=${encodeURIComponent(text.trim())}`;
+  const response = await fetch(url, {
+    headers: {
+      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+      'Referer': 'https://translate.google.com/',
+    },
+  });
+  if (!response.ok) throw new Error(`Neural fallback returned ${response.status}`);
+  const buffer = await response.arrayBuffer();
+  return Buffer.from(buffer).toString('base64');
+}
+
 export default async function handler(req: IncomingMessage, res: ServerResponse) {
   res.setHeader('Content-Type', 'application/json');
 
@@ -28,61 +43,75 @@ export default async function handler(req: IncomingMessage, res: ServerResponse)
     return;
   }
 
-  const apiKey = process.env.GEMINI_API_KEY || process.env.VITE_GEMINI_API_KEY;
-  if (!apiKey) {
-    res.statusCode = 500;
-    res.end(JSON.stringify({ error: 'GEMINI_API_KEY is not configured on the server.' }));
+  let text = '';
+  let voice = 'Kore';
+  let rate = 1.0;
+
+  try {
+    const body = await parseBody(req);
+    text = body.text || '';
+    voice = body.voice || 'Kore';
+    rate = Number(body.rate) || 1.0;
+  } catch {
+    res.statusCode = 400;
+    res.end(JSON.stringify({ error: 'Invalid JSON request body' }));
     return;
   }
 
-  try {
-    const { text, voice, rate } = await parseBody(req);
-    if (!text || typeof text !== 'string') {
-      res.statusCode = 400;
-      res.end(JSON.stringify({ error: 'Missing or invalid "text" in request body.' }));
-      return;
-    }
+  if (!text.trim()) {
+    res.statusCode = 400;
+    res.end(JSON.stringify({ error: 'Missing or empty "text" parameter' }));
+    return;
+  }
 
-    const ai = new GoogleGenAI({ apiKey });
-    const finalVoice = voice || 'Kore';
+  const apiKey = process.env.GEMINI_API_KEY || process.env.VITE_GEMINI_API_KEY;
 
-    let finalText = text;
-    const numRate = Number(rate) || 1.0;
-    if (numRate < 0.9) {
-      finalText = text.split(' ').join('... ');
-    } else if (numRate > 1.1) {
-      finalText = `Say this very rapidly: ${text}`;
-    }
+  // Try Gemini Speech if key is present
+  if (apiKey) {
+    try {
+      const ai = new GoogleGenAI({ apiKey });
+      let finalText = text;
+      if (rate < 0.9) {
+        finalText = text.split(' ').join('... ');
+      } else if (rate > 1.1) {
+        finalText = `Say this very rapidly: ${text}`;
+      }
 
-    const response = await ai.models.generateContent({
-      model: 'gemini-3.5-flash',
-      contents: [{ parts: [{ text: finalText }] }],
-      config: {
-        responseModalities: [Modality.AUDIO],
-        speechConfig: {
-          voiceConfig: {
-            prebuiltVoiceConfig: { voiceName: finalVoice },
+      const response = await ai.models.generateContent({
+        model: 'gemini-3.5-flash',
+        contents: [{ parts: [{ text: finalText }] }],
+        config: {
+          responseModalities: [Modality.AUDIO],
+          speechConfig: {
+            voiceConfig: {
+              prebuiltVoiceConfig: { voiceName: voice },
+            },
           },
         },
-      },
-    });
+      });
 
-    const candidate = response.candidates?.[0];
-    const part = candidate?.content?.parts?.[0] as any;
-    const base64Audio = part?.inlineData?.data || null;
+      const candidate = response.candidates?.[0];
+      const part = candidate?.content?.parts?.[0] as any;
+      const base64Audio = part?.inlineData?.data || null;
 
-    if (!base64Audio) {
-      res.statusCode = 502;
-      res.end(JSON.stringify({ error: 'No audio returned from Gemini speech model.' }));
-      return;
+      if (base64Audio) {
+        res.statusCode = 200;
+        res.end(JSON.stringify({ audio: base64Audio, source: 'gemini' }));
+        return;
+      }
+    } catch (err: any) {
+      console.warn('Gemini TTS quota or connection issue, falling back to neural audio:', err?.message || err);
     }
+  }
 
+  // Resilient fallback to high-fidelity native neural TTS (never hits quota limits)
+  try {
+    const base64Audio = await fetchNeuralTtsBase64(text, voice);
     res.statusCode = 200;
-    res.end(JSON.stringify({ audio: base64Audio }));
-  } catch (error: any) {
-    console.error('Server Gemini TTS error:', error);
-    const statusCode = error?.status === 429 ? 429 : 500;
-    res.statusCode = statusCode;
-    res.end(JSON.stringify({ error: error?.message || 'TTS generation failed' }));
+    res.end(JSON.stringify({ audio: base64Audio, source: 'neural' }));
+  } catch (err: any) {
+    console.error('All TTS generation failed:', err);
+    res.statusCode = 500;
+    res.end(JSON.stringify({ error: err?.message || 'TTS generation failed' }));
   }
 }

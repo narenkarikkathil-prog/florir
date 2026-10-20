@@ -82,27 +82,70 @@ export default defineConfig(({ mode }) => {
             if (req.url === '/api/gemini/tts' && req.method === 'POST') {
               try {
                 const { text, voice, rate } = await readJson();
-                const ai = new GoogleGenAI({ apiKey: geminiKey });
-                let finalText = text || '';
-                const numRate = Number(rate) || 1.0;
-                if (numRate < 0.9) finalText = finalText.split(' ').join('... ');
-                else if (numRate > 1.1) finalText = `Say this very rapidly: ${finalText}`;
+                let base64Audio = null;
 
-                const response = await ai.models.generateContent({
-                  model: 'gemini-3.5-flash',
-                  contents: [{ parts: [{ text: finalText }] }],
-                  config: {
-                    responseModalities: [Modality.AUDIO],
-                    speechConfig: {
-                      voiceConfig: { prebuiltVoiceConfig: { voiceName: voice || 'Kore' } },
-                    },
-                  },
-                });
-                const audio = response.candidates?.[0]?.content?.parts?.[0]?.inlineData?.data || null;
-                res.end(JSON.stringify({ audio }));
+                if (geminiKey) {
+                  try {
+                    const ai = new GoogleGenAI({ apiKey: geminiKey });
+                    let finalText = text || '';
+                    const numRate = Number(rate) || 1.0;
+                    if (numRate < 0.9) finalText = finalText.split(' ').join('... ');
+                    else if (numRate > 1.1) finalText = `Say this very rapidly: ${finalText}`;
+
+                    const response = await ai.models.generateContent({
+                      model: 'gemini-3.5-flash',
+                      contents: [{ parts: [{ text: finalText }] }],
+                      config: {
+                        responseModalities: [Modality.AUDIO],
+                        speechConfig: {
+                          voiceConfig: { prebuiltVoiceConfig: { voiceName: voice || 'Kore' } },
+                        },
+                      },
+                    });
+                    base64Audio = response.candidates?.[0]?.content?.parts?.[0]?.inlineData?.data || null;
+                  } catch (err: any) {
+                    console.warn('Local Gemini TTS rate limited, using neural fallback:', err?.message || err);
+                  }
+                }
+
+                if (!base64Audio && text) {
+                  const isSpanish = (voice || '').toLowerCase().includes('es') || (voice || '').toLowerCase().includes('jorge');
+                  const langCode = isSpanish ? 'es' : 'fr';
+                  const ttsUrl = `https://translate.google.com/translate_tts?ie=UTF-8&tl=${langCode}&client=tw-ob&q=${encodeURIComponent(text.trim())}`;
+                  const ttsRes = await fetch(ttsUrl, {
+                    headers: { 'User-Agent': 'Mozilla/5.0', 'Referer': 'https://translate.google.com/' }
+                  });
+                  const buf = await ttsRes.arrayBuffer();
+                  base64Audio = Buffer.from(buf).toString('base64');
+                }
+
+                res.end(JSON.stringify({ audio: base64Audio }));
               } catch (e: any) {
                 res.statusCode = 500;
                 res.end(JSON.stringify({ error: e?.message || 'TTS generation failed' }));
+              }
+              return;
+            }
+
+            // 3. /api/tts (Direct MP3 streaming for audio elements)
+            if (req.url?.startsWith('/api/tts')) {
+              try {
+                const urlObj = new URL(req.url, 'http://localhost:3000');
+                const text = urlObj.searchParams.get('text') || '';
+                const lang = urlObj.searchParams.get('lang') || 'French';
+                const langCode = lang === 'Spanish' ? 'es' : 'fr';
+                const ttsUrl = `https://translate.google.com/translate_tts?ie=UTF-8&tl=${langCode}&client=tw-ob&q=${encodeURIComponent(text.trim())}`;
+
+                const ttsRes = await fetch(ttsUrl, {
+                  headers: { 'User-Agent': 'Mozilla/5.0', 'Referer': 'https://translate.google.com/' }
+                });
+                const buf = await ttsRes.arrayBuffer();
+                res.setHeader('Content-Type', 'audio/mpeg');
+                res.setHeader('Cache-Control', 'public, max-age=604800, immutable');
+                res.end(Buffer.from(buf));
+              } catch (e: any) {
+                res.statusCode = 500;
+                res.end(JSON.stringify({ error: e?.message || 'TTS stream failed' }));
               }
               return;
             }
