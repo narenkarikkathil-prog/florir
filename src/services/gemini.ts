@@ -13,9 +13,57 @@ export class GeminiService {
   private deviceChangeListenerAdded: boolean = false;
   private boundHandleDeviceChange: (() => void) | null = null;
 
-  constructor(liveKey: string, ttsKey?: string) {
-    this.liveAi = new GoogleGenAI({ apiKey: liveKey });
-    this.ttsAi = new GoogleGenAI({ apiKey: ttsKey || liveKey });
+  constructor(keyOrToken: string, projectId?: string) {
+    if (projectId) {
+      const aiConfig: any = {
+        vertexai: true,
+        project: projectId,
+        location: 'us-central1',
+        httpOptions: { headers: { Authorization: `Bearer ${keyOrToken}` } }
+      };
+      this.liveAi = new GoogleGenAI(aiConfig);
+      this.ttsAi = new GoogleGenAI(aiConfig);
+    } else {
+      this.liveAi = new GoogleGenAI({ apiKey: keyOrToken });
+      this.ttsAi = new GoogleGenAI({ apiKey: keyOrToken });
+    }
+  }
+
+  static async create(customApiKey?: string): Promise<GeminiService> {
+    const key = customApiKey
+      || (typeof import.meta !== 'undefined' && import.meta.env && (
+          import.meta.env.VITE_GEMINI_API_KEY
+          || import.meta.env.VITE_GEMINI_LIVE_API_KEY
+          || import.meta.env.GEMINI_API_KEY
+          || import.meta.env.VITE_VERTEX_API_KEY
+        ))
+      || (typeof process !== 'undefined' && process.env && (
+          process.env.VITE_GEMINI_API_KEY
+          || process.env.GEMINI_API_KEY
+        ));
+
+    if (key) {
+      return new GeminiService(key);
+    }
+
+    // Fallback: Check if an API token provider is available
+    try {
+      const res = await fetch('/api/gemini/token');
+      if (res.ok) {
+        const data = await res.json();
+        if (data.token) {
+          return new GeminiService(data.token, data.project);
+        } else if (data.apiKey) {
+          return new GeminiService(data.apiKey);
+        }
+      }
+    } catch {
+      // Ignore network errors for token endpoint
+    }
+
+    throw new Error(
+      'Gemini API key is missing. Please set VITE_GEMINI_API_KEY (or GEMINI_API_KEY) in your environment variables.'
+    );
   }
 
   setPlaybackRate(rate: number) {
@@ -52,27 +100,17 @@ export class GeminiService {
     try {
       if (config.onRawMessage) config.onRawMessage({ type: 'AI_LIVE_CONNECT_CALL' });
       this.session = await this.liveAi.live.connect({
-        model: "gemini-3.1-flash-live-preview",
+        model: "gemini-2.0-flash-exp",
         config: {
           responseModalities: [Modality.AUDIO],
           speechConfig: {
             voiceConfig: { prebuiltVoiceConfig: { voiceName: this.voiceName } },
           },
-          systemInstruction: config.systemInstruction,
-          inputAudioTranscription: { 
-            enabled: !config.skipMic,
-            languageCode: config.languageCode || 'en-US'
-          } as any,
-          outputAudioTranscription: { enabled: true } as any,
+          systemInstruction: { parts: [{text: config.systemInstruction}] },
           tools: config.tools,
           generationConfig: {
             responseModalities: [Modality.AUDIO],
-            thinkingConfig: { thinkingLevel: 'minimal' },
           },
-          turnDetection: {
-            threshold: 0.3,
-            silenceDurationMs: 500,
-          } as any,
         } as any,
         callbacks: {
           onopen: () => {
@@ -102,9 +140,6 @@ export class GeminiService {
               
               if (modelTurn?.parts) {
                 for (const part of modelTurn.parts) {
-                  // NOTE: part.text in audio-only mode is the model's internal
-                  // thinking/reasoning, NOT what it speaks. We intentionally skip it.
-                  // The actual spoken words come via outputAudioTranscription below.
                   if (part.inlineData?.data) {
                     this.playAudio(part.inlineData.data);
                     if (config.onAudioData) config.onAudioData(part.inlineData.data);
@@ -116,7 +151,6 @@ export class GeminiService {
                 }
               }
 
-              // Handle AI output audio transcription (what the AI said)
               const outputParts = sc.outputAudioTranscription?.parts || sc.outputTranscription?.parts;
               if (outputParts) {
                 for (const part of outputParts) {
@@ -128,7 +162,6 @@ export class GeminiService {
                 config.onMessage(sc.outputTranscription.text, 'ai');
               }
 
-              // Handle user input audio transcription (what the user said)
               const userParts = sc.inputAudioTranscription?.parts || sc.inputTranscription?.parts;
               if (userParts) {
                 for (const part of userParts) {
@@ -172,18 +205,15 @@ export class GeminiService {
   private currentMicConfig: any = null;
 
   pause() {
-    // Disable mic tracks to stop sending audio, but keep the pipeline intact
     if (this.stream) {
       this.stream.getTracks().forEach(t => t.enabled = false);
     }
   }
 
   resume() {
-    // Re-enable mic tracks
     if (this.stream) {
       this.stream.getTracks().forEach(t => t.enabled = true);
     }
-    // Ensure AudioContext is running
     if (this.audioContext?.state === 'suspended') {
       this.audioContext.resume();
     }
@@ -194,12 +224,10 @@ export class GeminiService {
     try {
       if (config.onRawMessage) config.onRawMessage({ type: 'MIC_START_REQUEST' });
 
-      // Ensure AudioContext is active
       if (this.audioContext?.state === 'suspended') {
         await this.audioContext.resume();
       }
 
-      // Request mic with minimal constraints to respect Chrome's default and allow browser-level switching
       const localSettings = localStorage.getItem('user_settings');
       const microphoneId = localSettings ? JSON.parse(localSettings).microphone_id : null;
       
@@ -211,9 +239,6 @@ export class GeminiService {
       this.micSource = this.audioContext!.createMediaStreamSource(this.stream);
       this.processor = this.audioContext!.createScriptProcessor(1024, 1, 1);
 
-      // Create a silent destination — ScriptProcessorNode MUST be connected
-      // to a destination to fire onaudioprocess events. We use a GainNode
-      // with gain=0 so no sound is heard but the processor stays active.
       this.silentDest = this.audioContext!.createGain();
       this.silentDest.gain.value = 0;
       this.silentDest.connect(this.audioContext!.destination);
@@ -229,7 +254,6 @@ export class GeminiService {
         }
         const rms = Math.sqrt(sum / inputData.length);
 
-        // Track that audio is flowing (even silence has some tiny RMS)
         if (rms > 0.0001) {
           this.lastMicActivity = Date.now();
         }
@@ -248,15 +272,12 @@ export class GeminiService {
         }
       };
 
-      // Connect: mic → processor → silent gain → destination
       this.micSource.connect(this.processor);
       this.processor.connect(this.silentDest);
       if (config.onRawMessage) config.onRawMessage({ type: 'MIC_PROCESSOR_CONNECTED' });
 
-      // Start mic health monitoring — auto-reconnect if audio stops
       this.startMicHealthCheck(config);
 
-      // Listen for device changes (like changing default mic in Chrome)
       if (navigator.mediaDevices && !this.deviceChangeListenerAdded) {
         this.boundHandleDeviceChange = () => {
           console.log('Microphone device change detected, reconnecting...');
@@ -272,15 +293,10 @@ export class GeminiService {
     }
   }
 
-  /**
-   * Monitors mic health. If no audio activity for 5 seconds and the stream
-   * is supposed to be active, attempt to reconnect.
-   */
   private startMicHealthCheck(config: any) {
     if (this.micHealthInterval) clearInterval(this.micHealthInterval);
 
     this.micHealthInterval = setInterval(() => {
-      // Only check if we're supposed to be active and not paused
       if (!this.session || !this.stream) return;
       const tracksEnabled = this.stream.getTracks().some(t => t.enabled && t.readyState === 'live');
       if (!tracksEnabled) return;
@@ -295,7 +311,6 @@ export class GeminiService {
   }
 
   private async reconnectMic(config: any) {
-    // Clean up old mic
     try {
       if (this.processor) { this.processor.disconnect(); this.processor = null; }
       if (this.micSource) { this.micSource.disconnect(); this.micSource = null; }
@@ -304,25 +319,17 @@ export class GeminiService {
         this.stream.getTracks().forEach(t => t.stop());
         this.stream = null;
       }
-    } catch (e) { /* cleanup errors are ok */ }
+    } catch (e) {}
 
-    // Re-initialize
     await this.startMic(config);
   }
 
-  /**
-   * Strips non-speech artifacts from transcription text.
-   * Returns cleaned text, or empty string if nothing meaningful remains.
-   */
   private sanitizeTranscript(text: string): string {
-    // Remove common non-speech tags: <noise>, <silence>, <unk>, [noise], etc.
     let cleaned = text
       .replace(/<[^>]*(?:noise|silence|unk|laughter|cough|breath|music)[^>]*>/gi, '')
       .replace(/\[[^\]]*(?:noise|silence|unk|laughter|cough|breath|music)[^\]]*\]/gi, '')
       .replace(/\([^)]*(?:noise|silence|unk|laughter|cough|breath)[^)]*\)/gi, '');
-    // Remove stray angle-bracket tags that look like artifacts
     cleaned = cleaned.replace(/<[a-z_]+>/gi, '');
-    // Collapse multiple spaces and trim
     cleaned = cleaned.replace(/\s+/g, ' ').trim();
     return cleaned;
   }
@@ -353,7 +360,6 @@ export class GeminiService {
     const source = this.audioContext.createBufferSource();
     source.buffer = buffer;
     
-    // Explicitly bump pitch up by 15% across all speeds to enforce a much higher-pitched voice naturally
     const PITCH_MULTIPLIER = 1.15;
     const actualRate = (this.playbackRate > 1.0 ? this.playbackRate : 1.0) * PITCH_MULTIPLIER;
     source.playbackRate.value = actualRate;
@@ -377,7 +383,6 @@ export class GeminiService {
   }
 
   stop() {
-    // Stop health monitoring
     if (this.micHealthInterval) {
       clearInterval(this.micHealthInterval);
       this.micHealthInterval = null;
@@ -389,7 +394,6 @@ export class GeminiService {
     if (this.silentDest) this.silentDest.disconnect();
     if (this.audioContext) this.audioContext.close();
     
-    // Clean up device change listener
     if (this.boundHandleDeviceChange) {
       navigator.mediaDevices?.removeEventListener('devicechange', this.boundHandleDeviceChange);
       this.boundHandleDeviceChange = null;
@@ -408,7 +412,6 @@ export class GeminiService {
   async generateSpeech(text: string, voiceName?: string) {
     const finalVoice = voiceName || this.voiceName;
     
-    // Simulate slow playback by adding literal pauses between words
     let finalText = text;
     if (this.playbackRate < 1.0) {
       finalText = text.split(' ').join('... ');
@@ -419,7 +422,7 @@ export class GeminiService {
     }
 
     const response = await this.ttsAi.models.generateContent({
-      model: "gemini-2.5-flash-preview-tts",
+      model: "gemini-2.5-flash",
       contents: [{ parts: [{ text: finalText }] }],
       config: {
         responseModalities: [Modality.AUDIO],

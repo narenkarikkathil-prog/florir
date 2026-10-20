@@ -194,8 +194,8 @@ export default function TypeSession() {
 
   const playTTS = async (text: string) => {
     if (!ttsServiceRef.current) {
-        const apiKey = import.meta.env.VITE_GEMINI_LIVE_API_KEY || import.meta.env.VITE_VERTEX_API_KEY || import.meta.env.GEMINI_API_KEY;
-        ttsServiceRef.current = new GeminiService(apiKey, apiKey);
+        const apiKey = import.meta.env.VITE_GEMINI_API_KEY || import.meta.env.VITE_GEMINI_LIVE_API_KEY || import.meta.env.VITE_VERTEX_API_KEY || import.meta.env.GEMINI_API_KEY;
+        ttsServiceRef.current = await GeminiService.create(apiKey);
     }
     try {
         const base64Audio = await ttsServiceRef.current.generateSpeech(text);
@@ -245,9 +245,9 @@ export default function TypeSession() {
   };
 
   const startSession = async () => {
-    const apiKey = import.meta.env.VITE_GEMINI_LIVE_API_KEY || import.meta.env.VITE_VERTEX_API_KEY || import.meta.env.GEMINI_API_KEY;
+    const apiKey = import.meta.env.VITE_GEMINI_API_KEY || import.meta.env.VITE_GEMINI_LIVE_API_KEY || import.meta.env.VITE_VERTEX_API_KEY || import.meta.env.GEMINI_API_KEY;
     if (!apiKey) {
-      alert("API Key is missing.");
+      alert("Gemini API Key is missing. Please configure VITE_GEMINI_API_KEY in your environment variables.");
       return;
     }
 

@@ -463,10 +463,7 @@ export default function Session() {
   };
 
   const playQuizAudio = async (text: string, retryCount = 0) => {
-    const liveKey = import.meta.env.VITE_GEMINI_LIVE_API_KEY || import.meta.env.VITE_VERTEX_API_KEY || import.meta.env.GEMINI_API_KEY;
-    const ttsKey = import.meta.env.VITE_GEMINI_TTS_API_KEY || import.meta.env.VITE_VERTEX_API_KEY || import.meta.env.GEMINI_API_KEY;
-
-    if (!ttsKey) return;
+    const ttsKey = import.meta.env.VITE_GEMINI_API_KEY || import.meta.env.VITE_GEMINI_TTS_API_KEY || import.meta.env.VITE_VERTEX_API_KEY || import.meta.env.GEMINI_API_KEY;
 
     if (!ttsKey) return;
 
@@ -494,7 +491,7 @@ export default function Session() {
 
     try {
       if (!geminiRef.current) {
-        geminiRef.current = new GeminiService(liveKey, ttsKey);
+        geminiRef.current = await GeminiService.create();
       }
 
       const base64Audio = await geminiRef.current.generateSpeech(text);
@@ -545,14 +542,13 @@ export default function Session() {
   const prefetchAudio = async (text: string) => {
     if (!text || audioCacheRef.current[text] || prefetchedAudioRef.current[text] || isQuotaExhaustedRef.current) return;
 
-    const liveKey = import.meta.env.VITE_GEMINI_LIVE_API_KEY || import.meta.env.VITE_VERTEX_API_KEY || import.meta.env.GEMINI_API_KEY;
-    const ttsKey = import.meta.env.VITE_GEMINI_TTS_API_KEY || import.meta.env.VITE_VERTEX_API_KEY || import.meta.env.GEMINI_API_KEY;
+    const ttsKey = import.meta.env.VITE_GEMINI_API_KEY || import.meta.env.VITE_GEMINI_TTS_API_KEY || import.meta.env.VITE_VERTEX_API_KEY || import.meta.env.GEMINI_API_KEY;
 
     if (!ttsKey) return;
 
     try {
       if (!geminiRef.current) {
-        geminiRef.current = new GeminiService(liveKey, ttsKey);
+        geminiRef.current = await GeminiService.create();
       }
       const base64Audio = await geminiRef.current.generateSpeech(text);
       if (base64Audio) {
@@ -647,11 +643,11 @@ export default function Session() {
   };
 
   const startMcqSession = async () => {
-    const liveKey = import.meta.env.VITE_GEMINI_LIVE_API_KEY || import.meta.env.VITE_VERTEX_API_KEY || import.meta.env.GEMINI_API_KEY;
-    const ttsKey = import.meta.env.VITE_GEMINI_TTS_API_KEY || import.meta.env.VITE_VERTEX_API_KEY || import.meta.env.GEMINI_API_KEY;
+    const liveKey = import.meta.env.VITE_GEMINI_API_KEY || import.meta.env.VITE_GEMINI_LIVE_API_KEY || import.meta.env.VITE_VERTEX_API_KEY || import.meta.env.GEMINI_API_KEY;
+    const ttsKey = import.meta.env.VITE_GEMINI_API_KEY || import.meta.env.VITE_GEMINI_TTS_API_KEY || import.meta.env.VITE_VERTEX_API_KEY || import.meta.env.GEMINI_API_KEY;
 
     if (!liveKey) {
-      alert("Gemini API Key is missing. Please configure it in the Secrets panel.");
+      alert("Gemini API Key is missing. Please configure VITE_GEMINI_API_KEY in your environment variables.");
       return;
     }
 
@@ -667,7 +663,7 @@ export default function Session() {
 
     try {
       if (!geminiRef.current) {
-        geminiRef.current = new GeminiService(liveKey, ttsKey);
+        geminiRef.current = await GeminiService.create();
       }
       const response = await geminiRef.current.generateContent({
         model: "gemini-2.5-flash",
@@ -828,15 +824,15 @@ Return ONLY valid JSON in this structure:
       return;
     }
 
-    const liveKey = import.meta.env.VITE_GEMINI_LIVE_API_KEY || import.meta.env.VITE_VERTEX_API_KEY || import.meta.env.GEMINI_API_KEY;
-    const ttsKey = import.meta.env.VITE_GEMINI_TTS_API_KEY || import.meta.env.VITE_VERTEX_API_KEY || import.meta.env.GEMINI_API_KEY;
+    const liveKey = import.meta.env.VITE_GEMINI_API_KEY || import.meta.env.VITE_GEMINI_LIVE_API_KEY || import.meta.env.VITE_VERTEX_API_KEY || import.meta.env.GEMINI_API_KEY;
+    const ttsKey = import.meta.env.VITE_GEMINI_API_KEY || import.meta.env.VITE_GEMINI_TTS_API_KEY || import.meta.env.VITE_VERTEX_API_KEY || import.meta.env.GEMINI_API_KEY;
 
     if (!liveKey) {
-      alert("Gemini API Key is missing. Please configure it in the Secrets panel.");
+      alert("Gemini API Key is missing. Please configure VITE_GEMINI_API_KEY in your environment variables.");
       return;
     }
 
-    geminiRef.current = new GeminiService(liveKey, ttsKey);
+    geminiRef.current = await GeminiService.create();
 
     // Fetch user settings (with localStorage fallback)
     const localSettings = localStorage.getItem('user_settings');

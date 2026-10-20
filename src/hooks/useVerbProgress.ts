@@ -54,9 +54,9 @@ export function useVerbProgress(lang: Language) {
     const newFailures = current.failures + 1;
     
     // Any failure instantly puts it in 'trouble'
-    const newState = 'trouble';
+    const newState: VerbState = 'trouble';
 
-    const newProgress = { ...progress, [englishVerb]: { state: newState, failures: newFailures } };
+    const newProgress: LanguageVerbProgress = { ...progress, [englishVerb]: { state: newState, failures: newFailures } };
     saveProgress(newProgress);
   };
 

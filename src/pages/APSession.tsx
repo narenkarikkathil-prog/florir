@@ -346,10 +346,13 @@ export default function APSession({ mode }: { mode: 'ap-simulated' | 'ap-speakin
 
   // Init Gemini for TTS and grading
   useEffect(() => {
-    const key = import.meta.env.VITE_GEMINI_TTS_API_KEY || import.meta.env.VITE_VERTEX_API_KEY || import.meta.env.GEMINI_API_KEY;
-    if (key) {
-      geminiRef.current = new GeminiService(key, key);
-    }
+    const initGemini = async () => {
+      const key = import.meta.env.VITE_GEMINI_API_KEY || import.meta.env.VITE_GEMINI_TTS_API_KEY || import.meta.env.VITE_VERTEX_API_KEY || import.meta.env.GEMINI_API_KEY;
+      if (key) {
+        geminiRef.current = await GeminiService.create();
+      }
+    };
+    initGemini();
   }, []);
 
   // Cleanup on unmount
@@ -652,7 +655,7 @@ export default function APSession({ mode }: { mode: 'ap-simulated' | 'ap-speakin
   const gradeConversation = async (conv: typeof AP_CONVERSATIONS[0], responses: string[]) => {
     setIsGrading(true);
     try {
-      const liveKey = import.meta.env.VITE_GEMINI_LIVE_API_KEY || import.meta.env.VITE_VERTEX_API_KEY;
+      const liveKey = import.meta.env.VITE_GEMINI_API_KEY || import.meta.env.VITE_GEMINI_LIVE_API_KEY || import.meta.env.VITE_VERTEX_API_KEY || import.meta.env.GEMINI_API_KEY;
       if (!liveKey || !geminiRef.current) return;
 
       const transcriptText = conv.turns.map((t, i) => 
