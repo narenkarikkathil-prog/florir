@@ -498,11 +498,7 @@ export default function Session() {
       return;
     }
 
-    const ttsKey = import.meta.env.VITE_GEMINI_API_KEY || import.meta.env.VITE_GEMINI_TTS_API_KEY || import.meta.env.VITE_VERTEX_API_KEY || import.meta.env.GEMINI_API_KEY;
-    if (!ttsKey) {
-      playBrowserTTS(text);
-      return;
-    }
+
 
     try {
       if (!geminiRef.current) {
@@ -579,8 +575,7 @@ export default function Session() {
       }
     } catch {}
 
-    const ttsKey = import.meta.env.VITE_GEMINI_API_KEY || import.meta.env.VITE_GEMINI_TTS_API_KEY || import.meta.env.VITE_VERTEX_API_KEY || import.meta.env.GEMINI_API_KEY;
-    if (!ttsKey) return;
+
 
     try {
       if (!geminiRef.current) {
@@ -761,15 +756,12 @@ export default function Session() {
       return;
     }
 
-    const liveKey = import.meta.env.VITE_GEMINI_API_KEY || import.meta.env.VITE_GEMINI_LIVE_API_KEY || import.meta.env.VITE_VERTEX_API_KEY || import.meta.env.GEMINI_API_KEY;
-    const ttsKey = import.meta.env.VITE_GEMINI_API_KEY || import.meta.env.VITE_GEMINI_TTS_API_KEY || import.meta.env.VITE_VERTEX_API_KEY || import.meta.env.GEMINI_API_KEY;
-
-    if (!liveKey) {
-      alert("Gemini API Key is missing. Please configure VITE_GEMINI_API_KEY in your environment variables.");
+    try {
+      geminiRef.current = await GeminiService.create();
+    } catch {
+      alert("Gemini API Key is missing. Please configure VITE_GEMINI_API_KEY in your environment variables or Vercel project settings.");
       return;
     }
-
-    geminiRef.current = await GeminiService.create();
 
     // Fetch user settings (with localStorage fallback)
     const localSettings = localStorage.getItem('user_settings');

@@ -1,5 +1,49 @@
 import { GoogleGenAI, LiveServerMessage, Modality } from "@google/genai";
 
+let cachedApiKey = "";
+
+/**
+ * Resolves the Google AI Studio Gemini API key.
+ * 1. Checks in-memory cache.
+ * 2. Checks client environment variables (VITE_GEMINI_API_KEY, GEMINI_API_KEY).
+ * 3. Falls back to serverless function /api/gemini/token (reads server-side secrets on Vercel).
+ */
+export async function getGeminiApiKey(): Promise<string> {
+  if (cachedApiKey) return cachedApiKey;
+
+  const envKey =
+    (typeof import.meta !== "undefined" && import.meta.env && (
+      import.meta.env.VITE_GEMINI_API_KEY ||
+      import.meta.env.GEMINI_API_KEY
+    )) ||
+    (typeof process !== "undefined" && process.env && (
+      process.env.VITE_GEMINI_API_KEY ||
+      process.env.GEMINI_API_KEY
+    ));
+
+  if (envKey && typeof envKey === "string" && envKey.trim()) {
+    cachedApiKey = envKey.trim();
+    return cachedApiKey;
+  }
+
+  // Fallback to Vercel Serverless Function /api/gemini/token
+  try {
+    const res = await fetch("/api/gemini/token");
+    if (res.ok) {
+      const data = await res.json();
+      const resolved = data.apiKey || data.token;
+      if (resolved && typeof resolved === "string" && resolved.trim()) {
+        cachedApiKey = resolved.trim();
+        return cachedApiKey;
+      }
+    }
+  } catch {
+    // Network or offline fallback
+  }
+
+  return "";
+}
+
 export class GeminiService {
   private liveAi: GoogleGenAI;
   private ttsAi: GoogleGenAI;
@@ -13,56 +57,20 @@ export class GeminiService {
   private deviceChangeListenerAdded: boolean = false;
   private boundHandleDeviceChange: (() => void) | null = null;
 
-  constructor(keyOrToken: string, projectId?: string) {
-    if (projectId) {
-      const aiConfig: any = {
-        vertexai: true,
-        project: projectId,
-        location: 'us-central1',
-        httpOptions: { headers: { Authorization: `Bearer ${keyOrToken}` } }
-      };
-      this.liveAi = new GoogleGenAI(aiConfig);
-      this.ttsAi = new GoogleGenAI(aiConfig);
-    } else {
-      this.liveAi = new GoogleGenAI({ apiKey: keyOrToken });
-      this.ttsAi = new GoogleGenAI({ apiKey: keyOrToken });
-    }
+  constructor(apiKey: string) {
+    this.liveAi = new GoogleGenAI({ apiKey });
+    this.ttsAi = new GoogleGenAI({ apiKey });
   }
 
   static async create(customApiKey?: string): Promise<GeminiService> {
-    const key = customApiKey
-      || (typeof import.meta !== 'undefined' && import.meta.env && (
-          import.meta.env.VITE_GEMINI_API_KEY
-          || import.meta.env.VITE_GEMINI_LIVE_API_KEY
-          || import.meta.env.GEMINI_API_KEY
-          || import.meta.env.VITE_VERTEX_API_KEY
-        ))
-      || (typeof process !== 'undefined' && process.env && (
-          process.env.VITE_GEMINI_API_KEY
-          || process.env.GEMINI_API_KEY
-        ));
+    const key = customApiKey || await getGeminiApiKey();
 
     if (key) {
       return new GeminiService(key);
     }
 
-    // Fallback: Check if an API token provider is available
-    try {
-      const res = await fetch('/api/gemini/token');
-      if (res.ok) {
-        const data = await res.json();
-        if (data.token) {
-          return new GeminiService(data.token, data.project);
-        } else if (data.apiKey) {
-          return new GeminiService(data.apiKey);
-        }
-      }
-    } catch {
-      // Ignore network errors for token endpoint
-    }
-
     throw new Error(
-      'Gemini API key is missing. Please set VITE_GEMINI_API_KEY (or GEMINI_API_KEY) in your environment variables.'
+      'Gemini API key is missing. Please set VITE_GEMINI_API_KEY (or GEMINI_API_KEY) in your environment variables or Vercel project settings.'
     );
   }
 

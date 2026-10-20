@@ -5,7 +5,7 @@ import { defineConfig, loadEnv } from 'vite';
 
 export default defineConfig(({mode}) => {
   const env = loadEnv(mode, '.', '');
-  const geminiKey = env.VITE_GEMINI_API_KEY || env.GEMINI_API_KEY || env.VITE_GEMINI_LIVE_API_KEY || env.VITE_VERTEX_API_KEY || '';
+  const geminiKey = env.VITE_GEMINI_API_KEY || env.GEMINI_API_KEY || '';
   const supabaseUrl = env.VITE_SUPABASE_URL || env.SUPABASE_URL || '';
   const supabaseAnon = env.VITE_SUPABASE_ANON_KEY || env.SUPABASE_ANON_KEY || '';
 
@@ -31,9 +31,6 @@ export default defineConfig(({mode}) => {
     define: {
       'import.meta.env.VITE_GEMINI_API_KEY': JSON.stringify(geminiKey),
       'import.meta.env.GEMINI_API_KEY': JSON.stringify(geminiKey),
-      'import.meta.env.VITE_GEMINI_LIVE_API_KEY': JSON.stringify(env.VITE_GEMINI_LIVE_API_KEY || geminiKey),
-      'import.meta.env.VITE_GEMINI_TTS_API_KEY': JSON.stringify(env.VITE_GEMINI_TTS_API_KEY || geminiKey),
-      'import.meta.env.VITE_VERTEX_API_KEY': JSON.stringify(env.VITE_VERTEX_API_KEY || geminiKey),
       'import.meta.env.VITE_SUPABASE_URL': JSON.stringify(supabaseUrl),
       'import.meta.env.SUPABASE_URL': JSON.stringify(supabaseUrl),
       'import.meta.env.VITE_SUPABASE_ANON_KEY': JSON.stringify(supabaseAnon),

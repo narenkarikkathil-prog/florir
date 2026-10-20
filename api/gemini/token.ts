@@ -6,9 +6,7 @@ export default function handler(
 ) {
   const apiKey =
     process.env.VITE_GEMINI_API_KEY ||
-    process.env.GEMINI_API_KEY ||
-    process.env.VITE_GEMINI_LIVE_API_KEY ||
-    process.env.VITE_VERTEX_API_KEY;
+    process.env.GEMINI_API_KEY;
 
   res.setHeader('Content-Type', 'application/json');
 
