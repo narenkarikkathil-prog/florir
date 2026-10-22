@@ -79,7 +79,6 @@ export default function Layout({ children }: { children: React.ReactNode }) {
               </>
             ) : (
               <>
-                <Link to="/#pricing" className="text-sm font-medium text-dark/70 hover:text-gold transition-colors">Pricing</Link>
                 <Link to="/auth" className="text-sm font-medium text-dark/70 hover:text-gold transition-colors">Login</Link>
                 <Link 
                   to="/auth?signup=true" 
