@@ -8,6 +8,18 @@ import { FlowerLogo, BloomingFlower } from '@/src/components/FlowerLogo';
 const languages = [
   { name: 'French', icon: <Globe size={14} className="text-blue-500" /> },
   { name: 'Spanish', icon: <Globe size={14} className="text-red-500" /> },
+  { name: 'Mandarin', icon: <Globe size={14} className="text-amber-500" /> },
+  { name: 'Italian', icon: <Globe size={14} className="text-emerald-500" /> },
+  { name: 'German', icon: <Globe size={14} className="text-yellow-600" /> },
+  { name: 'Hindi', icon: <Globe size={14} className="text-orange-500" /> },
+  { name: 'Arabic', icon: <Globe size={14} className="text-teal-600" /> },
+  { name: 'Russian', icon: <Globe size={14} className="text-indigo-500" /> },
+  { name: 'Farsi (Persian)', icon: <Globe size={14} className="text-rose-500" /> },
+  { name: 'Thai', icon: <Globe size={14} className="text-cyan-600" /> },
+  { name: 'Urdu', icon: <Globe size={14} className="text-green-600" /> },
+  { name: 'Tagalog (Filipino)', icon: <Globe size={14} className="text-sky-500" /> },
+  { name: 'Serbian, Croatian & Bosnian', icon: <Globe size={14} className="text-purple-600" /> },
+  { name: 'Malayalam', icon: <Globe size={14} className="text-lime-600" /> },
 ];
 
 const SHOW_PAID_FEATURES = false;

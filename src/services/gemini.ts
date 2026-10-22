@@ -404,7 +404,7 @@ export class GeminiService {
   }
 
   // TTS Methods (Proxied through backend server to keep API key private)
-  async generateSpeech(text: string, voiceName?: string): Promise<string | null> {
+  async generateSpeech(text: string, voiceName?: string, lang?: string): Promise<string | null> {
     const finalVoice = voiceName || this.voiceName;
 
     try {
@@ -415,6 +415,7 @@ export class GeminiService {
           text,
           voice: finalVoice,
           rate: this.playbackRate,
+          lang,
         }),
       });
 

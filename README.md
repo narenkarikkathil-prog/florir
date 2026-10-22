@@ -80,7 +80,7 @@ Orati is configured for single-click zero-config deployment on Vercel.
 ## 🛠️ Features
 
 - **Live Voice Sessions**: Multimodal real-time conversational speaking and listening with Gemini.
-- **Text Conversations**: Chat in French or Spanish with real-time feedback, correction hints, and translations.
+- **Text Conversations**: Chat in French, Spanish, Mandarin, Italian, German, Hindi, Arabic, or Russian with real-time feedback, correction hints, and translations.
 - **Situational Learning**: Roleplay realistic scenarios (ordering at a café, booking travel, checking in).
 - **AP Exam Mode**: Practice AP French/Spanish simulated conversations with timers and rubric-aligned scoring.
 - **Verb Mastery**: Spaced repetition verb practice with multiple-choice and written recall modes.

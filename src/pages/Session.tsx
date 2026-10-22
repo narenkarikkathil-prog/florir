@@ -16,13 +16,27 @@ const LANGUAGE_CODES: Record<Language, string> = {
   'French': 'fr-FR',
   'Spanish': 'es-ES',
   'German': 'de-DE',
-  'Portuguese': 'pt-BR',
-  'Japanese': 'ja-JP',
-  'Korean': 'ko-KR',
+  'Italian': 'it-IT',
+  'Mandarin': 'zh-CN',
   'Hindi': 'hi-IN',
   'Arabic': 'ar-SA',
   'Russian': 'ru-RU',
-  'Italian': 'it-IT',
+  'Farsi (Persian)': 'fa-IR',
+  'Farsi': 'fa-IR',
+  'Persian': 'fa-IR',
+  'Thai': 'th-TH',
+  'Urdu': 'ur-PK',
+  'Tagalog (Filipino)': 'fil-PH',
+  'Tagalog': 'tl-PH',
+  'Filipino': 'fil-PH',
+  'Serbian': 'sr-RS',
+  'Croatian': 'hr-HR',
+  'Bosnian': 'bs-BA',
+  'Serbian, Croatian, and Bosnian': 'sr-RS',
+  'Malayalam': 'ml-IN',
+  'Japanese': 'ja-JP',
+  'Portuguese': 'pt-BR',
+  'Korean': 'ko-KR',
   'Turkish': 'tr-TR',
   'Vietnamese': 'vi-VN',
   'Indonesian': 'id-ID',
@@ -102,7 +116,7 @@ export default function Session() {
       id: 'restaurant',
       title: 'At a Restaurant',
       icon: <Utensils size={24} className="text-orange-500" />,
-      prompt: "You are a waiter at a French restaurant. The user is a customer.",
+      prompt: "You are a waiter at a restaurant. The user is a customer.",
       subScenarios: [
         "Ordering a three-course meal at a fancy bistro.",
         "Complaining about a cold dish to the waiter.",
@@ -230,6 +244,11 @@ export default function Session() {
         "Don't forget to use 'usted' in professional settings.",
         "Pay attention to the difference between 'ser' and 'estar'."
       ],
+      'Mandarin': [
+        "Focus on the four tones—they change the meaning of words completely.",
+        "Practice pinyin to master accurate pronunciation and mouth shapes.",
+        "Remember to use measure words (like 个 gè) between numbers and nouns."
+      ],
       'Japanese': [
         "Focus on pitch accent to distinguish between similar words.",
         "Practice using honorifics (keigo) in formal situations.",
@@ -299,6 +318,71 @@ export default function Session() {
         "Focus on the unique retroflex sounds.",
         "Practice the distinction between formal and informal Tamil.",
         "Pay attention to the agglutinative nature of the language."
+      ],
+      'Farsi (Persian)': [
+        "Practice conversational 'Ta'arof' phrases for polite social interactions.",
+        "Notice that spoken Persian often shortens vowels in everyday conversation.",
+        "Persian verbs come at the end of the sentence (SOV sentence structure)."
+      ],
+      'Farsi': [
+        "Practice conversational 'Ta'arof' phrases for polite social interactions.",
+        "Notice that spoken Persian often shortens vowels in everyday conversation.",
+        "Persian verbs come at the end of the sentence (SOV sentence structure)."
+      ],
+      'Persian': [
+        "Practice conversational 'Ta'arof' phrases for polite social interactions.",
+        "Notice that spoken Persian often shortens vowels in everyday conversation.",
+        "Persian verbs come at the end of the sentence (SOV sentence structure)."
+      ],
+      'Thai': [
+        "Pay close attention to the five tones (low, mid, high, falling, rising)—they change word meaning.",
+        "Remember politeness particles like 'khrap' and 'kha' at the end of sentences.",
+        "Focus on vowel length; long vs short vowels distinguish completely different words."
+      ],
+      'Urdu': [
+        "Pay attention to formal honorifics like 'Aap' and polite verb conjugations.",
+        "Distinguish between aspirated and unaspirated consonants (k vs kh, b vs bh).",
+        "Focus on the lyrical flow and compound expressions common in conversational Urdu."
+      ],
+      'Tagalog (Filipino)': [
+        "Master the focus/trigger system on verbs (Actor Focus vs Object Focus).",
+        "Use 'po' and 'opo' to show respect when speaking to elders or in formal settings.",
+        "Watch how prefixes like 'mag-', 'um-', and suffixes like '-in', '-an' change verb direction."
+      ],
+      'Tagalog': [
+        "Master the focus/trigger system on verbs (Actor Focus vs Object Focus).",
+        "Use 'po' and 'opo' to show respect when speaking to elders or in formal settings.",
+        "Watch how prefixes like 'mag-', 'um-', and suffixes like '-in', '-an' change verb direction."
+      ],
+      'Filipino': [
+        "Master the focus/trigger system on verbs (Actor Focus vs Object Focus).",
+        "Use 'po' and 'opo' to show respect when speaking to elders or in formal settings.",
+        "Watch how prefixes like 'mag-', 'um-', and suffixes like '-in', '-an' change verb direction."
+      ],
+      'Serbian': [
+        "Serbian uses both Cyrillic and Latin alphabets; practice recognizing both.",
+        "Pay attention to the 7 grammatical cases and how noun endings shift.",
+        "Notice pitch accent in spoken Serbian to sound natural and fluent."
+      ],
+      'Croatian': [
+        "Croatian uses the Latin alphabet with diacritics (č, ć, dž, đ, š, ž).",
+        "Practice the 7 noun cases to accurately express prepositions and direct objects.",
+        "Croatian verbs conjugate thoroughly for person and number with clear prefix nuances."
+      ],
+      'Bosnian': [
+        "Bosnian features unique vocabulary and historical loanwords.",
+        "Master the 7 grammatical cases and gender agreement with adjectives.",
+        "Pay attention to vowel length and melodic rising/falling pitch accents."
+      ],
+      'Serbian, Croatian, and Bosnian': [
+        "Focus on the 7 grammatical cases shared across BCS languages.",
+        "Be mindful of regional vocabulary variations between Belgrade, Zagreb, and Sarajevo.",
+        "Practice natural reflexive verbs with the particle 'se'."
+      ],
+      'Malayalam': [
+        "Malayalam has agglutinative morphology; words combine suffixes to build complex meanings.",
+        "Practice the unique retroflex sounds like 'ഴ' (zha/ḻ) formed by curling the tongue backwards.",
+        "Pay attention to the distinction between formal literary registers and everyday spoken Malayalam."
       ]
     };
     const tips = languageTips[lang] || [
@@ -521,7 +605,7 @@ export default function Session() {
       if (!geminiRef.current) {
         geminiRef.current = await GeminiService.create();
       }
-      const base64Audio = await geminiRef.current.generateSpeech(cleanText);
+      const base64Audio = await geminiRef.current.generateSpeech(cleanText, undefined, lang);
       if (base64Audio) {
         audioCacheRef.current[cleanText] = base64Audio;
         try { localStorage.setItem(cacheKey, base64Audio); } catch {}
@@ -542,13 +626,13 @@ export default function Session() {
     try {
       window.speechSynthesis.cancel();
       const utterance = new SpeechSynthesisUtterance(text);
-      utterance.lang = lang === 'Spanish' ? 'es-ES' : 'fr-FR';
+      utterance.lang = LANGUAGE_CODES[lang] || 'fr-FR';
       const localSettings = localStorage.getItem('user_settings');
       const rate = localSettings ? (JSON.parse(localSettings).playback_speed || 1.0) : 1.0;
       utterance.rate = rate;
 
       const voices = window.speechSynthesis.getVoices();
-      const targetPrefix = lang === 'Spanish' ? 'es' : 'fr';
+      const targetPrefix = (LANGUAGE_CODES[lang] || 'fr-FR').split('-')[0];
       const naturalVoice = voices.find(v => v.lang.startsWith(targetPrefix) && (v.name.includes('Natural') || v.name.includes('Enhanced') || v.name.includes('Google') || v.name.includes('Thomas') || v.name.includes('Jorge') || v.name.includes('Amélie') || v.name.includes('Mónica')))
         || voices.find(v => v.lang.startsWith(targetPrefix));
 

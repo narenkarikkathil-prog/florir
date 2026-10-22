@@ -13,13 +13,27 @@ const LANGUAGE_CODES: Record<Language, string> = {
   'French': 'fr-FR',
   'Spanish': 'es-ES',
   'German': 'de-DE',
+  'Italian': 'it-IT',
+  'Mandarin': 'zh-CN',
   'Portuguese': 'pt-BR',
   'Japanese': 'ja-JP',
   'Korean': 'ko-KR',
   'Hindi': 'hi-IN',
   'Arabic': 'ar-SA',
   'Russian': 'ru-RU',
-  'Italian': 'it-IT',
+  'Farsi (Persian)': 'fa-IR',
+  'Farsi': 'fa-IR',
+  'Persian': 'fa-IR',
+  'Thai': 'th-TH',
+  'Urdu': 'ur-PK',
+  'Tagalog (Filipino)': 'fil-PH',
+  'Tagalog': 'tl-PH',
+  'Filipino': 'fil-PH',
+  'Serbian': 'sr-RS',
+  'Croatian': 'hr-HR',
+  'Bosnian': 'bs-BA',
+  'Serbian, Croatian, and Bosnian': 'sr-RS',
+  'Malayalam': 'ml-IN',
   'Turkish': 'tr-TR',
   'Vietnamese': 'vi-VN',
   'Indonesian': 'id-ID',
@@ -201,7 +215,7 @@ export default function TypeSession() {
       }
     }
     try {
-        const base64Audio = await ttsServiceRef.current.generateSpeech(text);
+        const base64Audio = await ttsServiceRef.current.generateSpeech(text, undefined, lang);
         if (base64Audio) playFromBase64(base64Audio);
     } catch (e) {
         console.error("TTS Error:", e);

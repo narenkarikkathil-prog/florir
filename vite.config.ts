@@ -81,7 +81,7 @@ export default defineConfig(({ mode }) => {
             // 2. /api/gemini/tts
             if (req.url === '/api/gemini/tts' && req.method === 'POST') {
               try {
-                const { text, voice, rate } = await readJson();
+                const { text, voice, rate, lang } = await readJson();
                 let base64Audio = null;
 
                 if (geminiKey) {
@@ -109,9 +109,38 @@ export default defineConfig(({ mode }) => {
                 }
 
                 if (!base64Audio && text) {
+                  const langCodeMap: Record<string, string> = {
+                    'French': 'fr',
+                    'Spanish': 'es',
+                    'German': 'de',
+                    'Italian': 'it',
+                    'Mandarin': 'zh-CN',
+                    'Hindi': 'hi',
+                    'Arabic': 'ar',
+                    'Russian': 'ru',
+                    'Farsi (Persian)': 'fa',
+                    'Farsi': 'fa',
+                    'Persian': 'fa',
+                    'Thai': 'th',
+                    'Urdu': 'ur',
+                    'Tagalog (Filipino)': 'tl',
+                    'Tagalog': 'tl',
+                    'Filipino': 'fil',
+                    'Serbian': 'sr',
+                    'Croatian': 'hr',
+                    'Bosnian': 'bs',
+                    'Serbian, Croatian, and Bosnian': 'sr',
+                    'Malayalam': 'ml',
+                    'Portuguese': 'pt',
+                    'Japanese': 'ja',
+                    'Korean': 'ko',
+                    'Turkish': 'tr',
+                    'Vietnamese': 'vi',
+                    'Indonesian': 'id',
+                  };
                   const isSpanish = (voice || '').toLowerCase().includes('es') || (voice || '').toLowerCase().includes('jorge');
-                  const langCode = isSpanish ? 'es' : 'fr';
-                  const ttsUrl = `https://translate.google.com/translate_tts?ie=UTF-8&tl=${langCode}&client=tw-ob&q=${encodeURIComponent(text.trim())}`;
+                  const langCode = (lang && langCodeMap[lang]) || (isSpanish ? 'es' : 'fr');
+                  const ttsUrl = `https://translate.google.com/translate_tts?ie=UTF-8&tl=${encodeURIComponent(langCode)}&client=tw-ob&q=${encodeURIComponent(text.trim())}`;
                   const ttsRes = await fetch(ttsUrl, {
                     headers: { 'User-Agent': 'Mozilla/5.0', 'Referer': 'https://translate.google.com/' }
                   });
@@ -133,8 +162,37 @@ export default defineConfig(({ mode }) => {
                 const urlObj = new URL(req.url, 'http://localhost:3000');
                 const text = urlObj.searchParams.get('text') || '';
                 const lang = urlObj.searchParams.get('lang') || 'French';
-                const langCode = lang === 'Spanish' ? 'es' : 'fr';
-                const ttsUrl = `https://translate.google.com/translate_tts?ie=UTF-8&tl=${langCode}&client=tw-ob&q=${encodeURIComponent(text.trim())}`;
+                const langCodeMap: Record<string, string> = {
+                  'French': 'fr',
+                  'Spanish': 'es',
+                  'German': 'de',
+                  'Italian': 'it',
+                  'Mandarin': 'zh-CN',
+                  'Hindi': 'hi',
+                  'Arabic': 'ar',
+                  'Russian': 'ru',
+                  'Farsi (Persian)': 'fa',
+                  'Farsi': 'fa',
+                  'Persian': 'fa',
+                  'Thai': 'th',
+                  'Urdu': 'ur',
+                  'Tagalog (Filipino)': 'tl',
+                  'Tagalog': 'tl',
+                  'Filipino': 'fil',
+                  'Serbian': 'sr',
+                  'Croatian': 'hr',
+                  'Bosnian': 'bs',
+                  'Serbian, Croatian, and Bosnian': 'sr',
+                  'Malayalam': 'ml',
+                  'Portuguese': 'pt',
+                  'Japanese': 'ja',
+                  'Korean': 'ko',
+                  'Turkish': 'tr',
+                  'Vietnamese': 'vi',
+                  'Indonesian': 'id',
+                };
+                const langCode = langCodeMap[lang] || (lang.length === 2 ? lang.toLowerCase() : 'fr');
+                const ttsUrl = `https://translate.google.com/translate_tts?ie=UTF-8&tl=${encodeURIComponent(langCode)}&client=tw-ob&q=${encodeURIComponent(text.trim())}`;
 
                 const ttsRes = await fetch(ttsUrl, {
                   headers: { 'User-Agent': 'Mozilla/5.0', 'Referer': 'https://translate.google.com/' }

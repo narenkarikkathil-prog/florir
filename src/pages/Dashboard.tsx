@@ -100,7 +100,22 @@ export default function Dashboard() {
             total_time: 0,
             level_per_language: {
               French: 'Beginner 1',
-              Spanish: 'Beginner 1'
+              Spanish: 'Beginner 1',
+              Mandarin: 'Beginner 1',
+              Italian: 'Beginner 1',
+              German: 'Beginner 1',
+              Hindi: 'Beginner 1',
+              Arabic: 'Beginner 1',
+              Russian: 'Beginner 1',
+              'Farsi (Persian)': 'Beginner 1',
+              Thai: 'Beginner 1',
+              Urdu: 'Beginner 1',
+              'Tagalog (Filipino)': 'Beginner 1',
+              Serbian: 'Beginner 1',
+              Croatian: 'Beginner 1',
+              Bosnian: 'Beginner 1',
+              'Serbian, Croatian, and Bosnian': 'Beginner 1',
+              Malayalam: 'Beginner 1'
             },
             settings: {
               voice_name: 'Kore',
@@ -155,7 +170,23 @@ export default function Dashboard() {
   };
 
   const allLanguages: Language[] = [
-    'French', 'Spanish'
+    'Arabic',
+    'Bosnian',
+    'Croatian',
+    'Farsi (Persian)',
+    'French',
+    'German',
+    'Hindi',
+    'Italian',
+    'Malayalam',
+    'Mandarin',
+    'Russian',
+    'Serbian',
+    'Serbian, Croatian, and Bosnian',
+    'Spanish',
+    'Tagalog (Filipino)',
+    'Thai',
+    'Urdu',
   ].sort() as Language[];
   const apLanguages: Language[] = ['French', 'Spanish'];
   const availableLanguages = activeTab === 'ap' ? apLanguages : allLanguages;
@@ -178,7 +209,7 @@ export default function Dashboard() {
             <FlowerLogo className="text-gold" size={28} />
             <h1 className="text-2xl md:text-4xl font-serif font-bold">My Learning</h1>
           </div>
-          <p className="text-dark/50">Practice French and Spanish.</p>
+          <p className="text-dark/50">Practice French, Spanish, Mandarin, German, and more.</p>
         </div>
 
         <div className="relative">

@@ -19,10 +19,40 @@ async function parseBody(req: any): Promise<any> {
   });
 }
 
-async function fetchNeuralTtsBase64(text: string, voice?: string): Promise<string> {
+const LANGUAGE_CODE_MAP: Record<string, string> = {
+  'French': 'fr',
+  'Spanish': 'es',
+  'German': 'de',
+  'Italian': 'it',
+  'Mandarin': 'zh-CN',
+  'Hindi': 'hi',
+  'Arabic': 'ar',
+  'Russian': 'ru',
+  'Farsi (Persian)': 'fa',
+  'Farsi': 'fa',
+  'Persian': 'fa',
+  'Thai': 'th',
+  'Urdu': 'ur',
+  'Tagalog (Filipino)': 'tl',
+  'Tagalog': 'tl',
+  'Filipino': 'fil',
+  'Serbian': 'sr',
+  'Croatian': 'hr',
+  'Bosnian': 'bs',
+  'Serbian, Croatian, and Bosnian': 'sr',
+  'Malayalam': 'ml',
+  'Portuguese': 'pt',
+  'Japanese': 'ja',
+  'Korean': 'ko',
+  'Turkish': 'tr',
+  'Vietnamese': 'vi',
+  'Indonesian': 'id',
+};
+
+async function fetchNeuralTtsBase64(text: string, voice?: string, lang?: string): Promise<string> {
   const isSpanish = voice?.toLowerCase().includes('es') || voice?.toLowerCase().includes('jorge');
-  const langCode = isSpanish ? 'es' : 'fr';
-  const url = `https://translate.google.com/translate_tts?ie=UTF-8&tl=${langCode}&client=tw-ob&q=${encodeURIComponent(text.trim())}`;
+  const langCode = (lang && LANGUAGE_CODE_MAP[lang]) || (isSpanish ? 'es' : 'fr');
+  const url = `https://translate.google.com/translate_tts?ie=UTF-8&tl=${encodeURIComponent(langCode)}&client=tw-ob&q=${encodeURIComponent(text.trim())}`;
   const response = await fetch(url, {
     headers: {
       'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
@@ -46,12 +76,14 @@ export default async function handler(req: IncomingMessage, res: ServerResponse)
   let text = '';
   let voice = 'Kore';
   let rate = 1.0;
+  let lang = 'French';
 
   try {
     const body = await parseBody(req);
     text = body.text || '';
     voice = body.voice || 'Kore';
     rate = Number(body.rate) || 1.0;
+    lang = body.lang || 'French';
   } catch {
     res.statusCode = 400;
     res.end(JSON.stringify({ error: 'Invalid JSON request body' }));
@@ -106,7 +138,7 @@ export default async function handler(req: IncomingMessage, res: ServerResponse)
 
   // Resilient fallback to high-fidelity native neural TTS (never hits quota limits)
   try {
-    const base64Audio = await fetchNeuralTtsBase64(text, voice);
+    const base64Audio = await fetchNeuralTtsBase64(text, voice, lang);
     res.statusCode = 200;
     res.end(JSON.stringify({ audio: base64Audio, source: 'neural' }));
   } catch (err: any) {

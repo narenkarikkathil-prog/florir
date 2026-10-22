@@ -131,14 +131,26 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                 <span className="font-serif text-xl font-bold tracking-tight">Orati</span>
               </div>
               <p className="text-dark/60 max-w-sm text-sm leading-relaxed">
-                A speech-first language learning platform dedicated to helping you master French and Spanish through real-time AI conversations.
+                A speech-first language learning platform dedicated to helping you master languages through real-time AI conversations.
               </p>
             </div>
             <div>
               <h4 className="font-bold text-sm mb-4 uppercase tracking-wider text-dark/40">Languages</h4>
-              <ul className="space-y-2 text-sm text-dark/70">
+              <ul className="grid grid-cols-2 gap-x-4 gap-y-1.5 text-sm text-dark/70">
                 <li>French</li>
                 <li>Spanish</li>
+                <li>Mandarin</li>
+                <li>Italian</li>
+                <li>German</li>
+                <li>Hindi</li>
+                <li>Arabic</li>
+                <li>Russian</li>
+                <li>Farsi (Persian)</li>
+                <li>Thai</li>
+                <li>Urdu</li>
+                <li>Tagalog (Filipino)</li>
+                <li>Serbian, Croatian & Bosnian</li>
+                <li>Malayalam</li>
               </ul>
             </div>
             <div>
