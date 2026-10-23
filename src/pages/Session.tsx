@@ -458,7 +458,7 @@ export default function Session() {
     }
   }, [selectedSituation]);
 
-  const lastNudgeTimeRef = useRef<number>(0);
+  const isInterruptedRef = useRef<boolean>(false);
   const lastAudioActivityRef = useRef<number>(Date.now());
 
   useEffect(() => {
@@ -484,25 +484,6 @@ export default function Session() {
     return () => clearInterval(interval);
   }, [isActive, isPaused]);
 
-  useEffect(() => {
-    if (!isActive || isPaused || !geminiRef.current || transcript.length === 0) return;
-
-    const lastMsg = transcript[transcript.length - 1];
-    if (lastMsg.role !== 'user') return;
-
-    const timeout = setTimeout(() => {
-      const now = Date.now();
-      // Check again if the last message is still the same user message
-      const currentLastMsg = transcript[transcript.length - 1];
-      if (currentLastMsg === lastMsg && now - lastNudgeTimeRef.current > 5000) {
-        console.log("Silence detected, nudging AI...");
-        geminiRef.current?.sendText("(The user has finished speaking and is waiting for your response. Please respond now.)");
-        lastNudgeTimeRef.current = now;
-      }
-    }, 2500); // Nudge after 2.5 seconds of silence
-
-    return () => clearTimeout(timeout);
-  }, [isActive, isPaused, transcript]);
 
   const translateToEnglish = async (text: string): Promise<string> => {
     if (!text.trim()) return "";
@@ -977,7 +958,7 @@ TONE:
 
     setIsActive(true);
     setIsPaused(false);
-    lastNudgeTimeRef.current = 0;
+    isInterruptedRef.current = false;
     lastAudioActivityRef.current = Date.now();
     totalSessionTimeRef.current = 0;
     startTimeRef.current = Date.now();
@@ -1070,6 +1051,12 @@ TONE:
             const lastTimestamp = lastMsg.timestamp || (now - 1000); // Fallback for missing timestamp
             const timeDiff = now - lastTimestamp;
 
+            // If an interruption occurred, start a new AI turn without merging into the interrupted text
+            if (isInterruptedRef.current && role === 'ai') {
+              isInterruptedRef.current = false;
+              return [...filteredPrev, { role, text, timestamp: now }];
+            }
+
             // If same role and within a reasonable time window (10s), merge
             // We use a larger window for AI responses as they can have natural pauses
             const mergeWindow = role === 'ai' ? 10000 : 5000;
@@ -1113,6 +1100,7 @@ TONE:
         },
         onInterruption: () => {
           console.log("Interrupted");
+          isInterruptedRef.current = true;
         },
         onRawMessage: (msg) => {
         }

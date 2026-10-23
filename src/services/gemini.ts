@@ -39,6 +39,7 @@ export class GeminiService {
   private voiceName: string = "Kore";
   private deviceChangeListenerAdded: boolean = false;
   private boundHandleDeviceChange: (() => void) | null = null;
+  private activeAudioSources: Set<AudioBufferSourceNode> = new Set();
 
   constructor(apiKeyOrToken?: string) {
     if (apiKeyOrToken) {
@@ -133,7 +134,12 @@ export class GeminiService {
               const sc = message.serverContent as any;
               const { modelTurn, userContent, interrupted } = sc;
               
-              if (modelTurn?.parts) {
+              if (interrupted) {
+                this.stopPlayback();
+                config.onInterruption();
+              }
+
+              if (modelTurn?.parts && !interrupted) {
                 for (const part of modelTurn.parts) {
                   if (part.inlineData?.data) {
                     this.playAudio(part.inlineData.data);
@@ -146,15 +152,17 @@ export class GeminiService {
                 }
               }
 
-              const outputParts = sc.outputAudioTranscription?.parts || sc.outputTranscription?.parts;
-              if (outputParts) {
-                for (const part of outputParts) {
-                  if (part.text) config.onMessage(part.text, 'ai');
+              if (!interrupted) {
+                const outputParts = sc.outputAudioTranscription?.parts || sc.outputTranscription?.parts;
+                if (outputParts) {
+                  for (const part of outputParts) {
+                    if (part.text) config.onMessage(part.text, 'ai');
+                  }
+                } else if (sc.outputAudioTranscription?.text) {
+                  config.onMessage(sc.outputAudioTranscription.text, 'ai');
+                } else if (sc.outputTranscription?.text) {
+                  config.onMessage(sc.outputTranscription.text, 'ai');
                 }
-              } else if (sc.outputAudioTranscription?.text) {
-                config.onMessage(sc.outputAudioTranscription.text, 'ai');
-              } else if (sc.outputTranscription?.text) {
-                config.onMessage(sc.outputTranscription.text, 'ai');
               }
 
               const userParts = sc.inputAudioTranscription?.parts || sc.inputTranscription?.parts;
@@ -171,11 +179,6 @@ export class GeminiService {
               } else if (sc.inputTranscription?.text) {
                 const cleaned = this.sanitizeTranscript(sc.inputTranscription.text);
                 if (cleaned) config.onMessage(cleaned, 'user');
-              }
-
-              if (interrupted) {
-                config.onInterruption();
-                this.stopPlayback();
               }
             }
           },
@@ -200,6 +203,7 @@ export class GeminiService {
   private currentMicConfig: any = null;
 
   pause() {
+    this.stopPlayback();
     if (this.stream) {
       this.stream.getTracks().forEach(t => t.enabled = false);
     }
@@ -226,8 +230,17 @@ export class GeminiService {
       const localSettings = localStorage.getItem('user_settings');
       const microphoneId = localSettings ? JSON.parse(localSettings).microphone_id : null;
       
+      const audioConstraints: MediaTrackConstraints = {
+        echoCancellation: true,
+        noiseSuppression: true,
+        autoGainControl: true,
+      };
+      if (microphoneId) {
+        audioConstraints.deviceId = { exact: microphoneId };
+      }
+
       this.stream = await navigator.mediaDevices.getUserMedia({
-        audio: microphoneId ? { deviceId: { exact: microphoneId } } : true
+        audio: audioConstraints
       });
       if (config.onRawMessage) config.onRawMessage({ type: 'MIC_STREAM_ACQUIRED' });
 
@@ -241,6 +254,7 @@ export class GeminiService {
       this.lastMicActivity = Date.now();
 
       this.processor.onaudioprocess = (e) => {
+        this.lastMicActivity = Date.now();
         const inputData = e.inputBuffer.getChannelData(0);
 
         let sum = 0;
@@ -341,31 +355,54 @@ export class GeminiService {
   private playAudio(base64: string) {
     if (!this.audioContext) return;
     
-    const binary = atob(base64);
-    const bytes = new Uint8Array(binary.length);
-    for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
-    
-    const pcm = new Int16Array(bytes.buffer);
-    const float32 = new Float32Array(pcm.length);
-    for (let i = 0; i < pcm.length; i++) float32[i] = pcm[i] / 32768.0;
+    try {
+      if (this.audioContext.state === 'suspended') {
+        this.audioContext.resume();
+      }
 
-    const buffer = this.audioContext.createBuffer(1, float32.length, 16000);
-    buffer.getChannelData(0).set(float32);
+      const binary = atob(base64);
+      const bytes = new Uint8Array(binary.length);
+      for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+      
+      const pcm = new Int16Array(bytes.buffer);
+      const float32 = new Float32Array(pcm.length);
+      for (let i = 0; i < pcm.length; i++) float32[i] = pcm[i] / 32768.0;
 
-    const source = this.audioContext.createBufferSource();
-    source.buffer = buffer;
-    
-    const PITCH_MULTIPLIER = 1.15;
-    const actualRate = (this.playbackRate > 1.0 ? this.playbackRate : 1.0) * PITCH_MULTIPLIER;
-    source.playbackRate.value = actualRate;
-    source.connect(this.audioContext.destination);
-    
-    const startTime = Math.max(this.audioContext.currentTime, this.nextStartTime);
-    source.start(startTime);
-    this.nextStartTime = startTime + (buffer.duration / actualRate);
+      const buffer = this.audioContext.createBuffer(1, float32.length, 16000);
+      buffer.getChannelData(0).set(float32);
+
+      const source = this.audioContext.createBufferSource();
+      source.buffer = buffer;
+      
+      const PITCH_MULTIPLIER = 1.15;
+      const actualRate = (this.playbackRate > 1.0 ? this.playbackRate : 1.0) * PITCH_MULTIPLIER;
+      source.playbackRate.value = actualRate;
+      source.connect(this.audioContext.destination);
+
+      this.activeAudioSources.add(source);
+      source.onended = () => {
+        this.activeAudioSources.delete(source);
+      };
+      
+      const startTime = Math.max(this.audioContext.currentTime, this.nextStartTime);
+      source.start(startTime);
+      this.nextStartTime = startTime + (buffer.duration / actualRate);
+    } catch (e) {
+      console.error("Error playing audio chunk:", e);
+    }
   }
 
-  private stopPlayback() {
+  public stopPlayback() {
+    for (const source of this.activeAudioSources) {
+      try {
+        source.onended = null;
+        source.stop(0);
+        source.disconnect();
+      } catch (e) {
+        // Source already ended or stopped
+      }
+    }
+    this.activeAudioSources.clear();
     this.nextStartTime = this.audioContext?.currentTime || 0;
   }
 
@@ -378,6 +415,7 @@ export class GeminiService {
   }
 
   stop() {
+    this.stopPlayback();
     if (this.micHealthInterval) {
       clearInterval(this.micHealthInterval);
       this.micHealthInterval = null;
