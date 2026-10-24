@@ -190,7 +190,7 @@ export class GeminiService {
                 }
               }
 
-              const userParts = sc.inputAudioTranscription?.parts || sc.inputTranscription?.parts || sc.userContent?.parts || (message as any).userContent?.parts;
+              const userParts = sc.inputAudioTranscription?.parts || sc.inputTranscription?.parts;
               if (userParts) {
                 for (const part of userParts) {
                   if (part.text) {
@@ -203,9 +203,6 @@ export class GeminiService {
                 if (cleaned) config.onMessage(cleaned, 'user');
               } else if (sc.inputTranscription?.text) {
                 const cleaned = this.sanitizeTranscript(sc.inputTranscription.text);
-                if (cleaned) config.onMessage(cleaned, 'user');
-              } else if (sc.userContent?.text) {
-                const cleaned = this.sanitizeTranscript(sc.userContent.text);
                 if (cleaned) config.onMessage(cleaned, 'user');
               }
             }
