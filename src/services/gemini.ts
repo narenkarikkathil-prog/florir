@@ -95,6 +95,11 @@ export class GeminiService {
       }
 
       if (config.onRawMessage) config.onRawMessage({ type: 'AI_LIVE_CONNECT_CALL' });
+      const inputTranscriptionConfig: any = {};
+      if (config.languageCode) {
+        inputTranscriptionConfig.languageCodes = [config.languageCode];
+      }
+
       this.session = await this.liveAi.live.connect({
         model: "gemini-3.1-flash-live-preview",
         config: {
@@ -104,6 +109,8 @@ export class GeminiService {
           },
           systemInstruction: { parts: [{text: config.systemInstruction}] },
           tools: config.tools,
+          inputAudioTranscription: inputTranscriptionConfig,
+          outputAudioTranscription: config.languageCode ? { languageCodes: [config.languageCode] } : {},
           generationConfig: {
             responseModalities: [Modality.AUDIO],
           },
@@ -127,6 +134,19 @@ export class GeminiService {
             if (message.toolCall?.functionCalls) {
               for (const call of message.toolCall.functionCalls) {
                 config.onMessage('', 'ai', { name: call.name, args: call.args });
+                try {
+                  if (this.session && typeof this.session.sendToolResponse === 'function') {
+                    this.session.sendToolResponse({
+                      functionResponses: [{
+                        id: call.id,
+                        name: call.name,
+                        response: { output: { received: true } }
+                      }]
+                    });
+                  }
+                } catch (e) {
+                  console.warn("Failed to send tool response:", e);
+                }
               }
             }
 
@@ -148,6 +168,19 @@ export class GeminiService {
                   const call = part.call || part.functionCall;
                   if (call) {
                     config.onMessage('', 'ai', { name: call.name, args: call.args });
+                    try {
+                      if (this.session && typeof this.session.sendToolResponse === 'function') {
+                        this.session.sendToolResponse({
+                          functionResponses: [{
+                            id: call.id,
+                            name: call.name,
+                            response: { output: { received: true } }
+                          }]
+                        });
+                      }
+                    } catch (e) {
+                      console.warn("Failed to send tool response:", e);
+                    }
                   }
                 }
               }

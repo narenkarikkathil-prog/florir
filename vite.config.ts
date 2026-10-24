@@ -42,12 +42,8 @@ export default defineConfig(({ mode }) => {
                   },
                   body: JSON.stringify({
                     config: {
-                      uses: 1,
+                      uses: 50,
                       expireTime,
-                      liveConnectConstraints: {
-                        model: 'models/gemini-2.5-flash',
-                        config: { responseModalities: ['AUDIO'] },
-                      },
                     },
                   }),
                 });

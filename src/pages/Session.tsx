@@ -61,6 +61,9 @@ export default function Session() {
     correctedSentence?: string;
     alternatives?: string[];
     translation?: string;
+    actualSpokenText?: string;
+    rawTranscript?: string;
+    isTranscriptionError?: boolean;
   }[]>([]);
   const [showTranslations, setShowTranslations] = useState(false);
   const [activeWordTranslations, setActiveWordTranslations] = useState<Record<string, string>>({});
@@ -176,10 +179,18 @@ export default function Session() {
   const provideFeedbackTool = {
     functionDeclarations: [{
       name: "provideFeedback",
-      description: "Provide corrections and severity scores for the user's last statement. This is NOT spoken out loud.",
+      description: "Provide corrections, severity scores, and reconciled transcription for the user's last statement. This is NOT spoken out loud.",
       parameters: {
         type: "OBJECT",
         properties: {
+          actualSpokenText: {
+            type: "STRING",
+            description: `What the user actually said in ${lang} based on listening to their voice audio. If the Voice API mistranscribed, translated to English, or hallucinated phonetically, provide what was really spoken in ${lang}.`
+          },
+          isTranscriptionError: {
+            type: "BOOLEAN",
+            description: `Set to true if the text transcript was mistranscribed, in the wrong language (e.g. English instead of ${lang}), or did not match the user's spoken audio.`
+          },
           correctedSentence: { type: "STRING", description: "The fully corrected version of what the user said." },
           mistakes: {
             type: "ARRAY",
@@ -894,18 +905,21 @@ ROLEPLAY:
 
 LANGUAGE:
 - ALWAYS speak in ${lang}. NEVER use English or any other language.
-- The transcripts you receive are from a Voice API. If the transcript contains words from a different language (e.g., Portuguese when the target is French), THE TRANSCRIPTION IS LIKELY WRONG. You MUST make your best guess of what the user said in ${lang} and provide corrections accordingly. NEVER switch the conversation to another language based on a likely transcription error.
+- The user is speaking in ${lang}. Listen directly to their voice audio.
+- The text transcripts you receive are from an automated Voice API. If the transcript contains words in English or any other language when the user was speaking ${lang}, THE TRANSCRIPTION IS WRONG. You MUST listen to what the user actually said in ${lang}, provide it in 'actualSpokenText', and set 'isTranscriptionError: true'.
+- NEVER switch the conversation to another language based on a likely transcription error.
 - Use simple, clear ${lang} (A1–A2 level) if the user is a beginner.
 - Use short, natural sentences.
 - Speak as a native would, but simplified for a beginner.
 
 CORRECTIONS & FEEDBACK (BACKGROUND TASK):
-- After the user speaks, analyze their utterance for grammatical or vocabulary mistakes.
+- After the user speaks, analyze their spoken utterance for genuine grammatical or vocabulary mistakes.
 - **SPEED IS VITAL**: Your highest priority is a natural, immediate spoken response in ${lang}.
 - You MUST call the 'provideFeedback' tool for every user turn to log mistakes, but DO NOT let this delay your speech.
 - Start speaking your roleplay response immediately. The feedback tool call can happen in parallel.
-- For each mistake, provide a 'confidence' score (0-100).
-- High confidence (80-100) means you are sure it's a linguistic error.
+- In 'actualSpokenText', provide what the user actually said in ${lang}.
+- If the speech-to-text transcript was an English or phonetic hallucination, set 'isTranscriptionError: true' and do NOT count it as a language mistake in 'mistakes'.
+- For each genuine mistake, provide a 'confidence' score (0-100). High confidence (80-100) means you are sure it's a real linguistic error, NOT a transcription or mic issue.
 - The 'correctedSentence' must be a natural sentence in ${lang}.
 - Even if there are no mistakes, you MUST call 'provideFeedback' with the original sentence as 'correctedSentence'.
 - DO NOT speak the corrections out loud. Only speak the roleplay part.
@@ -928,15 +942,18 @@ TONE:
 
 LANGUAGE:
 - ALWAYS speak in ${lang}. NEVER use English or any other language.
-- The transcripts you receive are from a Voice API. If the transcript contains words from a different language, THE TRANSCRIPTION IS LIKELY WRONG. You MUST make your best guess of what the user said in ${lang} and provide corrections accordingly. NEVER switch the conversation to another language based on a likely transcription error.
-- If the user speaks English, ignore the English and respond in ${lang} while correcting them via the tool.
+- The user is speaking in ${lang}. Listen directly to their voice audio.
+- The text transcripts you receive are from an automated Voice API. If the transcript contains words from a different language (such as English) when the target is ${lang}, THE TRANSCRIPTION IS LIKELY WRONG. You MUST determine what the user actually said in ${lang}, provide it in 'actualSpokenText', and set 'isTranscriptionError: true'.
+- If the user genuinely speaks English, ignore the English and respond in ${lang} while correcting them via the tool.
 
 CORRECTIONS & FEEDBACK (BACKGROUND TASK):
-- After the user speaks, analyze their utterance for grammatical or vocabulary mistakes.
+- After the user speaks, analyze their spoken utterance for genuine grammatical or vocabulary mistakes.
 - **SPEED IS VITAL**: Your highest priority is a natural, immediate spoken response in ${lang}.
 - You MUST call the 'provideFeedback' tool for every user turn to log mistakes, but DO NOT let this delay your speech.
 - Start speaking immediately. The feedback tool call can happen in parallel.
-- High confidence (80-100) means you are sure it's a linguistic error.
+- In 'actualSpokenText', provide what the user actually said in ${lang}.
+- If the text was a transcription error, set 'isTranscriptionError: true' and do NOT log it as a user mistake in 'mistakes'.
+- High confidence (80-100) means you are sure it's a real linguistic error, NOT a mic/transcription error.
 - The 'correctedSentence' must be a natural sentence in ${lang}.
 - Even if there are no mistakes, you MUST call 'provideFeedback' with the original sentence as 'correctedSentence'.
 - DO NOT speak the corrections out loud. Only speak your conversational response.
@@ -987,7 +1004,13 @@ TONE:
 
           if (toolCall && toolCall.name === 'provideFeedback') {
             console.log("FEEDBACK TOOL CALLED:", toolCall.args);
-            const { correctedSentence, mistakes: rawMistakes, alternatives } = toolCall.args;
+            const {
+              correctedSentence,
+              mistakes: rawMistakes,
+              alternatives,
+              actualSpokenText,
+              isTranscriptionError
+            } = toolCall.args;
 
             // Filter out mistakes with confidence < 30%
             const filteredMistakes = (rawMistakes || []).filter((m: any) => (m.confidence || 0) >= 30);
@@ -995,7 +1018,9 @@ TONE:
             const feedback = {
               correctedSentence: correctedSentence || '',
               mistakes: filteredMistakes,
-              alternatives: alternatives || []
+              alternatives: alternatives || [],
+              actualSpokenText: (actualSpokenText || '').trim(),
+              isTranscriptionError: Boolean(isTranscriptionError)
             };
 
             setLastFeedback(feedback);
@@ -1003,19 +1028,34 @@ TONE:
               setLastCorrectedSentence(correctedSentence);
             }
 
-            // Attach corrections to the last user message in transcript
+            // Attach corrections to the last user message in transcript and reconcile transcription
             setTranscript(prev => {
               const newTranscript = [...prev];
-              let foundUser = false;
               for (let i = newTranscript.length - 1; i >= 0; i--) {
                 if (newTranscript[i].role === 'user') {
+                  const currentText = (newTranscript[i].text || '').trim();
+                  const actualSpoken = feedback.actualSpokenText;
+
+                  // Detect transcription error: explicitly flagged OR actualSpoken differs substantially
+                  const hasTranscriptionError = feedback.isTranscriptionError || (
+                    Boolean(actualSpoken) &&
+                    actualSpoken.toLowerCase() !== currentText.toLowerCase()
+                  );
+
+                  const resolvedText = (hasTranscriptionError && actualSpoken)
+                    ? actualSpoken
+                    : currentText;
+
                   newTranscript[i] = {
                     ...newTranscript[i],
+                    text: resolvedText,
+                    rawTranscript: newTranscript[i].rawTranscript || currentText,
+                    actualSpokenText: actualSpoken || undefined,
+                    isTranscriptionError: hasTranscriptionError,
                     corrections: feedback.mistakes,
                     correctedSentence: feedback.correctedSentence,
                     alternatives: feedback.alternatives
                   };
-                  foundUser = true;
                   break;
                 }
               }
@@ -1724,8 +1764,16 @@ TONE:
                         "flex flex-col gap-2",
                         msg.role === 'user' ? "items-end" : "items-start"
                       )}>
-                        <span className="text-[9px] font-bold uppercase tracking-widest text-dark/20">
+                        <span className="text-[9px] font-bold uppercase tracking-widest text-dark/20 flex items-center gap-1.5">
                           {msg.role === 'user' ? 'You' : 'Florir'}
+                          {msg.role === 'user' && msg.isTranscriptionError && msg.rawTranscript && msg.rawTranscript.toLowerCase() !== msg.text.toLowerCase() && (
+                            <span
+                              className="text-[8px] font-normal lowercase tracking-normal text-amber-700/80 bg-amber-500/10 px-1.5 py-0.5 rounded-full cursor-help"
+                              title={`Voice API heard: "${msg.rawTranscript}" (reconciled to ${lang} from audio)`}
+                            >
+                              reconciled from audio
+                            </span>
+                          )}
                         </span>
                         <div className={cn(
                           "max-w-[90%] p-4 rounded-[24px] text-sm leading-relaxed shadow-sm transition-all duration-300",
@@ -1760,7 +1808,7 @@ TONE:
                         </div>
 
                         {/* Inline Correction for User Messages */}
-                        {msg.role === 'user' && msg.correctedSentence && msg.correctedSentence !== msg.text && (
+                        {msg.role === 'user' && msg.correctedSentence && msg.corrections && msg.corrections.length > 0 && msg.correctedSentence.trim().toLowerCase() !== msg.text.trim().toLowerCase() && (
                           <motion.div
                             initial={{ opacity: 0, y: -10 }}
                             animate={{ opacity: 1, y: 0 }}

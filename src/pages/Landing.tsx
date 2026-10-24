@@ -58,7 +58,7 @@ export default function Landing() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: "easeOut" }}
           >
-            <motion.div 
+            <motion.div
               initial={{ scale: 0.8, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               transition={{ duration: 1, delay: 0.2 }}
@@ -153,8 +153,8 @@ export default function Landing() {
                     <p className="text-cream/70 mb-8 leading-relaxed">
                       Orati is a non-profit initiative dedicated to making high-quality language education accessible to everyone, everywhere. Every dollar from our supporters goes directly toward covering the high costs of real-time AI processing. We take $0 profit.
                     </p>
-                    <Link 
-                      to="/nonprofit" 
+                    <Link
+                      to="/nonprofit"
                       className="inline-flex items-center gap-2 text-gold font-bold hover:underline mb-8"
                     >
                       Learn More <ArrowRight size={16} />
