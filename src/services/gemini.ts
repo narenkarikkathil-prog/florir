@@ -95,11 +95,6 @@ export class GeminiService {
       }
 
       if (config.onRawMessage) config.onRawMessage({ type: 'AI_LIVE_CONNECT_CALL' });
-      const inputTranscriptionConfig: any = {};
-      if (config.languageCode) {
-        inputTranscriptionConfig.languageCodes = [config.languageCode];
-      }
-
       this.session = await this.liveAi.live.connect({
         model: "gemini-3.1-flash-live-preview",
         config: {
@@ -109,11 +104,8 @@ export class GeminiService {
           },
           systemInstruction: { parts: [{text: config.systemInstruction}] },
           tools: config.tools,
-          inputAudioTranscription: inputTranscriptionConfig,
-          outputAudioTranscription: config.languageCode ? { languageCodes: [config.languageCode] } : {},
-          generationConfig: {
-            responseModalities: [Modality.AUDIO],
-          },
+          inputAudioTranscription: {},
+          outputAudioTranscription: {},
         } as any,
         callbacks: {
           onopen: () => {
