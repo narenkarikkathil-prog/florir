@@ -22,8 +22,6 @@ const languages = [
   { name: 'Malayalam', icon: <Globe size={14} className="text-lime-600" /> },
 ];
 
-const SHOW_PAID_FEATURES = false;
-
 const modes = [
   {
     title: 'Situational Speaking',
@@ -141,58 +139,6 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* Pricing Section */}
-      {SHOW_PAID_FEATURES && (
-        <section id="pricing" className="py-24 px-4">
-          <div className="container mx-auto max-w-4xl">
-            <div className="bg-dark text-cream rounded-[40px] p-8 md:p-16 relative overflow-hidden">
-              <div className="relative z-10">
-                <div className="flex flex-col md:flex-row md:items-center justify-between gap-8">
-                  <div className="max-w-md">
-                    <h2 className="text-4xl font-serif font-bold mb-6">Our Non-Profit Mission</h2>
-                    <p className="text-cream/70 mb-8 leading-relaxed">
-                      Orati is a non-profit initiative dedicated to making high-quality language education accessible to everyone, everywhere. Every dollar from our supporters goes directly toward covering the high costs of real-time AI processing. We take $0 profit.
-                    </p>
-                    <Link
-                      to="/nonprofit"
-                      className="inline-flex items-center gap-2 text-gold font-bold hover:underline mb-8"
-                    >
-                      Learn More <ArrowRight size={16} />
-                    </Link>
-                    <div className="space-y-4">
-                      <div className="flex items-center gap-3">
-                        <CheckCircle2 className="text-gold" size={20} />
-                        <span className="text-sm font-medium">Unlimited speaking minutes</span>
-                      </div>
-                      <div className="flex items-center gap-3">
-                        <CheckCircle2 className="text-gold" size={20} />
-                        <span className="text-sm font-medium">No advertisements</span>
-                      </div>
-                      <div className="flex items-center gap-3">
-                        <CheckCircle2 className="text-gold" size={20} />
-                        <span className="text-sm font-medium">Faster AI response times</span>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="bg-white/10 backdrop-blur-md p-8 rounded-3xl border border-white/10 text-center min-w-[280px]">
-                    <div className="text-gold font-bold text-sm uppercase tracking-widest mb-2">Supporter Tier</div>
-                    <div className="text-5xl font-serif font-bold mb-2">$3<span className="text-lg font-sans text-white/50">/mo</span></div>
-                    <p className="text-xs text-white/40 mb-6">Help us break even. 25 supporters needed.</p>
-                    <Link
-                      to="/auth?signup=true"
-                      className="block w-full py-3 bg-gold text-cream rounded-full font-bold hover:bg-gold/90 transition-all"
-                    >
-                      Become a Supporter
-                    </Link>
-                  </div>
-                </div>
-              </div>
-              {/* Decorative circle */}
-              <div className="absolute -bottom-24 -right-24 w-64 h-64 bg-gold/20 rounded-full blur-3xl" />
-            </div>
-          </div>
-        </section>
-      )}
       {/* Footer */}
       <footer className="py-10 px-4 border-t border-beige-mid/20">
         <div className="container mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-dark/35">

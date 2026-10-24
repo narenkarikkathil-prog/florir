@@ -66,6 +66,7 @@ export default function Session() {
     isTranscriptionError?: boolean;
   }[]>([]);
   const [showTranslations, setShowTranslations] = useState(false);
+  const [revealedTranscripts, setRevealedTranscripts] = useState<Record<number, boolean>>({});
   const [activeWordTranslations, setActiveWordTranslations] = useState<Record<string, string>>({});
   const [accuracy, setAccuracy] = useState(100);
   const [prevAccuracy, setPrevAccuracy] = useState(100);
@@ -1759,56 +1760,99 @@ TONE:
                     className="flex-1 overflow-y-auto pr-2 custom-scrollbar space-y-6"
                   >
                     {transcript.length === 0 && <p className="text-dark/30 italic text-center py-10">No conversation yet...</p>}
-                    {transcript.map((msg, i) => (
-                      <div key={i} className={cn(
-                        "flex flex-col gap-2",
-                        msg.role === 'user' ? "items-end" : "items-start"
-                      )}>
-                        <span className="text-[9px] font-bold uppercase tracking-widest text-dark/20 flex items-center gap-1.5">
-                          {msg.role === 'user' ? 'You' : 'Florir'}
-                          {msg.role === 'user' && msg.isTranscriptionError && msg.rawTranscript && msg.rawTranscript.toLowerCase() !== msg.text.toLowerCase() && (
-                            <span
-                              className="text-[8px] font-normal lowercase tracking-normal text-amber-700/80 bg-amber-500/10 px-1.5 py-0.5 rounded-full cursor-help"
-                              title={`Voice API heard: "${msg.rawTranscript}" (reconciled to ${lang} from audio)`}
-                            >
-                              reconciled from audio
-                            </span>
-                          )}
-                        </span>
-                        <div className={cn(
-                          "max-w-[90%] p-4 rounded-[24px] text-sm leading-relaxed shadow-sm transition-all duration-300",
-                          msg.role === 'user' ? "bg-dark text-white rounded-tr-none" : "bg-[#F3EFE9] text-dark rounded-tl-none border border-beige/20"
-                        )}>
-                          {showTranslations ? (
-                            <div className="flex flex-wrap gap-x-1 gap-y-1">
-                              {msg.text.split(' ').map((word, wIdx) => {
-                                const key = `${i}-${wIdx}`;
-                                const translation = activeWordTranslations[key];
-                                return (
-                                  <span key={wIdx} className="relative group inline-block">
-                                    <span
-                                      onClick={() => handleWordClick(i, wIdx, word)}
-                                      className="cursor-pointer hover:bg-gold/30 hover:text-gold-dark rounded transition-colors px-1"
-                                      title="Tap to translate this word"
-                                    >
-                                      {word}
-                                    </span>
-                                    {translation && (
-                                      <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-1 px-2 py-1 bg-dark text-white text-[10px] font-bold tracking-wider uppercase rounded shadow-xl whitespace-nowrap z-50 pointer-events-none">
-                                        {translation}
-                                      </span>
-                                    )}
-                                  </span>
-                                );
-                              })}
-                            </div>
-                          ) : (
-                            msg.text
-                          )}
-                        </div>
+                    {transcript.map((msg, i) => {
+                      const isUser = msg.role === 'user';
+                      const hasCorrections = isUser && Boolean(
+                        msg.corrections &&
+                        msg.corrections.length > 0 &&
+                        msg.correctedSentence &&
+                        msg.correctedSentence.trim().toLowerCase() !== msg.text.trim().toLowerCase()
+                      );
 
-                        {/* Inline Correction for User Messages */}
-                        {msg.role === 'user' && msg.correctedSentence && msg.corrections && msg.corrections.length > 0 && msg.correctedSentence.trim().toLowerCase() !== msg.text.trim().toLowerCase() && (
+                      return (
+                        <div key={i} className={cn(
+                          "flex flex-col gap-2",
+                          isUser ? "items-end" : "items-start"
+                        )}>
+                          <span className="text-[9px] font-bold uppercase tracking-widest text-dark/20 flex items-center gap-1.5">
+                            {isUser ? 'You' : 'Florir'}
+                            {hasCorrections && msg.isTranscriptionError && msg.rawTranscript && msg.rawTranscript.toLowerCase() !== msg.text.toLowerCase() && (
+                              <span
+                                className="text-[8px] font-normal lowercase tracking-normal text-amber-700/80 bg-amber-500/10 px-1.5 py-0.5 rounded-full cursor-help"
+                                title={`Voice API heard: "${msg.rawTranscript}" (reconciled to ${lang} from audio)`}
+                              >
+                                reconciled from audio
+                              </span>
+                            )}
+                          </span>
+
+                          <div className={cn(
+                            "max-w-[90%] p-4 rounded-[24px] text-sm leading-relaxed shadow-sm transition-all duration-300",
+                            isUser ? "bg-dark text-white rounded-tr-none" : "bg-[#F3EFE9] text-dark rounded-tl-none border border-beige/20"
+                          )}>
+                            {isUser && !hasCorrections ? (
+                              <div
+                                onClick={() => setRevealedTranscripts(prev => ({ ...prev, [i]: !prev[i] }))}
+                                className="cursor-pointer select-none group flex flex-col gap-1.5"
+                                title="Tap to toggle speech text"
+                              >
+                                <div className="flex items-center gap-2.5">
+                                  <div className="flex items-center gap-0.5 h-3">
+                                    <span className="w-0.5 h-2 bg-gold/70 rounded-full animate-pulse" />
+                                    <span className="w-0.5 h-3 bg-gold rounded-full" />
+                                    <span className="w-0.5 h-2.5 bg-gold/80 rounded-full" />
+                                    <span className="w-0.5 h-1.5 bg-gold/50 rounded-full" />
+                                  </div>
+                                  <span className="text-xs font-medium tracking-wide text-white/90">
+                                    Spoken response
+                                  </span>
+                                  {msg.corrections !== undefined && (
+                                    <span className="inline-flex items-center gap-1 text-[10px] text-emerald-400 font-medium pl-2 border-l border-white/10">
+                                      <CheckCircle2 size={11} className="text-emerald-400" />
+                                      <span>Clear</span>
+                                    </span>
+                                  )}
+                                </div>
+                                {revealedTranscripts[i] && (
+                                  <motion.p
+                                    initial={{ opacity: 0, height: 0 }}
+                                    animate={{ opacity: 1, height: 'auto' }}
+                                    className="text-xs text-white/50 italic border-t border-white/10 pt-2 mt-1 font-serif"
+                                  >
+                                    "{msg.text}"
+                                  </motion.p>
+                                )}
+                              </div>
+                            ) : showTranslations ? (
+                              <div className="flex flex-wrap gap-x-1 gap-y-1">
+                                {msg.text.split(' ').map((word, wIdx) => {
+                                  const key = `${i}-${wIdx}`;
+                                  const translation = activeWordTranslations[key];
+                                  return (
+                                    <span key={wIdx} className="relative group inline-block">
+                                      <span
+                                        onClick={() => handleWordClick(i, wIdx, word)}
+                                        className="cursor-pointer hover:bg-gold/30 hover:text-gold-dark rounded transition-colors px-1"
+                                        title="Tap to translate this word"
+                                      >
+                                        {word}
+                                      </span>
+                                      {translation && (
+                                        <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-1 px-2 py-1 bg-dark text-white text-[10px] font-bold tracking-wider uppercase rounded shadow-xl whitespace-nowrap z-50 pointer-events-none">
+                                          {translation}
+                                        </span>
+                                      )}
+                                    </span>
+                                  );
+                                })}
+                              </div>
+                            ) : (
+                              msg.text
+                            )}
+                          </div>
+
+                          {/* Inline Correction for User Messages */}
+                          {hasCorrections && (
                           <motion.div
                             initial={{ opacity: 0, y: -10 }}
                             animate={{ opacity: 1, y: 0 }}
@@ -1860,7 +1904,8 @@ TONE:
                           </motion.div>
                         )}
                       </div>
-                    ))}
+                    );
+                  })}
                     <div ref={transcriptEndRef} />
                   </div>
 
