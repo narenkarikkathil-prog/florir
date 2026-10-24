@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'motion/react';
-import { ArrowLeft, Mic, MicOff, Play, CheckCircle2, Clock, ChevronRight, RotateCcw, Star, Volume2 } from 'lucide-react';
+import { ArrowLeft, Mic, MicOff, Play, CheckCircle2, Clock, ChevronRight, RotateCcw, Star, Volume2, Languages } from 'lucide-react';
 import { cn } from '@/src/lib/utils';
 import { GeminiService } from '@/src/services/gemini';
 import { Language } from '@/src/types';
@@ -292,6 +292,9 @@ export default function APSession({ mode }: { mode: 'ap-simulated' | 'ap-speakin
   const [isGrading, setIsGrading] = useState(false);
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [showTranscript, setShowTranscript] = useState(false);
+  const [showTurnTranslation, setShowTurnTranslation] = useState(false);
+  const [turnTranslation, setTurnTranslation] = useState('');
+  const [isLoadingTurnTranslation, setIsLoadingTurnTranslation] = useState(false);
 
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
@@ -305,6 +308,39 @@ export default function APSession({ mode }: { mode: 'ap-simulated' | 'ap-speakin
 
   const isConversation = mode === 'ap-simulated';
   const prompts = isConversation ? AP_CONVERSATIONS : AP_CULTURAL_COMPARISONS;
+
+  useEffect(() => {
+    setShowTurnTranslation(false);
+    setTurnTranslation('');
+  }, [currentTurnIndex]);
+
+  const handleTranslateTurn = async (text?: string) => {
+    if (!text) return;
+    if (showTurnTranslation) {
+      setShowTurnTranslation(false);
+      return;
+    }
+    if (turnTranslation) {
+      setShowTurnTranslation(true);
+      return;
+    }
+    setIsLoadingTurnTranslation(true);
+    try {
+      const sourceLang = lang === 'Spanish' ? 'es' : 'fr';
+      const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=${sourceLang}&tl=en&dt=t&q=${encodeURIComponent(text)}`;
+      const res = await fetch(url);
+      const data = await res.json();
+      if (Array.isArray(data[0])) {
+        const full = data[0].map((item: any) => item[0]).filter(Boolean).join('');
+        setTurnTranslation(full);
+        setShowTurnTranslation(true);
+      }
+    } catch (err) {
+      console.error("Translation error:", err);
+    } finally {
+      setIsLoadingTurnTranslation(false);
+    }
+  };
 
   // Load completed IDs from Supabase (with localStorage fallback)
   useEffect(() => {
@@ -905,26 +941,55 @@ Return ONLY valid JSON (no markdown, no code fences):
               </div>
               <span className="text-sm font-bold text-dark/40">AI Partner</span>
             </div>
-            <button
-              onClick={() => setShowTranscript(!showTranscript)}
-              className={cn(
-                "text-xs font-bold px-3 py-1.5 rounded-full transition-all",
-                showTranscript ? "bg-gold/10 text-gold" : "bg-beige-mid/10 text-dark/30 hover:text-dark/50"
+            <div className="flex items-center gap-2">
+              {showTranscript && currentTurn?.text && (
+                <button
+                  type="button"
+                  onClick={() => handleTranslateTurn(currentTurn?.text)}
+                  className={cn(
+                    "text-xs font-bold px-3 py-1.5 rounded-full transition-all flex items-center gap-1.5 shadow-2xs",
+                    showTurnTranslation ? "bg-gold text-cream" : "bg-beige-mid/10 text-dark/40 hover:text-dark/70 hover:bg-beige"
+                  )}
+                >
+                  <Languages size={12} className={isLoadingTurnTranslation ? "animate-spin" : ""} />
+                  {isLoadingTurnTranslation ? "Translating..." : showTurnTranslation ? "Hide Translation" : "Translate Message"}
+                </button>
               )}
-            >
-              {showTranscript ? 'Hide Text' : 'Show Text'}
-            </button>
+              <button
+                onClick={() => setShowTranscript(!showTranscript)}
+                className={cn(
+                  "text-xs font-bold px-3 py-1.5 rounded-full transition-all",
+                  showTranscript ? "bg-gold/10 text-gold" : "bg-beige-mid/10 text-dark/30 hover:text-dark/50"
+                )}
+              >
+                {showTranscript ? 'Hide Text' : 'Show Text'}
+              </button>
+            </div>
           </div>
           <AnimatePresence>
             {showTranscript ? (
-              <motion.p 
-                initial={{ opacity: 0, height: 0 }}
-                animate={{ opacity: 1, height: 'auto' }}
-                exit={{ opacity: 0, height: 0 }}
-                className="text-lg font-serif text-dark leading-relaxed"
-              >
-                {currentTurn?.text}
-              </motion.p>
+              <div className="space-y-3">
+                <motion.p 
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: 'auto' }}
+                  exit={{ opacity: 0, height: 0 }}
+                  className="text-lg font-serif text-dark leading-relaxed"
+                >
+                  {currentTurn?.text}
+                </motion.p>
+                {showTurnTranslation && turnTranslation && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -4 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="p-3.5 bg-white/90 rounded-2xl border border-gold/20 text-xs text-dark/70 leading-relaxed shadow-xs"
+                  >
+                    <div className="flex items-center gap-1.5 text-[9px] font-bold uppercase tracking-wider text-gold mb-1">
+                      <Languages size={11} /> English Translation
+                    </div>
+                    <p className="font-sans font-medium">{turnTranslation}</p>
+                  </motion.div>
+                )}
+              </div>
             ) : (
               <p className="text-sm text-dark/30 italic">Listening mode — click "Show Text" to see the transcript</p>
             )}

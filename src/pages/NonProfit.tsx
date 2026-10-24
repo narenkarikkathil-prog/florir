@@ -73,9 +73,9 @@ export default function NonProfit() {
             <div className="w-20 h-20 bg-gold/10 text-gold rounded-[30px] flex items-center justify-center mx-auto mb-8">
               <Users size={40} />
             </div>
-            <h3 className="text-2xl font-serif font-bold mb-4">Community Driven</h3>
+            <h3 className="text-2xl font-serif font-bold mb-4">Independent & Community Driven</h3>
             <p className="text-dark/60 text-sm leading-relaxed">
-              Orati is built by language lovers, for language lovers. Your feedback and support directly shape the future of the platform.
+              Orati is independently developed and run by Narendran Karikkathil as a non-profit initiative for language lovers. Your feedback and support directly shape the future of the platform.
             </p>
           </motion.div>
         </div>

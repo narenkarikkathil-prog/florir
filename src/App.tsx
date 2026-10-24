@@ -26,6 +26,7 @@ export default function App() {
 
   useEffect(() => {
     if (!supabase) {
+      setUser({ email: 'learner@orati.org', id: 'local-dev-user' });
       setLoading(false);
       return;
     }

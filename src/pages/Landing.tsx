@@ -144,7 +144,7 @@ export default function Landing() {
         <div className="container mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-dark/35">
           <div className="flex items-center gap-2">
             <FlowerLogo size={14} className="text-gold/60" />
-            <span>© {new Date().getFullYear()} Orati — Non-Profit Language Learning</span>
+            <span>© {new Date().getFullYear()} Orati — Developed and run by Narendran Karikkathil</span>
           </div>
           <div className="flex items-center gap-5 font-medium">
             <Link to="/privacy" className="hover:text-gold transition-colors">Privacy Policy</Link>

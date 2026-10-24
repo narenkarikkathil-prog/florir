@@ -15,7 +15,10 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   const location = useLocation();
 
   useEffect(() => {
-    if (!supabase) return;
+    if (!supabase) {
+      setUser({ email: 'learner@orati.org', id: 'local-dev-user' });
+      return;
+    }
     
     supabase.auth.getSession().then(({ data: { session } }) => {
       setUser(session?.user ?? null);
@@ -129,8 +132,11 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                 <FlowerLogo className="text-gold" size={24} />
                 <span className="font-serif text-xl font-bold tracking-tight">Orati</span>
               </div>
-              <p className="text-dark/60 max-w-sm text-sm leading-relaxed">
+              <p className="text-dark/60 max-w-sm text-sm leading-relaxed mb-3">
                 A speech-first language learning platform dedicated to helping you master languages through real-time AI conversations.
+              </p>
+              <p className="text-xs text-dark/50 font-medium">
+                Developed and run by <span className="font-semibold text-dark/80">Narendran Karikkathil</span>
               </p>
             </div>
             <div>
@@ -162,8 +168,15 @@ export default function Layout({ children }: { children: React.ReactNode }) {
               </Link>
             </div>
           </div>
-          <div className="mt-12 pt-8 border-t border-beige-mid/20 text-center text-xs text-dark/40">
-            © {new Date().getFullYear()} Orati. All rights reserved.
+          <div className="mt-12 pt-8 border-t border-beige-mid/20 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-dark/40">
+            <div>
+              © {new Date().getFullYear()} Orati. Developed and run by <span className="font-semibold text-dark/70">Narendran Karikkathil</span>.
+            </div>
+            <div className="flex items-center gap-4">
+              <Link to="/privacy" className="hover:text-gold transition-colors">Privacy Policy</Link>
+              <Link to="/terms" className="hover:text-gold transition-colors">Terms of Service</Link>
+              <Link to="/nonprofit" className="hover:text-gold transition-colors">Our Mission</Link>
+            </div>
           </div>
         </div>
       </footer>

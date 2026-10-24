@@ -7,6 +7,7 @@ import { Language, UserLevel } from '@/src/types';
 import { supabase } from '@/src/lib/supabase';
 
 import { FlowerLogo, BloomingFlower } from '@/src/components/FlowerLogo';
+import LanguageSelector from '@/src/components/LanguageSelector';
 
 const generalModes = [
   {
@@ -70,7 +71,6 @@ export default function Dashboard() {
     const saved = localStorage.getItem('selected_language');
     return (saved as Language) || 'French';
   });
-  const [isLangDropdownOpen, setIsLangDropdownOpen] = useState(false);
 
   useEffect(() => {
     localStorage.setItem('selected_language', selectedLang);
@@ -203,7 +203,7 @@ export default function Dashboard() {
       <BloomingFlower className="absolute -top-10 -right-10 text-gold hidden md:block" size={120} delay={0.2} />
       <BloomingFlower className="absolute bottom-0 -left-10 text-petal hidden md:block" size={150} delay={0.5} />
 
-      <header className="mb-12 flex flex-col md:flex-row md:items-start justify-between gap-6 relative z-10">
+      <header className="mb-12 flex flex-col md:flex-row md:items-start justify-between gap-6 relative z-30">
         <div>
           <div className="flex items-center gap-3 mb-2">
             <FlowerLogo className="text-gold" size={28} />
@@ -212,51 +212,11 @@ export default function Dashboard() {
           <p className="text-dark/50">Practice French, Spanish, Mandarin, German, and more.</p>
         </div>
 
-        <div className="relative">
-          <button
-            onClick={() => setIsLangDropdownOpen(!isLangDropdownOpen)}
-            className="flex items-center gap-3 px-6 py-3 bg-white border border-beige-mid/20 rounded-2xl shadow-sm hover:shadow-md transition-all min-w-[180px] justify-between group"
-          >
-            <div className="flex items-center gap-2">
-              <Globe size={18} className="text-gold" />
-              <span className="font-bold text-dark">{selectedLang}</span>
-            </div>
-            <ChevronDown size={18} className={cn("text-dark/30 transition-transform", isLangDropdownOpen && "rotate-180")} />
-          </button>
-
-          <AnimatePresence>
-            {isLangDropdownOpen && (
-              <>
-                <div
-                  className="fixed inset-0 z-30"
-                  onClick={() => setIsLangDropdownOpen(false)}
-                />
-                <motion.div
-                  initial={{ opacity: 0, y: 10, scale: 0.95 }}
-                  animate={{ opacity: 1, y: 0, scale: 1 }}
-                  exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                  className="absolute right-0 mt-2 w-full bg-white border border-beige-mid/20 rounded-2xl shadow-xl z-40 overflow-hidden"
-                >
-                  {availableLanguages.map((lang) => (
-                    <button
-                      key={lang}
-                      onClick={() => {
-                        setSelectedLang(lang);
-                        setIsLangDropdownOpen(false);
-                      }}
-                      className={cn(
-                        "w-full px-6 py-3 text-left text-sm font-medium transition-colors hover:bg-beige/30",
-                        selectedLang === lang ? "text-gold bg-beige/10" : "text-dark/70"
-                      )}
-                    >
-                      {lang}
-                    </button>
-                  ))}
-                </motion.div>
-              </>
-            )}
-          </AnimatePresence>
-        </div>
+        <LanguageSelector
+          selectedLang={selectedLang}
+          onSelectLang={setSelectedLang}
+          availableLanguages={availableLanguages}
+        />
       </header>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8">
@@ -326,7 +286,7 @@ export default function Dashboard() {
               <h3 className="font-bold">Our Mission</h3>
             </div>
             <p className="text-sm text-cream/80 mb-6 leading-relaxed">
-              Orati is a non-profit initiative dedicated to making high-quality language education accessible to everyone, everywhere.
+              Orati is an independent non-profit initiative developed and run by Narendran Karikkathil, dedicated to making high-quality language education accessible to everyone, everywhere.
             </p>
             {activeTab === 'ap' ? (
               <button

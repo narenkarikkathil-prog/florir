@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useSearchParams, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'motion/react';
-import { Mic, X, MessageSquare, BarChart3, AlertCircle, ChevronRight, CheckCircle2, Volume2, Settings, Sliders, RefreshCw, Dices, Utensils, Plane, Hotel, Stethoscope, ShoppingBag, Trophy, Hash, Heart, Languages, Trash2 } from 'lucide-react';
+import { Mic, X, MessageSquare, BarChart3, AlertCircle, ChevronRight, CheckCircle2, Volume2, Settings, Sliders, RefreshCw, Dices, Utensils, Plane, Hotel, Stethoscope, ShoppingBag, Trophy, Hash, Heart, Languages, Trash2, Globe } from 'lucide-react';
 import { cn } from '@/src/lib/utils';
 import { Type, Modality } from "@google/genai";
 import { GeminiService } from '@/src/services/gemini';
@@ -66,6 +66,10 @@ export default function Session() {
     isTranscriptionError?: boolean;
   }[]>([]);
   const [showTranslations, setShowTranslations] = useState(false);
+  const [showFullTranslations, setShowFullTranslations] = useState(false);
+  const [messageTranslations, setMessageTranslations] = useState<Record<number, string>>({});
+  const [loadingTranslations, setLoadingTranslations] = useState<Record<number, boolean>>({});
+  const [visibleMessageTranslations, setVisibleMessageTranslations] = useState<Record<number, boolean>>({});
   const [activeWordTranslations, setActiveWordTranslations] = useState<Record<string, string>>({});
   const [accuracy, setAccuracy] = useState(100);
   const [prevAccuracy, setPrevAccuracy] = useState(100);
@@ -503,10 +507,65 @@ export default function Session() {
       const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=${sourceLang}&tl=en&dt=t&q=${encodeURIComponent(text)}`;
       const res = await fetch(url);
       const data = await res.json();
+      if (Array.isArray(data[0])) {
+        return data[0].map((item: any) => item[0]).filter(Boolean).join('');
+      }
       return data[0][0][0] || "";
     } catch (error) {
       console.error("Translation error:", error);
       return "";
+    }
+  };
+
+  const toggleMessageTranslation = async (index: number, text: string) => {
+    if (visibleMessageTranslations[index]) {
+      setVisibleMessageTranslations(prev => ({ ...prev, [index]: false }));
+      return;
+    }
+
+    if (messageTranslations[index]) {
+      setVisibleMessageTranslations(prev => ({ ...prev, [index]: true }));
+      return;
+    }
+
+    setLoadingTranslations(prev => ({ ...prev, [index]: true }));
+    try {
+      const translation = await translateToEnglish(text);
+      if (translation) {
+        setMessageTranslations(prev => ({ ...prev, [index]: translation }));
+        setVisibleMessageTranslations(prev => ({ ...prev, [index]: true }));
+      }
+    } finally {
+      setLoadingTranslations(prev => ({ ...prev, [index]: false }));
+    }
+  };
+
+  const toggleTranslateAllMessages = async () => {
+    const nextState = !showFullTranslations;
+    setShowFullTranslations(nextState);
+
+    if (nextState) {
+      const missing = transcript
+        .map((m, idx) => ({ m, idx }))
+        .filter(({ idx }) => !messageTranslations[idx]);
+
+      if (missing.length > 0) {
+        setLoadingTranslations(prev => {
+          const updated = { ...prev };
+          missing.forEach(({ idx }) => { updated[idx] = true; });
+          return updated;
+        });
+
+        await Promise.all(
+          missing.map(async ({ m, idx }) => {
+            const translation = await translateToEnglish(m.text);
+            if (translation) {
+              setMessageTranslations(prev => ({ ...prev, [idx]: translation }));
+            }
+            setLoadingTranslations(prev => ({ ...prev, [idx]: false }));
+          })
+        );
+      }
     }
   };
 
@@ -1728,19 +1787,16 @@ TONE:
                   transition={{ type: 'spring', damping: 25, stiffness: 200 }}
                   className="w-full max-w-[450px] h-[400px] md:h-[500px] bg-white/90 backdrop-blur-xl rounded-[40px] shadow-[0_20px_60px_-15px_rgba(0,0,0,0.1)] border border-beige/20 p-8 flex flex-col z-10"
                 >
-                  <div className="flex items-center justify-between mb-6">
-                    <h3 className="text-xl font-serif font-bold">Transcript</h3>
+                  <div className="flex items-center justify-between mb-4">
                     <div className="flex items-center gap-2">
-                      <button
-                        onClick={() => setShowTranslations(!showTranslations)}
-                        className={cn(
-                          "px-3 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-wider transition-all flex items-center gap-2",
-                          showTranslations ? "bg-dark text-white" : "bg-beige/50 text-dark/60 hover:bg-beige"
-                        )}
-                      >
-                        <Languages size={12} />
-                        {showTranslations ? "Word Translate Active" : "Tap Words to Translate"}
-                      </button>
+                      <h3 className="text-xl font-serif font-bold">Transcript</h3>
+                      {transcript.length > 0 && (
+                        <span className="text-[10px] text-dark/40 font-mono bg-beige/40 px-2 py-0.5 rounded-full font-bold">
+                          {transcript.length}
+                        </span>
+                      )}
+                    </div>
+                    <div className="flex items-center gap-1.5">
                       <button
                         onClick={() => setTranscript([])}
                         className="p-2 hover:bg-beige rounded-full transition-all text-dark/40 hover:text-red-500"
@@ -1752,6 +1808,34 @@ TONE:
                         <X size={20} />
                       </button>
                     </div>
+                  </div>
+
+                  {/* Translation Toolbar */}
+                  <div className="flex items-center gap-2 mb-4 pb-3 border-b border-beige-mid/20 flex-wrap">
+                    <button
+                      type="button"
+                      onClick={toggleTranslateAllMessages}
+                      className={cn(
+                        "px-3 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-wider transition-all flex items-center gap-1.5 shadow-2xs",
+                        showFullTranslations ? "bg-gold text-cream" : "bg-beige/40 text-dark/70 hover:bg-beige"
+                      )}
+                      title="Translate all whole messages in the transcript"
+                    >
+                      <Languages size={12} />
+                      {showFullTranslations ? "Full Translations Active" : "Translate Whole Messages"}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setShowTranslations(!showTranslations)}
+                      className={cn(
+                        "px-3 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-wider transition-all flex items-center gap-1.5 shadow-2xs",
+                        showTranslations ? "bg-dark text-white" : "bg-beige/40 text-dark/70 hover:bg-beige"
+                      )}
+                      title="Tap individual words in messages to translate"
+                    >
+                      <Globe size={12} />
+                      {showTranslations ? "Word Lookup Active" : "Tap Words to Translate"}
+                    </button>
                   </div>
 
                   <div
@@ -1769,10 +1853,13 @@ TONE:
                           msg.corrections.some(c => c.original && c.correction && c.original.trim().toLowerCase() !== c.correction.trim().toLowerCase())
                         )
                       );
+                      const isTranslationVisible = showFullTranslations || visibleMessageTranslations[i];
+                      const translationText = messageTranslations[i];
+                      const isLoadingTranslation = loadingTranslations[i];
 
                       return (
                         <div key={i} className={cn(
-                          "flex flex-col gap-2",
+                          "flex flex-col gap-1.5",
                           isUser ? "items-end" : "items-start"
                         )}>
                           <span className="text-[9px] font-bold uppercase tracking-widest text-dark/20 flex items-center gap-1.5">
@@ -1841,7 +1928,44 @@ TONE:
                             ) : (
                               msg.text
                             )}
+
+                            {/* Full Message Translation within bubble */}
+                            {isTranslationVisible && translationText && (
+                              <motion.div
+                                initial={{ opacity: 0, y: -4 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                className={cn(
+                                  "mt-3 pt-2.5 border-t text-xs leading-relaxed transition-all",
+                                  isUser
+                                    ? "border-white/15 text-white/80"
+                                    : "border-dark/10 text-dark/70"
+                                )}
+                              >
+                                <div className="flex items-center gap-1.5 text-[9px] font-bold uppercase tracking-wider text-gold mb-1">
+                                  <Languages size={10} /> English Translation
+                                </div>
+                                <p className="font-sans font-medium">{translationText}</p>
+                              </motion.div>
+                            )}
                           </div>
+
+                          {/* Per-message translate toggle button */}
+                          {msg.text && (
+                            <button
+                              type="button"
+                              onClick={() => toggleMessageTranslation(i, msg.text)}
+                              className="text-[11px] text-dark/40 hover:text-gold flex items-center gap-1 transition-colors px-1 py-0.5"
+                            >
+                              <Languages size={11} className={isLoadingTranslation ? "animate-spin text-gold" : ""} />
+                              <span>
+                                {isLoadingTranslation
+                                  ? "Translating..."
+                                  : isTranslationVisible && translationText
+                                  ? "Hide translation"
+                                  : "Translate message"}
+                              </span>
+                            </button>
+                          )}
 
                           {/* Inline Correction for User Messages */}
                           {hasCorrections && (

@@ -94,3 +94,10 @@ Orati is configured for single-click zero-config deployment on Vercel.
 - `npm run build`: Build production assets into `dist/`
 - `npm run preview`: Preview the production build locally
 - `npm run lint`: Run TypeScript type-checking without emitting files
+
+---
+
+## 👤 Author & Credits
+
+Developed and run independently by **Narendran Karikkathil** as a non-profit educational initiative.
+
