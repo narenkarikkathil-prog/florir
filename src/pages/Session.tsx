@@ -66,7 +66,6 @@ export default function Session() {
     isTranscriptionError?: boolean;
   }[]>([]);
   const [showTranslations, setShowTranslations] = useState(false);
-  const [revealedTranscripts, setRevealedTranscripts] = useState<Record<number, boolean>>({});
   const [activeWordTranslations, setActiveWordTranslations] = useState<Record<string, string>>({});
   const [accuracy, setAccuracy] = useState(100);
   const [prevAccuracy, setPrevAccuracy] = useState(100);
@@ -1765,8 +1764,10 @@ TONE:
                       const hasCorrections = isUser && Boolean(
                         msg.corrections &&
                         msg.corrections.length > 0 &&
-                        msg.correctedSentence &&
-                        msg.correctedSentence.trim().toLowerCase() !== msg.text.trim().toLowerCase()
+                        (
+                          (msg.correctedSentence && msg.correctedSentence.trim().toLowerCase() !== msg.text.trim().toLowerCase()) ||
+                          msg.corrections.some(c => c.original && c.correction && c.original.trim().toLowerCase() !== c.correction.trim().toLowerCase())
+                        )
                       );
 
                       return (
@@ -1787,42 +1788,33 @@ TONE:
                           </span>
 
                           <div className={cn(
-                            "max-w-[90%] p-4 rounded-[24px] text-sm leading-relaxed shadow-sm transition-all duration-300",
-                            isUser ? "bg-dark text-white rounded-tr-none" : "bg-[#F3EFE9] text-dark rounded-tl-none border border-beige/20"
+                            "max-w-[90%] rounded-[24px] text-sm leading-relaxed shadow-sm transition-all duration-300",
+                            isUser
+                              ? (hasCorrections ? "bg-dark text-white rounded-tr-none p-4" : "bg-dark text-white rounded-tr-none py-2.5 px-4")
+                              : "bg-[#F3EFE9] text-dark rounded-tl-none border border-beige/20 p-4"
                           )}>
                             {isUser && !hasCorrections ? (
-                              <div
-                                onClick={() => setRevealedTranscripts(prev => ({ ...prev, [i]: !prev[i] }))}
-                                className="cursor-pointer select-none group flex flex-col gap-1.5"
-                                title="Tap to toggle speech text"
-                              >
-                                <div className="flex items-center gap-2.5">
-                                  <div className="flex items-center gap-0.5 h-3">
-                                    <span className="w-0.5 h-2 bg-gold/70 rounded-full animate-pulse" />
-                                    <span className="w-0.5 h-3 bg-gold rounded-full" />
-                                    <span className="w-0.5 h-2.5 bg-gold/80 rounded-full" />
-                                    <span className="w-0.5 h-1.5 bg-gold/50 rounded-full" />
-                                  </div>
-                                  <span className="text-xs font-medium tracking-wide text-white/90">
-                                    Spoken response
-                                  </span>
-                                  {msg.corrections !== undefined && (
-                                    <span className="inline-flex items-center gap-1 text-[10px] text-emerald-400 font-medium pl-2 border-l border-white/10">
-                                      <CheckCircle2 size={11} className="text-emerald-400" />
-                                      <span>Clear</span>
-                                    </span>
-                                  )}
+                              <div className="flex items-center gap-2.5 py-0.5 select-none">
+                                <div className="flex items-center gap-1 h-3.5 px-0.5">
+                                  <span className="w-0.5 h-2 bg-gold/70 rounded-full animate-pulse" />
+                                  <span className="w-0.5 h-3.5 bg-gold rounded-full" />
+                                  <span className="w-0.5 h-2.5 bg-gold/80 rounded-full" />
+                                  <span className="w-0.5 h-1.5 bg-gold/50 rounded-full" />
                                 </div>
-                                {revealedTranscripts[i] && (
-                                  <motion.p
-                                    initial={{ opacity: 0, height: 0 }}
-                                    animate={{ opacity: 1, height: 'auto' }}
-                                    className="text-xs text-white/50 italic border-t border-white/10 pt-2 mt-1 font-serif"
-                                  >
-                                    "{msg.text}"
-                                  </motion.p>
+                                <span className="font-serif italic text-sm text-white/90 tracking-wide">
+                                  Spoken response
+                                </span>
+                                {msg.corrections !== undefined && (
+                                  <span className="inline-flex items-center gap-1 text-[10px] text-emerald-400 font-sans font-medium pl-2 border-l border-white/15">
+                                    <CheckCircle2 size={11} className="text-emerald-400" />
+                                    <span>Clear</span>
+                                  </span>
                                 )}
                               </div>
+                            ) : isUser ? (
+                              <p className="font-serif italic text-white/95 text-[15px] leading-relaxed">
+                                "{msg.text}"
+                              </p>
                             ) : showTranslations ? (
                               <div className="flex flex-wrap gap-x-1 gap-y-1">
                                 {msg.text.split(' ').map((word, wIdx) => {
