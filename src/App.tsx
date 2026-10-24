@@ -50,6 +50,12 @@ export default function App() {
     );
   }
 
+  const isRecoveryMode = typeof window !== 'undefined' && (
+    window.location.hash.includes('type=recovery') ||
+    window.location.search.includes('reset=true') ||
+    window.location.search.includes('mode=reset')
+  );
+
   return (
     <Router>
       <Layout>
@@ -59,7 +65,7 @@ export default function App() {
           <Route path="/nonprofit" element={<NonProfit />} />
           <Route path="/privacy" element={<PrivacyPolicy />} />
           <Route path="/terms" element={<TermsOfService />} />
-          <Route path="/auth" element={user ? <Navigate to="/dashboard" /> : <Auth />} />
+          <Route path="/auth" element={user && !isRecoveryMode ? <Navigate to="/dashboard" /> : <Auth />} />
           <Route path="/dashboard" element={user ? <Dashboard /> : <Navigate to="/auth" />} />
           <Route path="/session/ap-simulated" element={user ? <APSession mode="ap-simulated" /> : <Navigate to="/auth" />} />
           <Route path="/session/ap-speaking" element={user ? <APSession mode="ap-speaking" /> : <Navigate to="/auth" />} />
