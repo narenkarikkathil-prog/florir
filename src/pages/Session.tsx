@@ -1028,30 +1028,16 @@ TONE:
               setLastCorrectedSentence(correctedSentence);
             }
 
-            // Attach corrections to the last user message in transcript and reconcile transcription
+            // Attach corrections to the last user message in transcript while keeping text accurate to what the live API heard
             setTranscript(prev => {
               const newTranscript = [...prev];
               for (let i = newTranscript.length - 1; i >= 0; i--) {
                 if (newTranscript[i].role === 'user') {
                   const currentText = (newTranscript[i].text || '').trim();
-                  const actualSpoken = feedback.actualSpokenText;
-
-                  // Detect transcription error: explicitly flagged OR actualSpoken differs substantially
-                  const hasTranscriptionError = feedback.isTranscriptionError || (
-                    Boolean(actualSpoken) &&
-                    actualSpoken.toLowerCase() !== currentText.toLowerCase()
-                  );
-
-                  const resolvedText = (hasTranscriptionError && actualSpoken)
-                    ? actualSpoken
-                    : currentText;
-
                   newTranscript[i] = {
                     ...newTranscript[i],
-                    text: resolvedText,
-                    rawTranscript: newTranscript[i].rawTranscript || currentText,
-                    actualSpokenText: actualSpoken || undefined,
-                    isTranscriptionError: hasTranscriptionError,
+                    text: currentText,
+                    rawTranscript: currentText,
                     corrections: feedback.mistakes,
                     correctedSentence: feedback.correctedSentence,
                     alternatives: feedback.alternatives
@@ -1777,45 +1763,13 @@ TONE:
                         )}>
                           <span className="text-[9px] font-bold uppercase tracking-widest text-dark/20 flex items-center gap-1.5">
                             {isUser ? 'You' : 'Florir'}
-                            {hasCorrections && msg.isTranscriptionError && msg.rawTranscript && msg.rawTranscript.toLowerCase() !== msg.text.toLowerCase() && (
-                              <span
-                                className="text-[8px] font-normal lowercase tracking-normal text-amber-700/80 bg-amber-500/10 px-1.5 py-0.5 rounded-full cursor-help"
-                                title={`Voice API heard: "${msg.rawTranscript}" (reconciled to ${lang} from audio)`}
-                              >
-                                reconciled from audio
-                              </span>
-                            )}
                           </span>
 
                           <div className={cn(
-                            "max-w-[90%] rounded-[24px] text-sm leading-relaxed shadow-sm transition-all duration-300",
-                            isUser
-                              ? (hasCorrections ? "bg-dark text-white rounded-tr-none p-4" : "bg-dark text-white rounded-tr-none py-2.5 px-4")
-                              : "bg-[#F3EFE9] text-dark rounded-tl-none border border-beige/20 p-4"
+                            "max-w-[90%] p-4 rounded-[24px] text-sm leading-relaxed shadow-sm transition-all duration-300",
+                            isUser ? "bg-dark text-white rounded-tr-none" : "bg-[#F3EFE9] text-dark rounded-tl-none border border-beige/20"
                           )}>
-                            {isUser && !hasCorrections ? (
-                              <div className="flex items-center gap-2.5 py-0.5 select-none">
-                                <div className="flex items-center gap-1 h-3.5 px-0.5">
-                                  <span className="w-0.5 h-2 bg-gold/70 rounded-full animate-pulse" />
-                                  <span className="w-0.5 h-3.5 bg-gold rounded-full" />
-                                  <span className="w-0.5 h-2.5 bg-gold/80 rounded-full" />
-                                  <span className="w-0.5 h-1.5 bg-gold/50 rounded-full" />
-                                </div>
-                                <span className="font-serif italic text-sm text-white/90 tracking-wide">
-                                  Spoken response
-                                </span>
-                                {msg.corrections !== undefined && (
-                                  <span className="inline-flex items-center gap-1 text-[10px] text-emerald-400 font-sans font-medium pl-2 border-l border-white/15">
-                                    <CheckCircle2 size={11} className="text-emerald-400" />
-                                    <span>Clear</span>
-                                  </span>
-                                )}
-                              </div>
-                            ) : isUser ? (
-                              <p className="font-serif italic text-white/95 text-[15px] leading-relaxed">
-                                "{msg.text}"
-                              </p>
-                            ) : showTranslations ? (
+                            {showTranslations ? (
                               <div className="flex flex-wrap gap-x-1 gap-y-1">
                                 {msg.text.split(' ').map((word, wIdx) => {
                                   const key = `${i}-${wIdx}`;
