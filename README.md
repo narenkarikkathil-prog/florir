@@ -1,10 +1,10 @@
-# Orati (Florir) 🌸
+# Orati (Florir) 
 
 An AI-powered language learning platform featuring real-time conversational practice, AP-style simulated examinations, situational roleplaying, vocabulary comprehension listening, and spaced-repetition verb conjugation mastery.
 
 ---
 
-## 🚀 Quick Start (Local Development)
+## Quick Start (Local Development)
 
 ### 1. Prerequisites
 - Node.js 20+
@@ -77,7 +77,7 @@ Orati is configured for single-click zero-config deployment on Vercel.
 
 ---
 
-## 🛠️ Features
+## Features
 
 - **Live Voice Sessions**: Multimodal real-time conversational speaking and listening with Gemini.
 - **Text Conversations**: Chat in French, Spanish, Mandarin, Italian, German, Hindi, Arabic, or Russian with real-time feedback, correction hints, and translations.
@@ -88,7 +88,7 @@ Orati is configured for single-click zero-config deployment on Vercel.
 
 ---
 
-## 📜 Available Scripts
+## Available Scripts
 
 - `npm run dev`: Start local Vite development server
 - `npm run build`: Build production assets into `dist/`
@@ -97,7 +97,7 @@ Orati is configured for single-click zero-config deployment on Vercel.
 
 ---
 
-## 👤 Author & Credits
+## Author & Credits
 
 Developed and run independently by **Narendran Karikkathil** as a non-profit educational initiative.
 
