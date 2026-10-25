@@ -1284,7 +1284,10 @@ TONE:
       <BloomingFlower className="absolute -bottom-10 -right-10 text-gold" size={160} delay={1.1} />
 
       {/* Top Navigation */}
-      <div className="p-4 md:p-8 flex items-center justify-between z-20 relative">
+      <div className={cn(
+        "p-4 md:p-8 flex items-center justify-between z-20 relative",
+        activePanel === 'transcript' && "hidden md:flex"
+      )}>
         <div className="flex items-center gap-2 md:gap-4">
           <FlowerLogo className="text-gold shrink-0" size={32} />
           {/* Situation Badge - hidden on mobile, appears at bottom instead */}
@@ -1777,72 +1780,105 @@ TONE:
               </div>
             </motion.div>
 
-            {/* Floating Transcript Bubble */}
+            {/* Mobile Backdrop for Transcript */}
             <AnimatePresence>
               {activePanel === 'transcript' && (
                 <motion.div
-                  initial={{ opacity: 0, x: 50, scale: 0.9 }}
-                  animate={{ opacity: 1, x: 0, scale: 1 }}
-                  exit={{ opacity: 0, x: 50, scale: 0.9 }}
-                  transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-                  className="w-full max-w-[450px] h-[400px] md:h-[500px] bg-white/90 backdrop-blur-xl rounded-[40px] shadow-[0_20px_60px_-15px_rgba(0,0,0,0.1)] border border-beige/20 p-8 flex flex-col z-10"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  onClick={() => setActivePanel('none')}
+                  className="fixed inset-0 bg-dark/30 backdrop-blur-xs z-40 md:hidden"
+                />
+              )}
+            </AnimatePresence>
+
+            {/* Transcript Window (Mobile Bottom Sheet / Desktop Side Panel) */}
+            <AnimatePresence>
+              {activePanel === 'transcript' && (
+                <motion.div
+                  initial={{ opacity: 0, y: 40 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 40 }}
+                  transition={{ type: 'spring', damping: 26, stiffness: 220 }}
+                  className={cn(
+                    "fixed inset-x-0 bottom-0 top-16 z-50 flex flex-col bg-white border-t border-beige-mid/30 shadow-2xl rounded-t-[32px] p-4 sm:p-6",
+                    "md:relative md:inset-auto md:top-auto md:z-10 md:w-full md:max-w-[460px] md:h-[540px] md:rounded-[40px] md:border md:border-beige/20 md:p-7 md:shadow-[0_20px_60px_-15px_rgba(0,0,0,0.1)] md:bg-white/95 md:backdrop-blur-2xl"
+                  )}
                 >
-                  <div className="flex items-center justify-between mb-4">
+                  {/* Mobile Grab Handle */}
+                  <div className="w-12 h-1.5 bg-dark/15 rounded-full mx-auto mb-3 md:hidden shrink-0" />
+
+                  {/* Header */}
+                  <div className="flex items-center justify-between mb-3 pb-2.5 border-b border-beige-mid/20 shrink-0">
                     <div className="flex items-center gap-2">
-                      <h3 className="text-xl font-serif font-bold">Transcript</h3>
+                      <h3 className="text-lg md:text-xl font-serif font-bold text-dark">Transcript</h3>
                       {transcript.length > 0 && (
-                        <span className="text-[10px] text-dark/40 font-mono bg-beige/40 px-2 py-0.5 rounded-full font-bold">
+                        <span className="text-[11px] text-dark/60 font-mono bg-beige/50 px-2.5 py-0.5 rounded-full font-bold">
                           {transcript.length}
                         </span>
                       )}
                     </div>
                     <div className="flex items-center gap-1.5">
+                      {transcript.length > 0 && (
+                        <button
+                          onClick={() => setTranscript([])}
+                          className="p-2 hover:bg-beige/40 rounded-full transition-all text-dark/40 hover:text-red-500"
+                          title="Clear Transcript"
+                        >
+                          <Trash2 size={16} />
+                        </button>
+                      )}
                       <button
-                        onClick={() => setTranscript([])}
-                        className="p-2 hover:bg-beige rounded-full transition-all text-dark/40 hover:text-red-500"
-                        title="Clear Transcript"
+                        onClick={() => setActivePanel('none')}
+                        className="p-2 hover:bg-beige/40 rounded-full transition-all text-dark/60 hover:text-dark"
+                        title="Close Transcript"
                       >
-                        <Trash2 size={16} />
-                      </button>
-                      <button onClick={() => setActivePanel('none')} className="p-2 hover:bg-beige/20 rounded-xl transition-all">
                         <X size={20} />
                       </button>
                     </div>
                   </div>
 
                   {/* Translation Toolbar */}
-                  <div className="flex items-center gap-2 mb-4 pb-3 border-b border-beige-mid/20 flex-wrap">
+                  <div className="flex items-center gap-2 mb-3 pb-2.5 border-b border-beige-mid/20 shrink-0 overflow-x-auto no-scrollbar">
                     <button
                       type="button"
                       onClick={toggleTranslateAllMessages}
                       className={cn(
-                        "px-3 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-wider transition-all flex items-center gap-1.5 shadow-2xs",
+                        "px-3 py-1.5 rounded-full text-[11px] font-bold uppercase tracking-wider transition-all flex items-center gap-1.5 shrink-0 shadow-2xs",
                         showFullTranslations ? "bg-gold text-cream" : "bg-beige/40 text-dark/70 hover:bg-beige"
                       )}
                       title="Translate all whole messages in the transcript"
                     >
-                      <Languages size={12} />
-                      {showFullTranslations ? "Full Translations Active" : "Translate Whole Messages"}
+                      <Languages size={13} />
+                      <span>{showFullTranslations ? "Full Active" : "Translate All"}</span>
                     </button>
                     <button
                       type="button"
                       onClick={() => setShowTranslations(!showTranslations)}
                       className={cn(
-                        "px-3 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-wider transition-all flex items-center gap-1.5 shadow-2xs",
+                        "px-3 py-1.5 rounded-full text-[11px] font-bold uppercase tracking-wider transition-all flex items-center gap-1.5 shrink-0 shadow-2xs",
                         showTranslations ? "bg-dark text-white" : "bg-beige/40 text-dark/70 hover:bg-beige"
                       )}
                       title="Tap individual words in messages to translate"
                     >
-                      <Globe size={12} />
-                      {showTranslations ? "Word Lookup Active" : "Tap Words to Translate"}
+                      <Globe size={13} />
+                      <span>{showTranslations ? "Word Tap Active" : "Tap Words"}</span>
                     </button>
                   </div>
 
+                  {/* Message List */}
                   <div
                     ref={transcriptScrollRef}
-                    className="flex-1 overflow-y-auto pr-2 custom-scrollbar space-y-6"
+                    className="flex-1 min-h-0 overflow-y-auto pr-1 sm:pr-2 custom-scrollbar space-y-4"
                   >
-                    {transcript.length === 0 && <p className="text-dark/30 italic text-center py-10">No conversation yet...</p>}
+                    {transcript.length === 0 && (
+                      <div className="h-full flex flex-col items-center justify-center text-center py-10">
+                        <MessageSquare className="text-dark/15 mb-2" size={32} />
+                        <p className="text-dark/40 italic text-sm">No conversation yet...</p>
+                        <p className="text-dark/30 text-xs mt-1">Start speaking to see your live transcript</p>
+                      </div>
+                    )}
                     {transcript.map((msg, i) => {
                       const isUser = msg.role === 'user';
                       const hasCorrections = isUser && Boolean(
@@ -1875,28 +1911,35 @@ TONE:
                           </span>
 
                           <div className={cn(
-                            "max-w-[90%] rounded-[24px] text-sm leading-relaxed shadow-sm transition-all duration-300",
+                            "max-w-[88%] sm:max-w-[85%] rounded-[24px] text-sm leading-relaxed shadow-sm transition-all duration-300",
                             isUser
-                              ? (hasCorrections ? "bg-dark text-white rounded-tr-none p-4" : "bg-dark text-white rounded-tr-none py-2.5 px-4")
-                              : "bg-[#F3EFE9] text-dark rounded-tl-none border border-beige/20 p-4"
+                              ? "bg-dark text-white rounded-tr-none p-3.5 sm:p-4"
+                              : "bg-[#F3EFE9] text-dark rounded-tl-none border border-beige/20 p-3.5 sm:p-4"
                           )}>
                             {isUser && !hasCorrections ? (
-                              <div className="flex items-center gap-2.5 py-0.5 select-none">
-                                <div className="flex items-center gap-1 h-3.5 px-0.5">
-                                  <span className="w-0.5 h-2 bg-gold/70 rounded-full animate-pulse" />
-                                  <span className="w-0.5 h-3.5 bg-gold rounded-full" />
-                                  <span className="w-0.5 h-2.5 bg-gold/80 rounded-full" />
-                                  <span className="w-0.5 h-1.5 bg-gold/50 rounded-full" />
-                                </div>
-                                <span className="font-serif italic text-sm text-white/90 tracking-wide">
-                                  Spoken response
-                                </span>
-                                {msg.corrections !== undefined && (
-                                  <span className="inline-flex items-center gap-1 text-[10px] text-emerald-400 font-sans font-medium pl-2 border-l border-white/15">
-                                    <CheckCircle2 size={11} className="text-emerald-400" />
-                                    <span>Clear</span>
-                                  </span>
+                              <div className="flex flex-col gap-1.5">
+                                {msg.text && (
+                                  <p className="font-serif italic text-white/95 text-[15px] leading-relaxed">
+                                    "{msg.text}"
+                                  </p>
                                 )}
+                                <div className="flex items-center gap-2 pt-0.5 select-none">
+                                  <div className="flex items-center gap-1 h-3.5 px-0.5">
+                                    <span className="w-0.5 h-2 bg-gold/70 rounded-full animate-pulse" />
+                                    <span className="w-0.5 h-3.5 bg-gold rounded-full" />
+                                    <span className="w-0.5 h-2.5 bg-gold/80 rounded-full" />
+                                    <span className="w-0.5 h-1.5 bg-gold/50 rounded-full" />
+                                  </div>
+                                  <span className="font-serif italic text-xs text-white/80 tracking-wide">
+                                    Spoken response
+                                  </span>
+                                  {msg.corrections !== undefined && (
+                                    <span className="inline-flex items-center gap-1 text-[10px] text-emerald-400 font-sans font-medium pl-2 border-l border-white/15">
+                                      <CheckCircle2 size={11} className="text-emerald-400" />
+                                      <span>Clear</span>
+                                    </span>
+                                  )}
+                                </div>
                               </div>
                             ) : isUser ? (
                               <p className="font-serif italic text-white/95 text-[15px] leading-relaxed">
@@ -1969,78 +2012,85 @@ TONE:
 
                           {/* Inline Correction for User Messages */}
                           {hasCorrections && (
-                          <motion.div
-                            initial={{ opacity: 0, y: -10 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            className="max-w-[90%] mt-1 p-4 bg-green-50 border border-green-100 rounded-[24px] rounded-tr-none text-xs text-green-900 flex flex-col gap-2 shadow-sm"
-                          >
-                            <div className="flex items-center gap-2">
-                              <CheckCircle2 size={14} className="text-green-500" />
-                              <span className="font-bold uppercase text-[9px] tracking-wider opacity-60">Correction</span>
-                            </div>
-                            <p className="font-medium italic text-sm">"{msg.correctedSentence}"</p>
-                            {showTryAgain && (
-                              <div className="mt-2 flex items-center gap-2">
-                                <button
-                                  onClick={() => {
-                                    // Logic to "try again" - maybe clear last message or just highlight
-                                    console.log("Try again clicked for:", msg.correctedSentence);
-                                  }}
-                                  className="px-3 py-1 bg-green-600 text-white rounded-full text-[10px] font-bold hover:bg-green-700 transition-all shadow-sm"
-                                >
-                                  Try Again
-                                </button>
-                                <span className="text-[10px] font-bold text-green-700/60 uppercase">Say this instead!</span>
+                            <motion.div
+                              initial={{ opacity: 0, y: -10 }}
+                              animate={{ opacity: 1, y: 0 }}
+                              className="max-w-[88%] sm:max-w-[85%] mt-1 p-3.5 sm:p-4 bg-green-50 border border-green-100 rounded-[24px] rounded-tr-none text-xs text-green-900 flex flex-col gap-2 shadow-xs"
+                            >
+                              <div className="flex items-center gap-2">
+                                <CheckCircle2 size={14} className="text-green-500" />
+                                <span className="font-bold uppercase text-[9px] tracking-wider opacity-60">Correction</span>
                               </div>
-                            )}
-                            {msg.alternatives && msg.alternatives.length > 0 && (
-                              <div className="mt-2 space-y-1">
-                                <span className="text-[9px] font-bold text-green-700/40 uppercase">Alternatives</span>
-                                {msg.alternatives.map((alt, ai) => (
-                                  <p key={ai} className="text-[11px] text-green-800/80 italic">"{alt}"</p>
-                                ))}
-                              </div>
-                            )}
-                            {msg.corrections && msg.corrections.length > 0 && (
-                              <div className="flex flex-wrap gap-1.5 mt-1 pt-2 border-t border-green-100/50">
-                                {msg.corrections.map((c, ci) => (
-                                  <div key={ci} className="px-2 py-1 bg-white/80 rounded-lg border border-green-200/50 flex items-center gap-1.5 shadow-sm">
-                                    <span className="line-through text-red-400 font-medium">{c.original}</span>
-                                    <ChevronRight size={10} className="text-green-300" />
-                                    <span className={cn(
-                                      "font-bold",
-                                      c.severity > 7 ? "text-red-600" :
-                                        c.severity > 4 ? "text-orange-600" :
-                                          "text-green-600"
-                                    )}>{c.correction}</span>
-                                  </div>
-                                ))}
-                              </div>
-                            )}
-                          </motion.div>
-                        )}
-                      </div>
-                    );
-                  })}
+                              <p className="font-medium italic text-sm">"{msg.correctedSentence}"</p>
+                              {showTryAgain && (
+                                <div className="mt-1 flex items-center gap-2">
+                                  <button
+                                    onClick={() => {
+                                      console.log("Try again clicked for:", msg.correctedSentence);
+                                    }}
+                                    className="px-3 py-1 bg-green-600 text-white rounded-full text-[10px] font-bold hover:bg-green-700 transition-all shadow-xs"
+                                  >
+                                    Try Again
+                                  </button>
+                                  <span className="text-[10px] font-bold text-green-700/60 uppercase">Say this instead!</span>
+                                </div>
+                              )}
+                              {msg.alternatives && msg.alternatives.length > 0 && (
+                                <div className="mt-1 space-y-0.5">
+                                  <span className="text-[9px] font-bold text-green-700/40 uppercase">Alternatives</span>
+                                  {msg.alternatives.map((alt, ai) => (
+                                    <p key={ai} className="text-[11px] text-green-800/80 italic">"{alt}"</p>
+                                  ))}
+                                </div>
+                              )}
+                              {msg.corrections && msg.corrections.length > 0 && (
+                                <div className="flex flex-wrap gap-1.5 mt-1 pt-2 border-t border-green-100/50">
+                                  {msg.corrections.map((c, ci) => (
+                                    <div key={ci} className="px-2 py-1 bg-white/80 rounded-lg border border-green-200/50 flex items-center gap-1.5 shadow-2xs">
+                                      <span className="line-through text-red-400 font-medium">{c.original}</span>
+                                      <ChevronRight size={10} className="text-green-300" />
+                                      <span className={cn(
+                                        "font-bold",
+                                        c.severity > 7 ? "text-red-600" :
+                                          c.severity > 4 ? "text-orange-600" :
+                                            "text-green-600"
+                                      )}>{c.correction}</span>
+                                    </div>
+                                  ))}
+                                </div>
+                              )}
+                            </motion.div>
+                          )}
+                        </div>
+                      );
+                    })}
                     <div ref={transcriptEndRef} />
                   </div>
 
-                  {/* Inline Mobile Mic (Shows only inside transcript when active on small screens) */}
-                  <div className="md:hidden mt-4 pt-4 border-t border-beige/20 flex flex-col items-center gap-2">
+                  {/* Inline Mobile Audio Dock at bottom of transcript */}
+                  <div className="md:hidden mt-3 pt-3 border-t border-beige-mid/25 flex items-center justify-between gap-3 shrink-0">
+                    <div className="flex items-center gap-2.5 min-w-0">
+                      <div className={cn(
+                        "w-2.5 h-2.5 rounded-full shrink-0",
+                        isActive && !isPaused ? "bg-emerald-500 animate-ping" : isPaused ? "bg-amber-500" : "bg-dark/20"
+                      )} />
+                      <span className="text-xs font-bold text-dark/70 truncate">
+                        {isActive ? (isPaused ? "Session Paused" : "Florir is listening...") : "Microphone idle"}
+                      </span>
+                    </div>
+
                     <button
                       onClick={toggleSession}
                       className={cn(
-                        "w-16 h-16 rounded-full flex items-center justify-center transition-all shadow-[0_10px_25px_-5px_rgba(196,151,106,0.4)] relative",
+                        "px-4 py-2 rounded-full flex items-center gap-2 transition-all font-bold text-xs uppercase tracking-wider shadow-sm shrink-0",
                         isActive && !isPaused ? "bg-gold text-white" :
-                          isPaused ? "bg-yellow-500 text-white" :
+                          isPaused ? "bg-amber-500 text-white" :
                             "bg-gold text-white"
                       )}
                     >
-                      <Mic size={24} className={cn(isActive && !isPaused && "animate-pulse")} />
+                      <Mic size={15} className={cn(isActive && !isPaused && "animate-pulse")} />
+                      <span>{isActive ? (isPaused ? "Resume" : "Pause") : "Speak"}</span>
                     </button>
-                    <span className="text-[10px] font-bold text-dark/30 uppercase tracking-widest">
-                      {isActive ? (isPaused ? "Paused" : "Listening...") : "Tap to speak"}
-                    </span>
                   </div>
                 </motion.div>
               )}
@@ -2053,22 +2103,24 @@ TONE:
       <div className="mt-auto px-4 md:px-10 pb-6 pt-4 flex flex-col gap-4 z-10">
 
         {/* Mobile Settings Badges (Moved to bottom) */}
-        <div className="md:hidden flex flex-wrap justify-center gap-2 mt-2">
-          {mode === 'roleplay' && selectedSituation ? (
-            <div className="flex items-center gap-2 bg-white/80 backdrop-blur-sm px-4 py-2 rounded-full border border-beige/30 shadow-sm text-sm">
-              <span>{SITUATIONS.find(s => s.id === selectedSituation)?.icon}</span>
-              <span className="font-bold text-dark/80">{SITUATIONS.find(s => s.id === selectedSituation)?.title}</span>
-            </div>
-          ) : (mode?.includes('vocabulary') || mode?.includes('listening')) ? (
-            <div className="flex items-center gap-2 bg-white/80 backdrop-blur-sm px-4 py-2 rounded-full border border-beige/30 shadow-sm text-sm font-bold text-dark/80 capitalize">
-              {level} {mode}
-            </div>
-          ) : (
-            <div className="flex items-center gap-2 bg-white/80 backdrop-blur-sm px-4 py-2 rounded-full border border-beige/30 shadow-sm text-sm font-bold text-dark/80 capitalize">
-              {mode} Mode
-            </div>
-          )}
-        </div>
+        {activePanel !== 'transcript' && (
+          <div className="md:hidden flex flex-wrap justify-center gap-2 mt-2">
+            {mode === 'roleplay' && selectedSituation ? (
+              <div className="flex items-center gap-2 bg-white/80 backdrop-blur-sm px-4 py-2 rounded-full border border-beige/30 shadow-sm text-sm">
+                <span>{SITUATIONS.find(s => s.id === selectedSituation)?.icon}</span>
+                <span className="font-bold text-dark/80">{SITUATIONS.find(s => s.id === selectedSituation)?.title}</span>
+              </div>
+            ) : (mode?.includes('vocabulary') || mode?.includes('listening')) ? (
+              <div className="flex items-center gap-2 bg-white/80 backdrop-blur-sm px-4 py-2 rounded-full border border-beige/30 shadow-sm text-sm font-bold text-dark/80 capitalize">
+                {level} {mode}
+              </div>
+            ) : (
+              <div className="flex items-center gap-2 bg-white/80 backdrop-blur-sm px-4 py-2 rounded-full border border-beige/30 shadow-sm text-sm font-bold text-dark/80 capitalize">
+                {mode} Mode
+              </div>
+            )}
+          </div>
+        )}
 
         {/* Live Accuracy and Corrections */}
         {!(mode?.includes('vocabulary') || mode?.includes('listening')) && isActive && (
