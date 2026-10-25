@@ -147,6 +147,10 @@ export default function TypeSession() {
   // Keep a ref to the latest state so handleSendMessage can read it without staleness
   const isVoiceEnabledRef = useRef(isVoiceEnabled);
   useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+  }, []);
+
+  useEffect(() => {
     isVoiceEnabledRef.current = isVoiceEnabled;
   }, [isVoiceEnabled]);
   

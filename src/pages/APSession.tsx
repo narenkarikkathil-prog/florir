@@ -310,6 +310,10 @@ export default function APSession({ mode }: { mode: 'ap-simulated' | 'ap-speakin
   const prompts = isConversation ? AP_CONVERSATIONS : AP_CULTURAL_COMPARISONS;
 
   useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+  }, []);
+
+  useEffect(() => {
     setShowTurnTranslation(false);
     setTurnTranslation('');
   }, [currentTurnIndex]);

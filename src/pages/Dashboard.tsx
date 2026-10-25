@@ -160,6 +160,7 @@ export default function Dashboard() {
   }, [selectedLang]);
 
   const startSession = (modeId: string) => {
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
     if (modeId === 'type-session') {
       navigate(`/type-session?lang=${selectedLang}`);
     } else if (modeId === 'verbs') {

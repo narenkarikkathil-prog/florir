@@ -547,7 +547,21 @@ export default function Session() {
     if (nextState) {
       const missing = transcript
         .map((m, idx) => ({ m, idx }))
-        .filter(({ idx }) => !messageTranslations[idx]);
+        .filter(({ m, idx }) => {
+          if (messageTranslations[idx]) return false;
+          if (m.role === 'user') {
+            const hasCorrections = Boolean(
+              m.corrections &&
+              m.corrections.length > 0 &&
+              (
+                (m.correctedSentence && m.correctedSentence.trim().toLowerCase() !== m.text.trim().toLowerCase()) ||
+                m.corrections.some(c => c.original && c.correction && c.original.trim().toLowerCase() !== c.correction.trim().toLowerCase())
+              )
+            );
+            return hasCorrections;
+          }
+          return true;
+        });
 
       if (missing.length > 0) {
         setLoadingTranslations(prev => {
@@ -1272,6 +1286,7 @@ TONE:
   };
 
   useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
     return () => geminiRef.current?.stop();
   }, []);
 
@@ -1913,33 +1928,20 @@ TONE:
                           <div className={cn(
                             "max-w-[88%] sm:max-w-[85%] rounded-[24px] text-sm leading-relaxed shadow-sm transition-all duration-300",
                             isUser
-                              ? "bg-dark text-white rounded-tr-none p-3.5 sm:p-4"
+                              ? (hasCorrections ? "bg-dark text-white rounded-tr-none p-3.5 sm:p-4" : "bg-dark text-white rounded-tr-none py-2.5 px-4")
                               : "bg-[#F3EFE9] text-dark rounded-tl-none border border-beige/20 p-3.5 sm:p-4"
                           )}>
                             {isUser && !hasCorrections ? (
-                              <div className="flex flex-col gap-1.5">
-                                {msg.text && (
-                                  <p className="font-serif italic text-white/95 text-[15px] leading-relaxed">
-                                    "{msg.text}"
-                                  </p>
-                                )}
-                                <div className="flex items-center gap-2 pt-0.5 select-none">
-                                  <div className="flex items-center gap-1 h-3.5 px-0.5">
-                                    <span className="w-0.5 h-2 bg-gold/70 rounded-full animate-pulse" />
-                                    <span className="w-0.5 h-3.5 bg-gold rounded-full" />
-                                    <span className="w-0.5 h-2.5 bg-gold/80 rounded-full" />
-                                    <span className="w-0.5 h-1.5 bg-gold/50 rounded-full" />
-                                  </div>
-                                  <span className="font-serif italic text-xs text-white/80 tracking-wide">
-                                    Spoken response
-                                  </span>
-                                  {msg.corrections !== undefined && (
-                                    <span className="inline-flex items-center gap-1 text-[10px] text-emerald-400 font-sans font-medium pl-2 border-l border-white/15">
-                                      <CheckCircle2 size={11} className="text-emerald-400" />
-                                      <span>Clear</span>
-                                    </span>
-                                  )}
+                              <div className="flex items-center gap-2 select-none py-0.5">
+                                <div className="flex items-center gap-1 h-3.5 px-0.5">
+                                  <span className="w-0.5 h-2 bg-gold/70 rounded-full animate-pulse" />
+                                  <span className="w-0.5 h-3.5 bg-gold rounded-full" />
+                                  <span className="w-0.5 h-2.5 bg-gold/80 rounded-full" />
+                                  <span className="w-0.5 h-1.5 bg-gold/50 rounded-full" />
                                 </div>
+                                <span className="font-serif italic text-xs sm:text-sm text-white/90 tracking-wide">
+                                  Spoken response
+                                </span>
                               </div>
                             ) : isUser ? (
                               <p className="font-serif italic text-white/95 text-[15px] leading-relaxed">
@@ -1973,7 +1975,7 @@ TONE:
                             )}
 
                             {/* Full Message Translation within bubble */}
-                            {isTranslationVisible && translationText && (
+                            {isTranslationVisible && translationText && (!isUser || hasCorrections) && (
                               <motion.div
                                 initial={{ opacity: 0, y: -4 }}
                                 animate={{ opacity: 1, y: 0 }}
@@ -1993,7 +1995,7 @@ TONE:
                           </div>
 
                           {/* Per-message translate toggle button */}
-                          {msg.text && (
+                          {msg.text && (!isUser || hasCorrections) && (
                             <button
                               type="button"
                               onClick={() => toggleMessageTranslation(i, msg.text)}

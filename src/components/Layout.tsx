@@ -38,6 +38,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   };
 
   const isLanding = location.pathname === '/';
+  const isSession = location.pathname.startsWith('/session') || location.pathname.startsWith('/type-session');
 
   return (
     <div className="min-h-screen flex flex-col bg-cream relative overflow-hidden">
@@ -124,62 +125,64 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
       <SettingsModal isOpen={isSettingsOpen} onClose={() => setIsSettingsOpen(false)} />
 
-      <footer className="bg-beige py-12 border-t border-beige-mid/30">
-        <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-            <div className="col-span-1 md:col-span-2">
-              <div className="flex items-center gap-2 mb-4">
-                <FlowerLogo className="text-gold" size={24} />
-                <span className="font-serif text-xl font-bold tracking-tight">Orati</span>
+      {!isSession && (
+        <footer className="bg-beige py-12 border-t border-beige-mid/30">
+          <div className="container mx-auto px-4">
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+              <div className="col-span-1 md:col-span-2">
+                <div className="flex items-center gap-2 mb-4">
+                  <FlowerLogo className="text-gold" size={24} />
+                  <span className="font-serif text-xl font-bold tracking-tight">Orati</span>
+                </div>
+                <p className="text-dark/60 max-w-sm text-sm leading-relaxed mb-3">
+                  A speech-first language learning platform dedicated to helping you master languages through real-time AI conversations.
+                </p>
+                <p className="text-xs text-dark/50 font-medium">
+                  Developed and run by <span className="font-semibold text-dark/80">Narendran Karikkathil</span>
+                </p>
               </div>
-              <p className="text-dark/60 max-w-sm text-sm leading-relaxed mb-3">
-                A speech-first language learning platform dedicated to helping you master languages through real-time AI conversations.
-              </p>
-              <p className="text-xs text-dark/50 font-medium">
-                Developed and run by <span className="font-semibold text-dark/80">Narendran Karikkathil</span>
-              </p>
+              <div>
+                <h4 className="font-bold text-sm mb-4 uppercase tracking-wider text-dark/40">Languages</h4>
+                <ul className="grid grid-cols-2 gap-x-4 gap-y-1.5 text-sm text-dark/70">
+                  <li>French</li>
+                  <li>Spanish</li>
+                  <li>Mandarin</li>
+                  <li>Italian</li>
+                  <li>German</li>
+                  <li>Hindi</li>
+                  <li>Arabic</li>
+                  <li>Russian</li>
+                  <li>Farsi (Persian)</li>
+                  <li>Thai</li>
+                  <li>Urdu</li>
+                  <li>Tagalog (Filipino)</li>
+                  <li>Serbian, Croatian & Bosnian</li>
+                  <li>Malayalam</li>
+                </ul>
+              </div>
+              <div>
+                <h4 className="font-bold text-sm mb-4 uppercase tracking-wider text-dark/40">Mission</h4>
+                <p className="text-xs text-dark/60 leading-relaxed mb-4">
+                  Orati is a non-profit initiative dedicated to making high-quality language education accessible to everyone, everywhere.
+                </p>
+                <Link to="/nonprofit" className="text-xs font-bold text-gold hover:underline flex items-center gap-1">
+                  Learn More <ArrowRight size={12} />
+                </Link>
+              </div>
             </div>
-            <div>
-              <h4 className="font-bold text-sm mb-4 uppercase tracking-wider text-dark/40">Languages</h4>
-              <ul className="grid grid-cols-2 gap-x-4 gap-y-1.5 text-sm text-dark/70">
-                <li>French</li>
-                <li>Spanish</li>
-                <li>Mandarin</li>
-                <li>Italian</li>
-                <li>German</li>
-                <li>Hindi</li>
-                <li>Arabic</li>
-                <li>Russian</li>
-                <li>Farsi (Persian)</li>
-                <li>Thai</li>
-                <li>Urdu</li>
-                <li>Tagalog (Filipino)</li>
-                <li>Serbian, Croatian & Bosnian</li>
-                <li>Malayalam</li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="font-bold text-sm mb-4 uppercase tracking-wider text-dark/40">Mission</h4>
-              <p className="text-xs text-dark/60 leading-relaxed mb-4">
-                Orati is a non-profit initiative dedicated to making high-quality language education accessible to everyone, everywhere.
-              </p>
-              <Link to="/nonprofit" className="text-xs font-bold text-gold hover:underline flex items-center gap-1">
-                Learn More <ArrowRight size={12} />
-              </Link>
-            </div>
-          </div>
-          <div className="mt-12 pt-8 border-t border-beige-mid/20 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-dark/40">
-            <div>
-              © {new Date().getFullYear()} Orati. Developed and run by <span className="font-semibold text-dark/70">Narendran Karikkathil</span>.
-            </div>
-            <div className="flex items-center gap-4">
-              <Link to="/privacy" className="hover:text-gold transition-colors">Privacy Policy</Link>
-              <Link to="/terms" className="hover:text-gold transition-colors">Terms of Service</Link>
-              <Link to="/nonprofit" className="hover:text-gold transition-colors">Our Mission</Link>
+            <div className="mt-12 pt-8 border-t border-beige-mid/20 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-dark/40">
+              <div>
+                © {new Date().getFullYear()} Orati. Developed and run by <span className="font-semibold text-dark/70">Narendran Karikkathil</span>.
+              </div>
+              <div className="flex items-center gap-4">
+                <Link to="/privacy" className="hover:text-gold transition-colors">Privacy Policy</Link>
+                <Link to="/terms" className="hover:text-gold transition-colors">Terms of Service</Link>
+                <Link to="/nonprofit" className="hover:text-gold transition-colors">Our Mission</Link>
+              </div>
             </div>
           </div>
-        </div>
-      </footer>
+        </footer>
+      )}
     </div>
   );
 }
