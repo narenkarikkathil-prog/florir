@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'motion/react';
-import { Mic, BookOpen, MessageSquare, GraduationCap, Play, Trophy, Clock, AlertCircle, ChevronDown, Globe, Keyboard, BookCheck } from 'lucide-react';
+import { Mic, BookOpen, GraduationCap, Play, Trophy, Clock, AlertCircle, ChevronDown, Globe, Keyboard, BookCheck } from 'lucide-react';
 import { cn } from '@/src/lib/utils';
 import { Language, UserLevel } from '@/src/types';
 import { supabase } from '@/src/lib/supabase';
@@ -13,7 +13,7 @@ const generalModes = [
   {
     id: 'roleplay',
     title: 'Situational Learning',
-    desc: 'Practice real-world scenarios with AI characters.',
+    desc: 'Practice real-world scenarios or free conversation with AI.',
     icon: <Mic size={24} />,
     color: 'bg-blue-50 text-blue-600',
   },
@@ -23,13 +23,6 @@ const generalModes = [
     desc: 'Test your listening with multiple choice quizzes.',
     icon: <BookOpen size={24} />,
     color: 'bg-green-50 text-green-600',
-  },
-  {
-    id: 'conversation',
-    title: 'Free Conversation',
-    desc: 'Talk about anything and get live feedback.',
-    icon: <MessageSquare size={24} />,
-    color: 'bg-purple-50 text-purple-600',
   },
   {
     id: 'type-session',

@@ -120,6 +120,13 @@ export default function Session() {
 
   const SITUATIONS = [
     {
+      id: 'free',
+      title: 'Free Conversation',
+      icon: <MessageSquare size={24} className="text-purple-500" />,
+      prompt: "Engage in a casual, free-flowing conversation.",
+      subScenarios: []
+    },
+    {
       id: 'restaurant',
       title: 'At a Restaurant',
       icon: <Utensils size={24} className="text-orange-500" />,
@@ -459,11 +466,12 @@ export default function Session() {
 
   const rerollSubScenario = (sitId: string) => {
     const sit = SITUATIONS.find(s => s.id === sitId);
-    if (sit && sit.subScenarios) {
+    if (sit && sit.subScenarios && sit.subScenarios.length > 0) {
       const randomSub = sit.subScenarios[Math.floor(Math.random() * sit.subScenarios.length)];
       setCurrentSubScenario(randomSub);
       return randomSub;
     }
+    setCurrentSubScenario("");
     return "";
   };
 
@@ -965,7 +973,7 @@ export default function Session() {
       systemInstruction += `The user is at an advanced level. Use sophisticated vocabulary, complex figures of speech, and advanced idioms in ${lang} (C1–C2 level). Speak exactly as a native would in a professional or intellectual setting. Use a wide range of grammatical structures and nuanced expressions. `;
     }
 
-    if (mode === 'roleplay') {
+    if (mode === 'roleplay' && selectedSituation !== 'free') {
       const situation = SITUATIONS.find(s => s.id === selectedSituation);
       systemInstruction = `You are a ${lang} conversation partner roleplaying as a real-world character (e.g., a waiter at a restaurant).
 
@@ -1010,7 +1018,7 @@ STARTING THE CONVERSATION:
 TONE:
 - Patient, encouraging, and concise.
 - Never switch out of the roleplay character.`;
-    } else if (mode === 'conversation') {
+    } else if (mode === 'conversation' || (mode === 'roleplay' && selectedSituation === 'free')) {
       systemInstruction += `Engage in a free conversation in ${lang}. 
 
 LANGUAGE:
@@ -1060,9 +1068,9 @@ TONE:
         languageCode: LANGUAGE_CODES[lang] || 'en-US',
         voiceName: geminiRef.current.getVoiceName(),
         tools: [provideFeedbackTool],
-        initialMessage: mode === 'roleplay'
+        initialMessage: (mode === 'roleplay' && selectedSituation !== 'free')
           ? `[SYSTEM: START THE ROLEPLAY NOW] Introduce the scene: ${currentSubScenario || 'a restaurant'} and greet me in ${lang} to start the roleplay. You MUST speak first. Do not wait for me to speak.`
-          : (mode === 'conversation' ? `[SYSTEM: START THE CONVERSATION NOW] Greet me in ${lang} to start our conversation. You MUST speak first. Do not wait for me to speak.` : undefined),
+          : `[SYSTEM: START THE CONVERSATION NOW] Greet me in ${lang} to start our conversation. You MUST speak first. Do not wait for me to speak.`,
         onVolume: (volume) => {
           // Threshold for "activity" - 0.01 is a reasonable RMS for speech
           if (volume > 0.01) {
@@ -1221,7 +1229,7 @@ TONE:
 
       setTranscript(prev => {
         const filtered = prev.filter(m => m.text !== 'Connecting to Florir...');
-        const introMsg = mode === 'roleplay'
+        const introMsg = (mode === 'roleplay' && selectedSituation !== 'free')
           ? `Connection established! Ready to speak. Setting the scene: You are at ${currentSubScenario || 'a restaurant'} where ${lang} is spoken.`
           : 'Connection established! Ready to speak.';
         return [{ role: 'ai', text: introMsg, timestamp: Date.now() }, ...filtered];
@@ -1317,13 +1325,15 @@ TONE:
               </div>
               {!isActive && (
                 <div className="flex items-center gap-2 ml-2 border-l border-beige/30 pl-2">
-                  <button
-                    onClick={() => rerollSubScenario(selectedSituation)}
-                    title="Reroll scenario"
-                    className="p-1 hover:bg-beige/20 rounded-lg transition-all text-gold"
-                  >
-                    <Dices size={14} className="hover:scale-110 transition-transform" />
-                  </button>
+                  {selectedSituation !== 'free' && (
+                    <button
+                      onClick={() => rerollSubScenario(selectedSituation)}
+                      title="Reroll scenario"
+                      className="p-1 hover:bg-beige/20 rounded-lg transition-all text-gold"
+                    >
+                      <Dices size={14} className="hover:scale-110 transition-transform" />
+                    </button>
+                  )}
                   <button
                     onClick={() => {
                       setSelectedSituation(null);
@@ -1422,7 +1432,7 @@ TONE:
                     </p>
                   </div>
                 </button>
-                {selectedSituation === s.id && (
+                {selectedSituation === s.id && s.subScenarios && s.subScenarios.length > 0 && (
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
