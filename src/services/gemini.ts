@@ -222,7 +222,7 @@ export class GeminiService {
   }
 
   private micSource: MediaStreamAudioSourceNode | null = null;
-  private silentDest: GainNode | null = null;
+  private silentDest: MediaStreamAudioDestinationNode | null = null;
   private micHealthInterval: ReturnType<typeof setInterval> | null = null;
   private lastMicActivity: number = 0;
   private currentMicConfig: any = null;
@@ -272,15 +272,23 @@ export class GeminiService {
       this.micSource = this.audioContext!.createMediaStreamSource(this.stream);
       this.processor = this.audioContext!.createScriptProcessor(1024, 1, 1);
 
-      this.silentDest = this.audioContext!.createGain();
-      this.silentDest.gain.value = 0;
-      this.silentDest.connect(this.audioContext!.destination);
+      // Create a dummy MediaStreamDestination node as the sink for ScriptProcessorNode.
+      // ScriptProcessorNode requires an AudioNode sink to pull audio buffers and fire
+      // 'onaudioprocess'. Connecting to createMediaStreamDestination() instead of
+      // audioContext.destination ensures the microphone audio is NEVER routed to physical
+      // speakers, the Mac audio output bus, or OBS screen/system audio capture.
+      this.silentDest = this.audioContext!.createMediaStreamDestination();
 
       this.lastMicActivity = Date.now();
 
       this.processor.onaudioprocess = (e) => {
         this.lastMicActivity = Date.now();
         const inputData = e.inputBuffer.getChannelData(0);
+
+        // Zero out the output buffer to guarantee no audio passes through
+        for (let c = 0; c < e.outputBuffer.numberOfChannels; c++) {
+          e.outputBuffer.getChannelData(c).fill(0);
+        }
 
         let sum = 0;
         for (let i = 0; i < inputData.length; i++) {
@@ -348,7 +356,11 @@ export class GeminiService {
     try {
       if (this.processor) { this.processor.disconnect(); this.processor = null; }
       if (this.micSource) { this.micSource.disconnect(); this.micSource = null; }
-      if (this.silentDest) { this.silentDest.disconnect(); this.silentDest = null; }
+      if (this.silentDest) {
+        this.silentDest.stream.getTracks().forEach(t => t.stop());
+        this.silentDest.disconnect();
+        this.silentDest = null;
+      }
       if (this.stream) {
         this.stream.getTracks().forEach(t => t.stop());
         this.stream = null;
@@ -447,10 +459,21 @@ export class GeminiService {
     }
     if (this.session) this.session.close();
     if (this.stream) this.stream.getTracks().forEach(t => t.stop());
-    if (this.processor) this.processor.disconnect();
-    if (this.micSource) this.micSource.disconnect();
-    if (this.silentDest) this.silentDest.disconnect();
-    if (this.audioContext) this.audioContext.close();
+    if (this.processor) {
+      try { this.processor.disconnect(); } catch {}
+    }
+    if (this.micSource) {
+      try { this.micSource.disconnect(); } catch {}
+    }
+    if (this.silentDest) {
+      try {
+        this.silentDest.stream.getTracks().forEach(t => t.stop());
+        this.silentDest.disconnect();
+      } catch {}
+    }
+    if (this.audioContext) {
+      try { this.audioContext.close(); } catch {}
+    }
     
     if (this.boundHandleDeviceChange) {
       navigator.mediaDevices?.removeEventListener('devicechange', this.boundHandleDeviceChange);
